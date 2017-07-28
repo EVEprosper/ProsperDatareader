@@ -1,19 +1,21 @@
 |Show Logo|
 
+=================
 ProsperDatareader
-================
+=================
 
 |Build Status| |Coverage Status| |PyPI Badge|
 
 Helper libraries for reading/parsing common data used in Prosper tools
 
+===============
 Getting Started
 ===============
 
 	``pip install .``
 
 Testing
-=======
+-------
 
 	``python setup.py test``
 
