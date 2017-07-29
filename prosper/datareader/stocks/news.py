@@ -110,9 +110,10 @@ def fetch_company_news_google(
     articles_list = []
     try:
         raw_articles = demjson.decode(req.text)
-    except Exception as err:
+    except Exception as err: #pragma: no cover
+        #No coverage: blank news has no single ticker
         logger.debug(req.text)
-        if str(err) == 'Can not decode value starting with character \'<\'':
+        if str(err) == 'Can not decode value starting with character \'<\'': #pragma: no cover
             #demjson does not raise unique exceptions :<
             logger.warning('empty news endpoint for %s @ %s', ticker, uri)
             return articles_list

@@ -3,6 +3,7 @@ from datetime import datetime
 from os import path
 
 import pytest
+import requests
 import helpers
 
 import prosper.datareader.stocks.news as news
@@ -106,6 +107,13 @@ class TestMarketNewsGoogle:
 
         assert isinstance(news_list, list)
 
+        sample_article = news_list[0]
+        assert isinstance(sample_article, dict)
+        assert 'primary' in sample_article
+        assert 'usg' in sample_article
+        assert 'sru' in sample_article
+
+        ## NOTE: slow ##
         for article in news_list:
             assert isinstance(article, dict)
             helpers.validate_schema(
@@ -114,13 +122,102 @@ class TestMarketNewsGoogle:
             )
 
     def test_pretty_news(self):
+        """validate behavior -- pretty results"""
         news_list = news.fetch_market_news_google(pretty=True)
 
         assert isinstance(news_list, list)
 
+        sample_article = news_list[0]
+        assert isinstance(sample_article, dict)
+        assert 'primary' in sample_article
+        assert 'usg' not in sample_article
+        assert 'sru' not in sample_article
+
+        ## NOTE: slow ##
         for article in news_list:
             assert isinstance(article, dict)
             helpers.validate_schema(
                 article,
                 path.join('stocks', 'google_company_news_pretty.schema')
             )
+
+    def test_pretty_keep_links(self):
+        """validate behavior -- pretty + keep_google_links"""
+        news_list = news.fetch_market_news_google(pretty=True, keep_google_links=True)
+
+        assert isinstance(news_list, list)
+
+        sample_article = news_list[0]
+        assert isinstance(sample_article, dict)
+        assert 'primary' in sample_article
+        assert 'usg' in sample_article
+        assert 'sru' in sample_article
+
+class TestCompanyNewsGoogle:
+    """validate behavior for news.fetch_company_news_google()"""
+    good_ticker = helpers.CONFIG.get('STOCKS', 'good_ticker')
+    bad_ticker = helpers.CONFIG.get('STOCKS', 'bad_ticker')
+
+    def test_default_happypath(self):
+        """validate default behavior -- minimum args"""
+        news_list = news.fetch_company_news_google(self.good_ticker)
+
+        assert isinstance(news_list, list)
+
+        sample_article = news_list[0]
+        assert isinstance(sample_article, dict)
+        assert 'primary' in sample_article
+        assert 'usg' in sample_article
+        assert 'sru' in sample_article
+
+        ## NOTE: slow ##
+        for article in news_list:
+            assert isinstance(article, dict)
+            helpers.validate_schema(
+                article,
+                path.join('stocks', 'google_company_news.schema')
+            )
+
+    def test_default_bad_ticker(self):
+        """validate behavior -- incorrect ticker"""
+        with pytest.raises(requests.exceptions.HTTPError):
+            news_list = news.fetch_company_news_google(self.bad_ticker)
+
+    def test_pretty_news(self):
+        """validate behavior -- pretty print"""
+        news_list = news.fetch_company_news_google(
+            self.good_ticker,
+            pretty=True
+        )
+
+        assert isinstance(news_list, list)
+
+        sample_article = news_list[0]
+        assert isinstance(sample_article, dict)
+        assert 'primary' in sample_article
+        assert 'usg' not in sample_article
+        assert 'sru' not in sample_article
+
+        ## NOTE: slow ##
+        for article in news_list:
+            assert isinstance(article, dict)
+            helpers.validate_schema(
+                article,
+                path.join('stocks', 'google_company_news_pretty.schema')
+            )
+
+    def test_pretty_keep_links(self):
+        """validate behavior -- pretty + keep_google_links"""
+        news_list = news.fetch_company_news_google(
+            self.good_ticker,
+            pretty=True,
+            keep_google_links=True
+        )
+
+        assert isinstance(news_list, list)
+
+        sample_article = news_list[0]
+        assert isinstance(sample_article, dict)
+        assert 'primary' in sample_article
+        assert 'usg' in sample_article
+        assert 'sru' in sample_article
