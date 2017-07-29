@@ -72,6 +72,8 @@ def pretty_return_google_news(results, keep_google_links=False):
         if 'primary' in article:
             pretty['primary'] = article['primary']
 
+        pretty_results.append(pretty)
+
     return pretty_results
 
 GOOGLE_COMPANY_NEWS = 'https://www.google.com/finance/company_news'
