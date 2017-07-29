@@ -11,7 +11,7 @@ class TestMarketNewsGoogle:
 
     def test_default_happypath(self):
         """validate default behavior -- minimum args"""
-        news_list = news.fetch_market_news_google(self.config.get('STOCKS', 'good_ticker'))
+        news_list = news.fetch_market_news_google(self.config.get('STOCKS', 'good_index'))
 
         assert isinstance(news_list, list)
 
