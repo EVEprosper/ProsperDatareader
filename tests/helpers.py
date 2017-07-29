@@ -37,3 +37,47 @@ def validate_schema(
         schema = json.load(schema_fh)
 
     jsonschema.validate(test_dict, schema)
+
+def get_sample_json(
+        filename,
+        sample_basepath=path.join(HERE, 'samples')
+):
+    """fetch sample JSON for parsers/pretty testing
+
+    Args:
+        filename (str): name of sample file
+        sample_basepath (str, optional): path to sample collection
+
+    Returns:
+        (:obj:`dict`): processed JSON
+
+    """
+    sample_fullpath = path.join(sample_basepath, filename)
+
+    if not path.isfile(sample_fullpath):
+        print(sample_fullpath)
+        raise FileNotFoundError
+
+    with open(sample_fullpath, 'r') as json_fh:
+        data = json.load(json_fh)
+
+    return data
+
+def dump_debug(
+        data,
+        filename='debug_data.json',
+        dump_path=HERE
+):
+    """used for object dumping for debug help
+
+    Args:
+        data (:obj:`dict`): JSON serializable data
+        filename (str, optional): name of file to dump to
+        dump_path (str, optional): path to dump file to
+
+    Returns:
+        None
+
+    """
+    with open(path.join(dump_path, filename), 'w') as dump_fh:
+        json.dump(data, dump_fh, indent=4)

@@ -69,6 +69,8 @@ def pretty_return_google_news(results, keep_google_links=False):
         if keep_google_links:
             pretty['usg'] = article['usg']
             pretty['sru'] = article['sru']
+        if 'primary' in article:
+            pretty['primary'] = article['primary']
 
     return pretty_results
 
@@ -127,18 +129,18 @@ def fetch_company_news_google(
 
 GOOGLE_MARKET_NEWS = 'https://www.google.com/finance/market_news'
 def fetch_market_news_google(
-        ticker,
         pretty=False,
         keep_google_links=False,
         uri=GOOGLE_MARKET_NEWS,
         logger=LOGGER
 ):
-    """fetch market news for indexes and google products
+    """Fetches generic market news for the day
 
     Note:
         Wrapped function for `fetch_company_news_google` on a different endpoint
+
+
     Args:
-        ticker (str): google-name for index or product (ex: INDEXNASDAQ)
         pretty (bool, optional): recast short->pretty keys
         keep_google_links (bool, optional): save the google traceback information
         uri (str, optional): endpoint URI for `market_news`
@@ -147,11 +149,10 @@ def fetch_market_news_google(
         (:obj:`list`): processed news results, JSONable
 
     """
-    logger.info('fetching market_news for %s', ticker)
     logger.info('--wrapping `fetch_company_news_google() with uri=%s', uri)
 
     return fetch_company_news_google(
-        ticker,
+        '',
         pretty=pretty,
         keep_google_links=keep_google_links,
         uri=uri,

@@ -1,0 +1,16 @@
+{
+    "type": "object",
+    "properties": {
+        "source": {"type":"string"},
+        "url": {"type":"string", "format":"uri"},
+        "title": {"type":"string"},
+        "blurb": {"type":"string"},
+        "datetime": {"type":"string", "format":"date-time"},
+        "age": {"type":"string"},
+        "usg": {"type":"string"},
+        "sru": {"type":"string", "format":"uri"},
+        "primary": {"type":"boolean"}
+    },
+    "required": ["source", "url", "title", "blurb", "datetime", "age"],
+    "additionalProperties": false
+}
