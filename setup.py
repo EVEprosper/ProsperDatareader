@@ -123,6 +123,7 @@ setup(
         'ujson~=1.35'
     ],
     tests_require=[
+        'jsonschema',
         'pytest',
         'testfixtures',
         'pytest_cov',
