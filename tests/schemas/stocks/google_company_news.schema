@@ -1,0 +1,16 @@
+{
+	"type": "object",
+	"properties":{
+		"t": {"type":"string"},
+		"u": {"type":"string", "format":"uri"},
+		"s": {"type":"string"},
+		"sp": {"type":"string"},
+		"d": {"type":"string"},
+		"tt": {"type":"string", "format":"date-time"},
+		"usg": {"type":"string"},
+		"sru": {"type":"string", "format":"uri"},
+		"primary": {"type":"boolean"}
+	},
+	"required":["t", "u", "s", "sp", "tt", "usg", "sru"],
+	"additionalProperties": false
+}
