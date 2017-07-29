@@ -117,8 +117,9 @@ setup(
     },
     install_requires=[
         'prospercommon',
-        'requests',
         'pandas',
+        'requests',
+        'six',
         'demjson~=2.2.4',
         'ujson~=1.35'
     ],
