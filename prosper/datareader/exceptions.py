@@ -6,6 +6,9 @@ class DatareaderException(Exception):
 class DatareaderWarning(UserWarning):
     """base class for Datareader warnings"""
     pass
+class PaginationWarning(DatareaderWarning):
+    """hard limit reached for recursive page diving"""
+    pass
 
 ############
 ## Stocks ##

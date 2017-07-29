@@ -1,0 +1,18 @@
+{
+    "type": "object",
+    "properties": {
+        "url": {"type":"string", "format":"uri"},
+        "title": {"type":"string"},
+        "source": {"type":"string"},
+        "published_at": {"type":"string", "format":"date-time"},
+        "author": {"type":"string"},
+        "summary": {"type":"string"},
+        "api_source": {"type":"string", "enum":["yahoo_finance", "seeking_alpha"]},
+        "updated_at": {"type":"string"},
+        "instrument": {"type":"string", "format":"uri"}
+    },
+    "requires": [
+        "url", "title", "source", "published_at", "author", 
+        "summary", "api_source", "updated_at", "instrument"],
+    "additionalProperties": false
+}

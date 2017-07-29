@@ -221,3 +221,41 @@ class TestCompanyNewsGoogle:
         assert 'primary' in sample_article
         assert 'usg' in sample_article
         assert 'sru' in sample_article
+
+class TestCompanyNewsRobinhood:
+    """validate behavior for news.fetch_company_news_rh()"""
+    good_ticker = helpers.CONFIG.get('STOCKS', 'good_ticker')
+    bad_ticker = helpers.CONFIG.get('STOCKS', 'bad_ticker')
+    alt_ticker = helpers.CONFIG.get('STOCKS', 'alt_ticker')
+
+    def test_default_happypath(self):
+        """validate default behavior -- minimum args"""
+        news_list = news.fetch_company_news_rh(self.good_ticker)
+
+        assert isinstance(news_list, list)
+
+        ## NOTE: slow ##
+        for article in news_list:
+            assert isinstance(article, dict)
+            helpers.validate_schema(
+                article,
+                path.join('stocks', 'rh_news.schema')
+            )
+
+    def test_default_alt_ticker(self):
+        """validate default behavior -- minimum args"""
+        news_list = news.fetch_company_news_rh(self.good_ticker)
+
+        assert isinstance(news_list, list)
+
+        ## NOTE: slow ##
+        for article in news_list:
+            assert isinstance(article, dict)
+            helpers.validate_schema(
+                article,
+                path.join('stocks', 'rh_news.schema')
+            )
+    def test_default_bad_ticker(self):
+        """validate behavior -- incorrect ticker"""
+        #with pytest.raises(requests.exceptions.HTTPError):
+        news_list = news.fetch_company_news_rh(self.bad_ticker)
