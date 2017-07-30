@@ -193,6 +193,7 @@ def fetch_company_news_rh(
     while True:
         ## Generate request ##
         page_num = next(page)
+
         params = {
             'page': page_num,
             'symbol': ticker.upper()    #caps required

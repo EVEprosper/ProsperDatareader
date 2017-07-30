@@ -7,6 +7,7 @@ import requests
 import helpers
 
 import prosper.datareader.stocks.news as news
+import prosper.datareader.exceptions as exceptions
 
 class TestValidateGoogleResponse:
     """validate behavior for news.validate_google_response()"""
@@ -226,7 +227,6 @@ class TestCompanyNewsRobinhood:
     """validate behavior for news.fetch_company_news_rh()"""
     good_ticker = helpers.CONFIG.get('STOCKS', 'good_ticker')
     bad_ticker = helpers.CONFIG.get('STOCKS', 'bad_ticker')
-    alt_ticker = helpers.CONFIG.get('STOCKS', 'alt_ticker')
 
     def test_default_happypath(self):
         """validate default behavior -- minimum args"""
@@ -242,20 +242,28 @@ class TestCompanyNewsRobinhood:
                 path.join('stocks', 'rh_news.schema')
             )
 
-    def test_default_alt_ticker(self):
-        """validate default behavior -- minimum args"""
-        news_list = news.fetch_company_news_rh(self.good_ticker)
-
-        assert isinstance(news_list, list)
-
-        ## NOTE: slow ##
-        for article in news_list:
-            assert isinstance(article, dict)
-            helpers.validate_schema(
-                article,
-                path.join('stocks', 'rh_news.schema')
-            )
     def test_default_bad_ticker(self):
         """validate behavior -- incorrect ticker"""
         #with pytest.raises(requests.exceptions.HTTPError):
         news_list = news.fetch_company_news_rh(self.bad_ticker)
+
+    def test_page_stop(self):
+        """make sure page limit works"""
+        long_news_list = news.fetch_company_news_rh(self.good_ticker)
+
+        short_news_list = news.fetch_company_news_rh(
+            self.good_ticker,
+            page_limit=2
+        )
+
+        assert len(long_news_list) > len(short_news_list)
+
+    def test_hard_page_stop(self):
+        """make sure anti-recursion stop works as intended"""
+        default_page_hardbreak = news.PAGE_HARDBREAK
+        news.PAGE_HARDBREAK = 2
+
+        with pytest.warns(exceptions.PaginationWarning):
+            news_list = news.fetch_company_news_rh(self.good_ticker)
+
+        news.PAGE_HARDBREAK = default_page_hardbreak
