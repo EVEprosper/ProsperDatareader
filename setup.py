@@ -129,6 +129,12 @@ setup(
         'testfixtures',
         'pytest_cov',
     ],
+    extras_require={
+        'dev':[
+            'pandas-datareader',
+            'sphinx'
+        ]
+    },
     cmdclass={
         'test':PyTest
     }

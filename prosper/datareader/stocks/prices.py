@@ -2,6 +2,7 @@
 from os import path
 
 import requests
+import pandas as pd
 
 from prosper.datareader.config import LOGGER as G_LOGGER
 
@@ -76,13 +77,13 @@ def fetch_instruments_rh(
     pass
 
 def fetch_stock_summary_rh(
-        ticker,
+        ticker_list,
         logger=LOGGER
 ):
     """fetch common summary data for stock reporting
 
     Args:
-        ticker (str): ticker for company
+        ticker_list (:obj:`list`): list of tickers to look up
         logger (:obj:`logging.logger`, optional): logging handle
 
     Returns:
