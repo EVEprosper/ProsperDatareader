@@ -4,7 +4,7 @@
 ProsperDatareader
 =================
 
-|Build Status| |Coverage Status| |PyPI Badge|
+|Build Status| |Coverage Status| |PyPI Badge| |Docs|
 
 Helper libraries for reading/parsing common data used in Prosper tools
 
@@ -32,3 +32,6 @@ Notes
    :target: https://coveralls.io/github/EVEprosper/ProsperDatareader?branch=master
 .. |PyPI Badge| image:: https://badge.fury.io/py/ProsperDatareader.svg
    :target: https://badge.fury.io/py/ProsperDatareader
+.. |Docs| image:: https://readthedocs.org/projects/prosperdatareader/badge/?version=latest
+   :target: http://prosperdatareader.readthedocs.io/en/latest/?badge=latest
+   :alt: Documentation Status
