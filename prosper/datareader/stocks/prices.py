@@ -76,8 +76,10 @@ def fetch_instruments_rh(
     """
     pass
 
-def fetch_stock_summary_rh(
+SUMMARY_KEYS = ['symbol', 'simple_name', 'PE', 'change_pct', 'last', 'short_ratio', 'time']
+def stock_summary_rh(
         ticker_list,
+        keys=SUMMARY_KEYS,
         logger=LOGGER
 ):
     """fetch common summary data for stock reporting
@@ -87,7 +89,24 @@ def fetch_stock_summary_rh(
         logger (:obj:`logging.logger`, optional): logging handle
 
     Returns:
-        (:obj:`dict`): stock info for the day, JSONable
+        (:obj:`pandas.DataFrame`): stock info for the day, JSONable
         {'ticker', 'company_name', 'price', 'percent_change', 'PE', 'short_ratio', 'quote_datetime'}
     """
-    pass
+    summary_raw_data = []
+
+    ## Gather Required Data ##
+    quotes = fetch_price_quotes_rh(ticker_list, logger=logger)
+    for quote in quotes:
+        fundamentals = fetch_fundamentals_rh(quote['symbol'], logger=logger)
+        instruments = fetch_instruments_rh(quote['instrument'], logger=logger)
+
+        stock_info = {**quote, **fundamentals, **instruments}
+
+        summary_raw_data.append(stock_info)
+
+
+    summary_df = pd.DataFrame(summary_raw_data)
+
+    #TODO: calc pct_change
+
+    return summary_df[keys]
