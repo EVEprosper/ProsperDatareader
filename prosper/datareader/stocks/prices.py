@@ -77,7 +77,7 @@ def fetch_instruments_rh(
     pass
 
 SUMMARY_KEYS = ['symbol', 'simple_name', 'PE', 'change_pct', 'last', 'short_ratio', 'time']
-def stock_summary_rh(
+def get_quote_rh(
         ticker_list,
         keys=SUMMARY_KEYS,
         logger=LOGGER
