@@ -1,0 +1,28 @@
+{
+    "type": "object",
+    "properties": {
+        "min_tick_size",
+        "type": {"type":"string", "enum":["stock"]},
+        "margin_initial_ratio": {"type":"number"},
+        "url": {"type":"string", "format":"uri"},
+        "quote": {"type":"string", "format":"uri"},
+        "symbol": {"type":"string"},
+        "bloomberg_unique": {"type":"string", "pattern":"EQ\d{16}"},
+        "list_date": {"type":"string", "format":"date-time"},
+        "name": {"type":"string"},
+        "fundamentals": {"type":"string", "format":"uri"},
+        "state": {"type":"string", "enum":["active"]},
+        "country": {"type":"string"},
+        "day_trade_ratio": {"type":"number"},
+        "tradeable": {"type":"boolean"},
+        "maintenance_ratio": {"type":"number"},
+        "id": {"type":"string"},
+        "market": {"type":"string", "format":"uri"},
+        "simple_name": {"type":"string"}
+    },
+    "required": [
+        "min_tick_size", "type", "margin_initial_ratio", "url", "quote", "symbol",
+        "bloomberg_unique", "list_date", "name", "fundamentals", "state", "country",
+        "day_trade_ratio", "tradeable", "maintenance_ratio", "id", "market","simple_name"],
+    "additionalProperties": false
+}

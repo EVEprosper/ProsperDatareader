@@ -1,0 +1,21 @@
+{
+    "type": "object",
+    "properties": {
+        "open": {"type":"number"},
+        "high": {"type":"number"},
+        "low": {"type":"number"},
+        "volume": {"type":"number"},
+        "average_volume": {"type":"number"},
+        "high_52_weeks": {"type":"number"},
+        "dividend_yield": {"type":"number"},
+        "low_52_weeks": {"type":"number"},
+        "market_cap": {"type":"number"},
+        "pe_ratio": {"type":"number"},
+        "description": {"type":"string"},
+        "instrument": {"type":"string", "format":"uri"}
+    },
+    "required":[
+        "open", "high", "low", "volume", "average_volume", "high_52_weeks", "dividend_yield", 
+        "low_52_weeks", "market_cap", "pe_ratio", "description", "instrument"],
+    "additionalProperties": false
+}
