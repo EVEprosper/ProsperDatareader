@@ -6,14 +6,14 @@
             "items": {
                 "type": "object",
                 "properties": {
-                    "ask_price": {"type":"number"},
+                    "ask_price": {"type":"string"},
                     "ask_size": {"type":"integer"},
-                    "bid_price": {"type":"number"},
+                    "bid_price": {"type":"string"},
                     "bid_size": {"type":"integer"},
-                    "last_trade_price": {"type":"number"},
-                    "last_extended_hours_trade_price": {"type":"number"},
-                    "previous_close": {"type":"number"},
-                    "adjusted_previous_close": {"type":"number"},
+                    "last_trade_price": {"type":"string"},
+                    "last_extended_hours_trade_price": {"type":"string"},
+                    "previous_close": {"type":"string"},
+                    "adjusted_previous_close": {"type":"string"},
                     "previous_close_date": {"type":"string", "format":"date-time"},
                     "symbol": {"type":"string", "pattern":"([A-Z])+"},
                     "trading_halted": {"type":"boolean"},
@@ -22,8 +22,8 @@
                     "updated_at": {"type":"string", "format":"date-time"},
                     "instrument": {"type":"string", "format":"uri"}
                 },
-                "required":[
-                    "ask_price", "ask_size", "bid_price", "bid_size", "last_trade_price"
+                "required": [
+                    "ask_price", "ask_size", "bid_price", "bid_size", "last_trade_price",
                     "last_extended_hours_trade_price", "previous_close", "adjusted_previous_close",
                     "previous_close_date", "symbol", "trading_halted", "has_traded",
                     "last_trade_price_source", "updated_at", "instrument"],

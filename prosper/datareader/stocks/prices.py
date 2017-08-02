@@ -1,4 +1,6 @@
 """datareader.news.py: tools for fetching stock news"""
+from datetime import datetime
+import dateutil.parser
 from os import path
 
 import requests
@@ -160,6 +162,7 @@ def market_is_open(
         (bool): https://api.robinhood.com/markets/{market}/hours/{date}/['is_open']
 
     """
+    #TODO: cache me
     market_name = market_uri.split('/')[-1]
     logger.info('fetching market info for %s -- Robinhood', market_name)
 
@@ -172,7 +175,16 @@ def market_is_open(
     hours_req.raise_for_status()
     hours_data = hours_req.json()
 
-    return hours_data['is_open']
+    if not hours_data['is_open']:
+        return False
+
+    close_datetime = dateutil.parser.parse(hours_data['extended_opens_at'])
+    now = datetime.utcnow()
+
+    if close_datetime > now:
+        return False
+    else:
+        return True
 
 SUMMARY_KEYS = [
     'symbol', 'simple_name', 'pe_ratio', 'pct_change', 'current_price', 'updated_at']
