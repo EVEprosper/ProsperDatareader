@@ -1,0 +1,18 @@
+{
+    "type": "object",
+    "properties": {
+       "closes_at": {"type":"string", "format":"date-time"},
+       "extended_opens_at": {"type":"string", "format":"date-time"},
+       "next_open_hours": {"type":"string", "format":"uri"},
+       "previous_open_hours": {"type":"string", "format":"uri"},
+       "is_open": {"format":"boolean"},
+       "extended_closes_at": {"type":"string", "format":"date-time"},
+       "date": {"type":"string", "format":"date-time"},
+       "opens_at": {"type":"string", "format":"date-time"}
+    },
+    "requires": [
+        "closes_at", "extended_closes_at", "next_open_hours", "previous_open_hours",
+        "is_open", "extended_closes_at", "date", "opens_at"
+    ],
+    "additionalProperties": false
+}

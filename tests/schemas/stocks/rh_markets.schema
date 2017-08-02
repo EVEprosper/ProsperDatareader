@@ -1,0 +1,20 @@
+{
+    "type": "object",
+    "properties": {
+        "website": {"type":"string", "format":"uri"},
+        "name": {"type":"string"},
+        "city": {"type":"string"},
+        "url": {"type":"string", "format":"uri"},
+        "country": {"type":"string"},
+        "todays_hours": {"type":"string", "format":"uri"},
+        "operating_mic": {"type":"string"},
+        "acronym": {"type":"string"},
+        "timezone": {"type":"string"},
+        "mic": {"type":"string"}
+    },
+    "requires": [
+        "website", "city", "name", "url", "country", "todays_hours", 
+        "operating_mic", "acronym", "timezone", "mic"
+    ],
+    "additionalProperties": false
+}

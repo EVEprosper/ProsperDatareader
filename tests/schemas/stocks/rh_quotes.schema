@@ -11,7 +11,7 @@
                     "bid_price": {"type":"string"},
                     "bid_size": {"type":"integer"},
                     "last_trade_price": {"type":"string"},
-                    "last_extended_hours_trade_price": {"type":"string"},
+                    "last_extended_hours_trade_price": {"type":["string", "null"]},
                     "previous_close": {"type":"string"},
                     "adjusted_previous_close": {"type":"string"},
                     "previous_close_date": {"type":"string", "format":"date-time"},
