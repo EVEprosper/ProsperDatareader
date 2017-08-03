@@ -132,7 +132,8 @@ setup(
     extras_require={
         'dev':[
             'pandas-datareader',
-            'sphinx'
+            'sphinx',
+            'sphinxcontrib-napoleon'
         ]
     },
     cmdclass={

@@ -16,7 +16,6 @@ deploy:
   user: lockefox
   password:
     secure: nSn/DT7guDdqKm7bn/mY5KC07AJ5OyzGrE4B98vUq1mvIZhyuAC9+8ex2cIemcFZWexHvycW+G1CXVRTa4PH1a7PmqTq31+yhYD2Znjg7bilC0fB+I6ryp8H4IEeMBK93YCTHJoyIiMmYYA0Beg9CfSqNdjdSvt12D3rjPHdHaUXkPMiz7G3+X0814y4M8IB4pCMCKxBL+tGunLvIhBiMyQ/o8JvVeSo5xYO6/Lj8OGXIwWdeQfN7KNjHYSD5FM4P7MFTqsg9gzmXVxVHaSPNDwpUtI7bh3AF0ySJiBAB6MnkMQ4JiWrfu8WEcmkoW3ytPMNV4uqtnTsTsJlR3eUFNMi6JhO+rcj9nhsg37PtkC45e2glNjHVXqZPeGzkU8ZBXKylG2cxukaipa8VnWpjqzkFo8PfxGo38qt4HyyMPxTmzc75YmMkcJ3RQZvPtKz//JRHiEnFKjpmONNswvikiLN7QXLsNzwNJ/hdSTeGPRSjvcWyQikkVbDm24lmCkXPPvwZMS1n9l2tY6yPgw+oXgnSVQCNIbh5O47jK43WHrN3sWZGuvxtXKfVP00CTr3tQ6uCJQSQkMrYrdbWCF0xVzCZwjJohVK0tZdvxODpkDZAijrf9lryyTzs+S2007mgFD/EmWl941Q53SC2OgzKadGZuAqAN7v4BI2JjHA5aA=
-
   on:
     tags: true
-    distributions: sdist bdist_wheel
+    distributions: "sdist bdist_wheel"
