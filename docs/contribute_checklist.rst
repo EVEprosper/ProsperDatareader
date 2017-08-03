@@ -1,6 +1,6 @@
-==================================
-Contributing New Feeds - Checklist
-==================================
+======================
+Contributing New Feeds
+======================
 
 The goal of ProsperDatareader is to be an easy stop for common data.  We cover the testing/fetching/crunching so users can more quickly **use** the data they're after.
 

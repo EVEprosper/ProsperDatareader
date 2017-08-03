@@ -33,7 +33,6 @@ Index
 
    getting_started.rst
    source/datareader.rst
-   source/modules.rst
    stocks_help.rst   
    contribute_checklist.rst
 
