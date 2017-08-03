@@ -33,6 +33,7 @@ Index
 
    source/datareader.rst
    stocks_help.rst
+   getting_started.rst
 
 Indices and tables
 ==================
