@@ -31,9 +31,11 @@ Index
    :maxdepth: 2
    :caption: Contents:
 
-   source/datareader.rst
-   stocks_help.rst
    getting_started.rst
+   source/datareader.rst
+   source/modules.rst
+   stocks_help.rst   
+   contribute_checklist.rst
 
 Indices and tables
 ==================
