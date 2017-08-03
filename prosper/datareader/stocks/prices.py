@@ -1,5 +1,5 @@
 """datareader.news.py: tools for fetching stock news"""
-from datetime import datetime
+from datetime import datetime, timezone
 import dateutil.parser
 from os import path
 
@@ -148,10 +148,7 @@ def fetch_instruments_rh(
 
     return data
 
-def market_is_open(
-        market_uri,
-        logger=LOGGER
-):
+def market_is_open(market_uri, logger=LOGGER):  #pragma: no cover
     """checks if market is open right now
 
     Args:
@@ -163,6 +160,7 @@ def market_is_open(
 
     """
     #TODO: cache me
+    #TODO: test me
     market_name = market_uri.split('/')[-1]
     logger.info('fetching market info for %s -- Robinhood', market_name)
 
@@ -179,7 +177,7 @@ def market_is_open(
         return False
 
     close_datetime = dateutil.parser.parse(hours_data['extended_opens_at'])
-    now = datetime.utcnow()
+    now = datetime.now(timezone.utc)
 
     if close_datetime > now:
         return False
@@ -217,7 +215,7 @@ def get_quote_rh(
         stock_info = {**quote, **fundamentals, **instruments}   #join all data together
         stock_info['is_open'] = market_is_open(instruments['market'])
 
-        if stock_info['is_open']:
+        if stock_info['is_open']:   #pragma: no cover
             stock_info['current_price'] = stock_info['last_trade_price']
         else:
             stock_info['current_price'] = stock_info['last_extended_hours_trade_price']
@@ -229,4 +227,7 @@ def get_quote_rh(
 
     summary_df['pct_change'] = (summary_df['current_price'] - summary_df['previous_close']) / summary_df['previous_close'] * 100
 
-    return summary_df[keys]
+    if keys:
+        return summary_df[keys]
+    else:
+        return summary_df
