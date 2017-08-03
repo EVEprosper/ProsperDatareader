@@ -7,8 +7,21 @@
 ProsperDatareader - Uniform Data Collection
 ===========================================
 
-.. include:: ../README.rst
-  :start-after: inclusion-marker-do-not-remove
+|Build Status| |Coverage Status| |PyPI Badge| |Docs|
+
+Helper libraries for reading/parsing common data used in `Prosper`_ tools.  Drawing inspiration from `pandas-datareader`_ library as a companion.
+
+Quickstart
+==========
+
+Install ProsperDatareader:
+
+    ``pip install ProsperDatareader``
+
+Supported Feeds
+===============
+
+* `Stocks`_: Parse IRL stock quote data
 
 
 Index
@@ -19,6 +32,7 @@ Index
    :caption: Contents:
 
    source/datareader.rst
+   stocks_help.rst
 
 Indices and tables
 ==================
@@ -26,3 +40,15 @@ Indices and tables
 * :ref:`genindex`
 * :ref:`modindex`
 * :ref:`search`
+
+.. _Prosper: http://www.eveprosper.com
+.. _pandas-datareader: https://pandas-datareader.readthedocs.io/en/latest/index.html
+.. _Stocks: stocks_help.html
+
+.. |Build Status| image:: https://travis-ci.org/EVEprosper/ProsperDatareader.svg?branch=master
+   :target: https://travis-ci.org/EVEprosper/ProsperDatareader
+.. |Coverage Status| image:: https://coveralls.io/repos/github/EVEprosper/ProsperDatareader/badge.svg?branch=master
+   :target: https://coveralls.io/github/EVEprosper/ProsperDatareader?branch=master
+.. |PyPI Badge| image:: https://badge.fury.io/py/ProsperDatareader.svg
+   :target: https://badge.fury.io/py/ProsperDatareader
+.. |Docs| image:: https://readthedocs.org/projects/prosperdatareader/badge/?version=latest
