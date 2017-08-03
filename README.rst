@@ -12,7 +12,7 @@ Helper libraries for reading/parsing common data used in Prosper tools
 Getting Started
 ===============
 
-	``pip install .``
+	``pip install prosperdatareader``
 
 Testing
 -------
@@ -23,6 +23,18 @@ Notes
 -----
 
 - Only supporting >=3.5 Python
+
+===============
+Supported Feeds
+===============
+
+**Stocks**: meant as companion APIs to `pandas-datareader`_
+
+- Company News Feeds: Google, Robinhood
+- Market News Feed: Google
+- Price Quote: Robinhood
+
+.. _pandas-datareader: https://pandas-datareader.readthedocs.io/en/latest/index.html
 
 .. |Show Logo| image:: http://dl.eveprosper.com/podcast/logo-colour-17_sm2.png
    :target: http://eveprosper.com
