@@ -4,6 +4,8 @@
 ProsperDatareader
 =================
 
+.. inclusion-marker-do-not-remove
+
 |Build Status| |Coverage Status| |PyPI Badge| |Docs|
 
 Helper libraries for reading/parsing common data used in Prosper tools

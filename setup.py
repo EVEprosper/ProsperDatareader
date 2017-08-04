@@ -120,6 +120,7 @@ setup(
         'pandas',
         'requests',
         'six',
+        'semantic-version',
         'demjson~=2.2.4',
         'ujson~=1.35'
     ],
@@ -133,7 +134,8 @@ setup(
         'dev':[
             'pandas-datareader',
             'sphinx',
-            'sphinxcontrib-napoleon'
+            'sphinxcontrib-napoleon',
+            'semantic-version'
         ]
     },
     cmdclass={
