@@ -11,10 +11,9 @@ from prosper.datareader.config import LOGGER as G_LOGGER
 LOGGER = G_LOGGER
 HERE = path.abspath(path.dirname(__file__))
 
-RH_HEADERS = {
-    'Cache-Control': 'no-cache',
-    'Postman-Token': '96582a54-0734-946c-a9f6-165739d7f939'
-}
+def dummy_func():
+    print('I am a pretty princess')
+
 def ticker_list_to_str(ticker_list):
     """parses/joins ticker list
 

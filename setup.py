@@ -78,7 +78,8 @@ class PyTest(TestCommand):
             'tests',
             '-rx',
             '--cov=prosper/' + __library_name__,
-            '--cov-report=term-missing'
+            '--cov-report=term-missing',
+            '--cov-config=.coveragerc'
         ]    #load defaults here
 
     def run_tests(self):
@@ -92,6 +93,22 @@ class PyTest(TestCommand):
             pytest_commands = self.pytest_args
         errno = pytest.main(pytest_commands)
         exit(errno)
+
+class QuickTest(PyTest):
+    """wrapper for quick-testing for devs"""
+    user_options = [('pytest-args=', 'a', "Arguments to pass to pytest")]
+
+    def initialize_options(self):
+        TestCommand.initialize_options(self)
+        self.pytest_args = [
+            'tests',
+            '-rx',
+            '-m',
+            'not slow',
+            '--cov=prosper/' + __library_name__,
+            '--cov-report=term-missing',
+            '--cov-config=.coveragerc'
+        ]
 
 with open('README.rst', 'r', 'utf-8') as f:
     readme = f.read()
@@ -139,6 +156,7 @@ setup(
         ]
     },
     cmdclass={
-        'test':PyTest
+        'test':PyTest,
+        'quicktest': QuickTest
     }
 )
