@@ -20,7 +20,7 @@
 import os
 import sys
 sys.path.insert(0, os.path.abspath('../prosper'))
-
+import alabaster
 
 # -- General configuration ------------------------------------------------
 
@@ -40,10 +40,8 @@ extensions = [
     'sphinx.ext.mathjax',
     'sphinx.ext.ifconfig',
     'sphinx.ext.viewcode',
-    'sphinx.ext.githubpages']
-
-# Add any paths that contain templates here, relative to this directory.
-templates_path = ['_templates']
+    'sphinx.ext.githubpages',
+    'alabaster']
 
 # The suffix(es) of source filenames.
 # You can specify multiple suffix as a list of string:
@@ -92,18 +90,30 @@ todo_include_todos = True
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
+html_theme_path = [alabaster.get_path()]
 html_theme = 'alabaster'
+html_static_path = ['_static']
+templates_path = ['templates']
+html_show_sourcelink = False
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
 # documentation.
 #
-# html_theme_options = {}
+html_theme_options = {
+    'logo': 'logo-colour-sm.png',
+    'description': 'Uniform Data Collection',
+    'description_font_style': 'italic',
+    'github_user': 'eveprosper',
+    'github_repo': 'prosperdatareader',
+    'github_banner': True,
+    #'donate_url': 'https://www.patreon.com/eveprosper',
+}
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
-html_static_path = ['_static']
+html_static_path = ['static']
 
 # Custom sidebar templates, must be a dictionary that maps document names
 # to template names.
@@ -111,7 +121,12 @@ html_static_path = ['_static']
 # This is required for the alabaster theme
 # refs: http://alabaster.readthedocs.io/en/latest/installation.html#sidebars
 html_sidebars = {
-    '**': ['globaltoc.html', 'sourcelink.html', 'searchbox.html',]
+    'index': [
+        'about.html', 'patreon.html', 'searchbox.html',
+    ],
+    '**': [
+        'globaltoc.html', 'sourcelink.html', 'searchbox.html'
+    ]
 }
 #html_sidebars = {
 #    '**': [
