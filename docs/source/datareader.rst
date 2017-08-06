@@ -27,6 +27,14 @@ datareader\.exceptions module
     :undoc-members:
     :show-inheritance:
 
+datareader\.utils module
+------------------------
+
+.. automodule:: datareader.utils
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 
 Module contents
 ---------------
