@@ -102,6 +102,7 @@ class TestPrettyGoogleNews:
 class TestMarketNewsGoogle:
     config = helpers.CONFIG
 
+    @pytest.mark.long
     def test_default_happypath(self):
         """validate default behavior -- minimum args"""
         news_list = news.fetch_market_news_google()
@@ -114,7 +115,6 @@ class TestMarketNewsGoogle:
         assert 'usg' in sample_article
         assert 'sru' in sample_article
 
-        ## NOTE: slow ##
         for article in news_list:
             assert isinstance(article, dict)
             helpers.validate_schema(
@@ -122,6 +122,7 @@ class TestMarketNewsGoogle:
                 path.join('stocks', 'google_company_news.schema')
             )
 
+    @pytest.mark.long
     def test_pretty_news(self):
         """validate behavior -- pretty results"""
         news_list = news.fetch_market_news_google(pretty=True)
@@ -134,7 +135,6 @@ class TestMarketNewsGoogle:
         assert 'usg' not in sample_article
         assert 'sru' not in sample_article
 
-        ## NOTE: slow ##
         for article in news_list:
             assert isinstance(article, dict)
             helpers.validate_schema(
@@ -159,7 +159,7 @@ class TestCompanyNewsGoogle:
     good_ticker = helpers.CONFIG.get('STOCKS', 'good_ticker')
     bad_ticker = helpers.CONFIG.get('STOCKS', 'bad_ticker')
 
-    @pytest.mark.slow
+    @pytest.mark.long
     def test_default_happypath(self):
         """validate default behavior -- minimum args"""
         news_list = news.fetch_company_news_google(self.good_ticker)
@@ -184,7 +184,7 @@ class TestCompanyNewsGoogle:
         with pytest.raises(requests.exceptions.HTTPError):
             news_list = news.fetch_company_news_google(self.bad_ticker)
 
-    @pytest.mark.slow
+    @pytest.mark.long
     def test_pretty_news(self):
         """validate behavior -- pretty print"""
         news_list = news.fetch_company_news_google(
@@ -228,7 +228,7 @@ class TestCompanyNewsRobinhood:
     good_ticker = helpers.CONFIG.get('STOCKS', 'good_ticker')
     bad_ticker = helpers.CONFIG.get('STOCKS', 'bad_ticker')
 
-    @pytest.mark.slow
+    @pytest.mark.long
     def test_default_happypath(self):
         """validate default behavior -- minimum args"""
         news_list = news.fetch_company_news_rh(self.good_ticker)

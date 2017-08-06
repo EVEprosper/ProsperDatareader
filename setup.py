@@ -104,7 +104,7 @@ class QuickTest(PyTest):
             'tests',
             '-rx',
             '-m',
-            'not slow',
+            'not long',
             '--cov=prosper/' + __library_name__,
             '--cov-report=term-missing',
             '--cov-config=.coveragerc'
