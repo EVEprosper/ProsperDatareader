@@ -10,6 +10,13 @@ class PaginationWarning(DatareaderWarning):
     """hard limit reached for recursive page diving"""
     pass
 
+###########
+## Utils ##
+###########
+class UtilsNLTKDownloadFailed(DatareaderException):
+    """Unable to download lexicon from NLTK corpus"""
+    pass
+
 ############
 ## Stocks ##
 ############
@@ -19,8 +26,6 @@ class StocksException(DatareaderException):
 class StocksPricesException(StocksException):
     """base class for Datareader.stocks.prices"""
     pass
-
-
 class StocksNewsException(StocksException):
     """base class for Datareader.stocks.prices"""
     pass

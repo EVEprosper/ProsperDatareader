@@ -1,7 +1,10 @@
-"""datareader.news.py: tools for fetching stock news"""
+"""datareader.stocks.prices.py: tools for fetching stock prices
+
+Meant as companion to: https://pandas-datareader.readthedocs.io/en/latest/
+"""
+from os import path
 from datetime import datetime, timezone
 import dateutil.parser
-from os import path
 
 import requests
 import pandas as pd
@@ -10,9 +13,6 @@ from prosper.datareader.config import LOGGER as G_LOGGER
 
 LOGGER = G_LOGGER
 HERE = path.abspath(path.dirname(__file__))
-
-def dummy_func():
-    print('I am a pretty princess')
 
 def ticker_list_to_str(ticker_list):
     """parses/joins ticker list

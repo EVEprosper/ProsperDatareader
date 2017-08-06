@@ -134,6 +134,7 @@ setup(
     },
     install_requires=[
         'prospercommon',
+        'nltk',
         'pandas',
         'requests',
         'six',

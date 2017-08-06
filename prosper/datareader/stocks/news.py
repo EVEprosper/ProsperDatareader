@@ -1,4 +1,4 @@
-"""datareader.news.py: tools for fetching stock news"""
+"""datareader.stocks.news.py: tools for fetching stock news"""
 from datetime import datetime
 import itertools
 from os import path
