@@ -7,6 +7,7 @@ python:
 install: 
   - "pip install semantic_version"
   - "pip install ."
+  - "pip install .[nltk]"
 script: 
   - "python setup.py test"
 after_success:
