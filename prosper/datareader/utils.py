@@ -53,7 +53,6 @@ def _validate_install(
 
     INSTALLED_PACKAGES.append(package_name)
 
-VADER_ANALYZER = None
 def _get_analyzer():
     """fetch analyzer for grading strings
 
@@ -61,20 +60,16 @@ def _get_analyzer():
         (:obj:`nltk.sentiment.vader.SentimentIntensityAnalyzer`)
 
     """
-    if VADER_ANALYZER:
-        #already locked and loaded
-        return VADER_ANALYZER
-
     if 'vader_lexicon' not in INSTALLED_PACKAGES:
         _validate_install('vader_lexicon')
 
-    global VADER_ANALYZER
-    VADER_ANALYZER = sentiment.vader.SentimentIntensityAnalyzer()
-
-    return VADER_ANALYZER
+    return sentiment.vader.SentimentIntensityAnalyzer()
 
 COLUMN_NAMES = ['neu', 'pos', 'compound', 'neg']
-def map_vader_sentiment(string_series):
+def map_vader_sentiment(
+        string_series,
+        column_names=COLUMN_NAMES
+):
     """apply vader sentiment to an entire column and update the original source
 
     Note:
@@ -82,7 +77,8 @@ def map_vader_sentiment(string_series):
 
     Args:
         string_series (:obj:`pandas.Series`): column to grade strings from
-
+        column_names (:obj:`list`, optional): column names for vader results
+            ['neu', 'pos', 'compound', 'neg']
     Returns:
         (:obj:`pandas.DataFrame`) updated series + vader-sentiments
 
@@ -111,7 +107,7 @@ def map_vader_sentiment(string_series):
 
     source_col = string_series.name
     columns = [source_col]
-    columns.extend(COLUMN_NAMES)
+    columns.extend(column_names)
 
     new_df = pd.DataFrame(
         list(map(map_func, string_series)),
