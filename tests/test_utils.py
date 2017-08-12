@@ -5,6 +5,7 @@ from os import path
 import pytest
 import requests
 import helpers
+import pandas as pd
 
 import prosper.datareader.utils as utils
 import prosper.datareader.exceptions as exceptions
@@ -38,3 +39,18 @@ class TestNLTKInstall:
 
         #return to normal mode
         utils._TESTMODE = False
+
+def test_map_vader_sentiment():
+    """validate map_vader_sentiment() behavior"""
+    demo_data = [
+        {'text': 'I like hotdogs'},
+        {'text': 'Sandwiches are bad'},
+        {'text': 'Libraries have books'}
+    ]
+
+    demo_df = pd.DataFrame(demo_data)
+    graded_df = utils.map_vader_sentiment(demo_df['text'])
+
+    assert graded_df['compound'].loc[0] > 0
+    assert graded_df['compound'].loc[1] < 0
+    assert graded_df['compound'].loc[2] == 0

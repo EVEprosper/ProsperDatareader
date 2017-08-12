@@ -32,9 +32,16 @@ Index
    :caption: Contents:
 
    getting_started.rst
-   source/datareader.rst
    stocks_help.rst   
    contribute_checklist.rst
+
+API Reference
+=============
+
+.. toctree::
+   :maxdepth: 2
+
+   source/datareader.rst
 
 Indices and tables
 ==================

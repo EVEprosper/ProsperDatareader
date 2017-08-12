@@ -154,7 +154,8 @@ setup(
             'sphinx',
             'sphinxcontrib-napoleon',
             'semantic-version'
-        ]
+        ],
+        'nltk':['nltk'] # optional function, avoid heavy import unless required
     },
     cmdclass={
         'test':PyTest,

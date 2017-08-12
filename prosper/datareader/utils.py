@@ -2,8 +2,13 @@
 from os import path
 import warnings
 
-from nltk import download
-import nltk.sentiment as sentiment
+NLTK_IMPORT = True
+try:
+    from nltk import download
+    import nltk.sentiment as sentiment
+except ImportError:
+    NLTK_IMPORT = False
+import pandas as pd
 
 from prosper.datareader.config import LOGGER as G_LOGGER
 import prosper.datareader.exceptions as exceptions
@@ -27,6 +32,9 @@ def _validate_install(
         (:obj:`exceptions.UtilsNLTKDownloadFailed`)
 
     """
+    if not NLTK_IMPORT:
+        raise ImportError('Please use `prosperdatareader[nltk]` import')
+
     if package_name in INSTALLED_PACKAGES:
         if _TESTMODE:
             warnings.warn(
@@ -44,3 +52,70 @@ def _validate_install(
             'Unable to install: {}'.format(package_name))
 
     INSTALLED_PACKAGES.append(package_name)
+
+VADER_ANALYZER = None
+def _get_analyzer():
+    """fetch analyzer for grading strings
+
+    Returns:
+        (:obj:`nltk.sentiment.vader.SentimentIntensityAnalyzer`)
+
+    """
+    if VADER_ANALYZER:
+        #already locked and loaded
+        return VADER_ANALYZER
+
+    if 'vader_lexicon' not in INSTALLED_PACKAGES:
+        _validate_install('vader_lexicon')
+
+    global VADER_ANALYZER
+    VADER_ANALYZER = sentiment.vader.SentimentIntensityAnalyzer()
+
+    return VADER_ANALYZER
+
+COLUMN_NAMES = ['neu', 'pos', 'compound', 'neg']
+def map_vader_sentiment(string_series):
+    """apply vader sentiment to an entire column and update the original source
+
+    Note:
+        relies on `pandas.series.map()` functionality
+
+    Args:
+        string_series (:obj:`pandas.Series`): column to grade strings from
+
+    Returns:
+        (:obj:`pandas.DataFrame`) updated series + vader-sentiments
+
+    """
+    analyzer = _get_analyzer()
+    def map_func(grade_str):
+        """actual map function that does the heavy lifting
+
+        Args:
+            grade_str (str): string to be scored
+
+        Returns:
+            (:obj:`list`): original str + polarity scores ('neu', 'pos', 'compound', 'neg')
+
+        """
+        row = []
+        row.append(grade_str)
+        grades = analyzer.polarity_scores(grade_str)
+        row.extend([
+            grades['neu'],
+            grades['pos'],
+            grades['compound'],
+            grades['neg']
+        ])
+        return row
+
+    source_col = string_series.name
+    columns = [source_col]
+    columns.extend(COLUMN_NAMES)
+
+    new_df = pd.DataFrame(
+        list(map(map_func, string_series)),
+        columns=columns
+    )
+
+    return new_df
