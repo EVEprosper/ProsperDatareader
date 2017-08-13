@@ -9,28 +9,33 @@ Meant as an extension of `pandas-datareader`_, ``prosper.datareader.stocks`` pro
 News
 ====
 
-Fetching news feeds should be easy.  These endpoints return dataframes with articles, links, and some metadata.
+Fetching news feeds should be easy.  These endpoints return dataframes with articles, links, and some metadata.  These feeds save you from a few pitfalls.
 
-`company_news_google()`_ 
-------------------------
+* Non-compliant JSON 
+* Weird single-character identifiers
+* Strange tree-shaped feeds
+
+company_news_google()
+---------------------
 
 ``news_dataframe = stocks.news.company_news_google('TICKER')``
 
 Fetches all the news articles for a single ticker.  
 
-`company_news_rh()`_
+market_news_google()
 --------------------
+
+``news_dataframe = stocks.news.market_news_google()``
+
+Fetches all articles on `Google`_ general market feed
+
+company_news_rh()
+-----------------
 
 ``news_dataframe = stocks.news.company_news_rh('TICKER')``
 
 Fetches articles from `Robinhood`_ for desired ticker.  NOTE: ``page_limit`` may be needed for popular stocks.
 
-`market_news_google()`_
------------------------
-
-``news_dataframe = stocks.news.market_news_google()``
-
-Fetches all articles on `Google`_ general market feed
 
 Prices
 ======

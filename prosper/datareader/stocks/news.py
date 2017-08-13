@@ -49,40 +49,9 @@ def validate_google_response(response, tag_primary=True):
 
     return article_list
 
-def pretty_return_google_news(results, keep_google_links=False):
-    """recast keys shorthand->human in google result
-
-    Args:
-        results (:obj:`list`): google news results
-        keep_google_links (bool): save the google traceback information
-
-    Returns:
-        (:obj:`list`): human-friendly results, JSONable
-
-    """
-    pretty_results = []
-    for article in results:
-        pretty = {}
-        pretty['source'] = article['s']
-        pretty['url'] = article['u']
-        pretty['title'] = article['t']
-        pretty['blurb'] = article['sp']
-        pretty['datetime'] = article['tt']
-        pretty['age'] = article['d']
-        if keep_google_links:
-            pretty['usg'] = article['usg']
-            pretty['sru'] = article['sru']
-        if 'primary' in article:
-            pretty['primary'] = article['primary']
-
-        pretty_results.append(pretty)
-
-    return pretty_results
-
 GOOGLE_COMPANY_NEWS = 'https://www.google.com/finance/company_news'
 def fetch_company_news_google(
         ticker,
-        pretty=False,
         keep_google_links=False,
         uri=GOOGLE_COMPANY_NEWS,
         logger=LOGGER
@@ -91,7 +60,6 @@ def fetch_company_news_google(
 
     Args:
         ticker (str): ticker for company
-        pretty (bool, optional): recast short->pretty keys
         keep_google_links (bool, optional): save the google traceback information
         uri (str, optional): endpoint URI for `company_news`
         logger (:obj:`logging.logger`, optional): logging handle
@@ -127,15 +95,10 @@ def fetch_company_news_google(
     logger.info('parsing news object for %s', ticker)
     articles_list = validate_google_response(raw_articles)
 
-    if pretty:
-        logger.info('pretty printing article keys')
-        articles_list = pretty_return_google_news(articles_list, keep_google_links)
-
     return articles_list
 
 GOOGLE_MARKET_NEWS = 'https://www.google.com/finance/market_news'
 def fetch_market_news_google(
-        pretty=False,
         keep_google_links=False,
         uri=GOOGLE_MARKET_NEWS,
         logger=LOGGER
@@ -147,7 +110,6 @@ def fetch_market_news_google(
 
 
     Args:
-        pretty (bool, optional): recast short->pretty keys
         keep_google_links (bool, optional): save the google traceback information
         uri (str, optional): endpoint URI for `market_news`
         logger (:obj:`logging.logger`, optional): logging handle
@@ -159,11 +121,54 @@ def fetch_market_news_google(
 
     return fetch_company_news_google(
         '',
-        pretty=pretty,
         keep_google_links=keep_google_links,
         uri=uri,
         logger=logger
     )
+
+def company_news_google(
+        ticker,
+        pretty=True,
+        keep_google_links=False,
+        logger=LOGGER
+):
+    """get news items from google for a given company
+
+    Args:
+        ticker (str): ticker to look up
+        pretty (bool, optional): human-readable column names
+        keep_google_links (bool, optional): include google metadata links
+        logger (:obj:`logging.logger`, optional): logging handle
+
+    Returns:
+        (:obj:`pandas.DataFrame`): tabularized data for news
+
+    """
+    logger.info('Fetching company raw data feed for `%s` -- GOOGLE', ticker)
+    raw_news_data = fetch_company_news_google(
+        ticker,
+        keep_google_links=keep_google_links,
+        logger=logger
+    )
+
+    logger.info('--Pushing data into pandas')
+    news_df = pd.DataFrame(raw_news_data)
+    news_df['tt'] = pd.to_datetime(news_df['tt'])
+
+    if pretty:
+        logger.info('--Prettifying data')
+        col_map = {
+            's': 'source',
+            'u': 'url',
+            't': 'title',
+            'sp': 'blurb',
+            'tt': 'datetime',
+            'd': 'age'
+        }
+        news_df.rename(columns=col_map)
+
+    logger.debug(news_df)
+    return news_df
 
 RH_NEWS = 'https://api.robinhood.com/midlands/news/'
 PAGE_HARDBREAK = 50
