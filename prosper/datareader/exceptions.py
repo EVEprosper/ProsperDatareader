@@ -16,6 +16,9 @@ class PaginationWarning(DatareaderWarning):
 class UtilsNLTKDownloadFailed(DatareaderException):
     """Unable to download lexicon from NLTK corpus"""
     pass
+class VaderClassificationException(DatareaderException):
+    """Invalid options for mapping vader->pandas"""
+    pass
 
 ############
 ## Stocks ##

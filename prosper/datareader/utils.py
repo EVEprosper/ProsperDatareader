@@ -6,7 +6,7 @@ NLTK_IMPORT = True
 try:
     from nltk import download
     import nltk.sentiment as sentiment
-except ImportError:
+except ImportError: #pragma: no cover
     NLTK_IMPORT = False
 import pandas as pd
 
@@ -61,6 +61,11 @@ def _get_analyzer():
 
     """
     if 'vader_lexicon' not in INSTALLED_PACKAGES:
+        if _TESTMODE:
+            warnings.warn(
+                'Package missing',
+                exceptions.DatareaderWarning
+            )
         _validate_install('vader_lexicon')
 
     return sentiment.vader.SentimentIntensityAnalyzer()
@@ -84,6 +89,8 @@ def map_vader_sentiment(
 
     """
     analyzer = _get_analyzer()
+    if len(column_names) != 4:
+        raise exceptions.VaderClassificationException()
     def map_func(grade_str):
         """actual map function that does the heavy lifting
 
@@ -115,3 +122,23 @@ def map_vader_sentiment(
     )
 
     return new_df
+
+def vader_sentiment(
+        full_dataframe,
+        grading_column_name,
+        vader_columns=COLUMN_NAMES,
+        logger=G_LOGGER
+):
+    """apply vader_sentiment analysis to dataframe
+
+    Args:
+        full_dataframe (:obj:`pandas.DataFrame`): parent dataframe to apply analysis to
+        grading_column_name (str): column with the data to grade
+        vader_columns (:obj:`list`. optional): names to map vader results to ['neu', 'pos', 'compound', 'neg']
+        logger (:obj:`logging.logger`, optional): logging handle
+
+    Returns;
+        (:obj:`pandas.DataFrame`): updated dataframe with vader sentiment
+
+    """
+    pass
