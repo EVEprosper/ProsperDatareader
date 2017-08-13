@@ -97,39 +97,11 @@ def fetch_company_news_google(
 
     return articles_list
 
-GOOGLE_MARKET_NEWS = 'https://www.google.com/finance/market_news'
-def fetch_market_news_google(
-        keep_google_links=False,
-        uri=GOOGLE_MARKET_NEWS,
-        logger=LOGGER
-):
-    """Fetches generic market news for the day
-
-    Note:
-        Wrapped function for `fetch_company_news_google` on a different endpoint
-
-
-    Args:
-        keep_google_links (bool, optional): save the google traceback information
-        uri (str, optional): endpoint URI for `market_news`
-        logger (:obj:`logging.logger`, optional): logging handle
-    Returns:
-        (:obj:`list`): processed news results, JSONable
-
-    """
-    logger.info('--wrapping `fetch_company_news_google() with uri=%s', uri)
-
-    return fetch_company_news_google(
-        '',
-        keep_google_links=keep_google_links,
-        uri=uri,
-        logger=logger
-    )
-
 def company_news_google(
         ticker,
         pretty=True,
         keep_google_links=False,
+        _source_override=GOOGLE_COMPANY_NEWS,
         logger=LOGGER
 ):
     """get news items from google for a given company
@@ -138,6 +110,7 @@ def company_news_google(
         ticker (str): ticker to look up
         pretty (bool, optional): human-readable column names
         keep_google_links (bool, optional): include google metadata links
+        _source_override (str, optional): source URI; used to switch feeds
         logger (:obj:`logging.logger`, optional): logging handle
 
     Returns:
@@ -148,6 +121,7 @@ def company_news_google(
     raw_news_data = fetch_company_news_google(
         ticker,
         keep_google_links=keep_google_links,
+        uri=_source_override,
         logger=logger
     )
 
@@ -167,6 +141,35 @@ def company_news_google(
         }
         news_df.rename(columns=col_map)
 
+    logger.debug(news_df)
+    return news_df
+
+GOOGLE_MARKET_NEWS = 'https://www.google.com/finance/market_news'
+def market_news_google(
+        pretty=True,
+        keep_google_links=False,
+        _source_override=GOOGLE_MARKET_NEWS,
+        logger=LOGGER
+):
+    """Get all of today's general finance news from Google
+
+    Args:
+        pretty (bool, optional): human-readable column names
+        keep_google_links (bool, optional): include google metadata links
+        _source_override (str, optional): source URI; used to switch feeds
+        logger (:obj:`logging.logger`, optional): logging handle
+
+    Returns:
+        (:obj:`pandas.DataFrame`): tabularized data for news
+
+    """
+    logger.info('Fetching general finance news -- GOOGLE')
+    news_df = company_news_google(
+        '',
+        keep_google_links=keep_google_links,
+        _source_override=_source_override,
+        logger=logger
+    )
     logger.debug(news_df)
     return news_df
 
