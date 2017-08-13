@@ -11,6 +11,12 @@ import nltk
 import prosper.datareader.utils as utils
 import prosper.datareader.exceptions as exceptions
 
+DEMO_DATA = [
+    {'text': 'I like hotdogs', 'etc': 4},
+    {'text': 'Sandwiches are bad', 'etc': 5},
+    {'text': 'Libraries have books', 'etc': 6}
+]
+
 class TestNLTKInstall:
     """validate NLTK install checker works as expected"""
     fake_lexicon = 'fake_lexicon_name'
@@ -52,7 +58,6 @@ class TestNLTKInstall:
 def test_get_analyzer():
     """validate _get_analyzer() behavior"""
     analyzer = utils._get_analyzer()
-    print(type(analyzer))
     assert isinstance(analyzer, nltk.sentiment.vader.SentimentIntensityAnalyzer)
 
 def test_get_analyzer_no_lexicon():
@@ -69,13 +74,7 @@ def test_get_analyzer_no_lexicon():
 
 def test_map_vader_sentiment():
     """validate map_vader_sentiment() behavior"""
-    demo_data = [
-        {'text': 'I like hotdogs'},
-        {'text': 'Sandwiches are bad'},
-        {'text': 'Libraries have books'}
-    ]
-
-    demo_df = pd.DataFrame(demo_data)
+    demo_df = pd.DataFrame(DEMO_DATA)
     graded_df = utils.map_vader_sentiment(demo_df['text'])
 
     assert graded_df['compound'].loc[0] > 0
@@ -96,3 +95,17 @@ def test_map_vader_sentiment():
             column_names=['not', 'enough', 'keys']
         )
 
+def test_prod_vader_sentiment():
+    """validate vader_sentiment()"""
+    demo_df = pd.DataFrame(DEMO_DATA)
+
+    vader_df = utils.vader_sentiment(demo_df, 'text')
+
+    expected_columns = ['etc', 'text']
+    expected_columns.extend(utils.COLUMN_NAMES)
+
+    assert expected_columns == list(vader_df.columns.values)
+
+    assert vader_df['compound'].loc[0] > 0
+    assert vader_df['compound'].loc[1] < 0
+    assert vader_df['compound'].loc[2] == 0

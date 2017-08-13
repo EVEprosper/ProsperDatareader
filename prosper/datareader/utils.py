@@ -77,9 +77,6 @@ def map_vader_sentiment(
 ):
     """apply vader sentiment to an entire column and update the original source
 
-    Note:
-        relies on `pandas.series.map()` functionality
-
     Args:
         string_series (:obj:`pandas.Series`): column to grade strings from
         column_names (:obj:`list`, optional): column names for vader results
@@ -141,4 +138,19 @@ def vader_sentiment(
         (:obj:`pandas.DataFrame`): updated dataframe with vader sentiment
 
     """
-    pass
+    logger.info('applying vader sentiment analysis to `%s`', grading_column_name)
+
+    logger.info('--applying vader_lexicon')
+    vader_df = map_vader_sentiment(
+        full_dataframe[grading_column_name],
+        column_names=vader_columns
+    )
+
+    logger.info('--merging results into original dataframe')
+    joined_df = full_dataframe.merge(
+        vader_df,
+        how='left',
+        on=grading_column_name
+    )
+
+    return joined_df
