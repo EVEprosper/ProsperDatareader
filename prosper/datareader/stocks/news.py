@@ -7,6 +7,7 @@ import warnings
 import demjson
 import requests
 from six.moves.html_parser import HTMLParser
+import pandas as pd
 
 from prosper.datareader.config import LOGGER as G_LOGGER
 import prosper.datareader.exceptions as exceptions
@@ -61,7 +62,6 @@ def validate_google_response(response, tag_primary=True):
 GOOGLE_COMPANY_NEWS = 'https://www.google.com/finance/company_news'
 def fetch_company_news_google(
         ticker,
-        keep_google_links=False,
         uri=GOOGLE_COMPANY_NEWS,
         logger=LOGGER
 ):
@@ -69,7 +69,6 @@ def fetch_company_news_google(
 
     Args:
         ticker (str): ticker for company
-        keep_google_links (bool, optional): save the google traceback information
         uri (str, optional): endpoint URI for `company_news`
         logger (:obj:`logging.logger`, optional): logging handle
 
@@ -173,7 +172,6 @@ def fetch_company_news_rh(
 def company_news_google(
         ticker,
         pretty=True,
-        keep_google_links=False,
         _source_override=GOOGLE_COMPANY_NEWS,
         logger=LOGGER
 ):
@@ -193,7 +191,6 @@ def company_news_google(
     logger.info('Fetching company raw data feed for `%s` -- GOOGLE', ticker)
     raw_news_data = fetch_company_news_google(
         ticker,
-        keep_google_links=keep_google_links,
         uri=_source_override,
         logger=logger
     )
@@ -212,7 +209,7 @@ def company_news_google(
             'tt': 'datetime',
             'd': 'age'
         }
-        news_df.rename(columns=col_map)
+        news_df = news_df.rename(columns=col_map)
 
     logger.debug(news_df)
     return news_df
@@ -220,7 +217,6 @@ def company_news_google(
 GOOGLE_MARKET_NEWS = 'https://www.google.com/finance/market_news'
 def market_news_google(
         pretty=True,
-        keep_google_links=False,
         _source_override=GOOGLE_MARKET_NEWS,
         logger=LOGGER
 ):
@@ -228,7 +224,6 @@ def market_news_google(
 
     Args:
         pretty (bool, optional): human-readable column names
-        keep_google_links (bool, optional): include google metadata links
         _source_override (str, optional): source URI; used to switch feeds
         logger (:obj:`logging.logger`, optional): logging handle
 
@@ -239,7 +234,7 @@ def market_news_google(
     logger.info('Fetching general finance news -- GOOGLE')
     news_df = company_news_google(
         '',
-        keep_google_links=keep_google_links,
+        pretty=pretty,
         _source_override=_source_override,
         logger=logger
     )
