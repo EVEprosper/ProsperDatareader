@@ -110,8 +110,9 @@ html_theme_options = {
     'github_user': 'eveprosper',
     'github_repo': 'prosperdatareader',
     'github_banner': True,
-    #'donate_url': 'https://www.patreon.com/eveprosper',
 }
+
+html_favicon = "static/prosper.ico"
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
