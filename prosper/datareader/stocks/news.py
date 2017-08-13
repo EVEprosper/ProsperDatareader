@@ -15,6 +15,12 @@ LOGGER = G_LOGGER
 HERE = path.abspath(path.dirname(__file__))
 #PARSER = HTMLParser()
 
+__all__ = [
+    'company_news_google',
+    'market_news_google',
+    'company_news_rh'
+]
+
 def validate_google_response(response, tag_primary=True):
     """crunches down google response for return
 
@@ -49,6 +55,9 @@ def validate_google_response(response, tag_primary=True):
 
     return article_list
 
+##############
+## Fetchers ##
+##############
 GOOGLE_COMPANY_NEWS = 'https://www.google.com/finance/company_news'
 def fetch_company_news_google(
         ticker,
@@ -96,82 +105,6 @@ def fetch_company_news_google(
     articles_list = validate_google_response(raw_articles)
 
     return articles_list
-
-def company_news_google(
-        ticker,
-        pretty=True,
-        keep_google_links=False,
-        _source_override=GOOGLE_COMPANY_NEWS,
-        logger=LOGGER
-):
-    """get news items from google for a given company
-
-    Args:
-        ticker (str): ticker to look up
-        pretty (bool, optional): human-readable column names
-        keep_google_links (bool, optional): include google metadata links
-        _source_override (str, optional): source URI; used to switch feeds
-        logger (:obj:`logging.logger`, optional): logging handle
-
-    Returns:
-        (:obj:`pandas.DataFrame`): tabularized data for news
-
-    """
-    logger.info('Fetching company raw data feed for `%s` -- GOOGLE', ticker)
-    raw_news_data = fetch_company_news_google(
-        ticker,
-        keep_google_links=keep_google_links,
-        uri=_source_override,
-        logger=logger
-    )
-
-    logger.info('--Pushing data into pandas')
-    news_df = pd.DataFrame(raw_news_data)
-    news_df['tt'] = pd.to_datetime(news_df['tt'])
-
-    if pretty:
-        logger.info('--Prettifying data')
-        col_map = {
-            's': 'source',
-            'u': 'url',
-            't': 'title',
-            'sp': 'blurb',
-            'tt': 'datetime',
-            'd': 'age'
-        }
-        news_df.rename(columns=col_map)
-
-    logger.debug(news_df)
-    return news_df
-
-GOOGLE_MARKET_NEWS = 'https://www.google.com/finance/market_news'
-def market_news_google(
-        pretty=True,
-        keep_google_links=False,
-        _source_override=GOOGLE_MARKET_NEWS,
-        logger=LOGGER
-):
-    """Get all of today's general finance news from Google
-
-    Args:
-        pretty (bool, optional): human-readable column names
-        keep_google_links (bool, optional): include google metadata links
-        _source_override (str, optional): source URI; used to switch feeds
-        logger (:obj:`logging.logger`, optional): logging handle
-
-    Returns:
-        (:obj:`pandas.DataFrame`): tabularized data for news
-
-    """
-    logger.info('Fetching general finance news -- GOOGLE')
-    news_df = company_news_google(
-        '',
-        keep_google_links=keep_google_links,
-        _source_override=_source_override,
-        logger=logger
-    )
-    logger.debug(news_df)
-    return news_df
 
 RH_NEWS = 'https://api.robinhood.com/midlands/news/'
 PAGE_HARDBREAK = 50
@@ -233,3 +166,112 @@ def fetch_company_news_rh(
             break
 
     return articles_list
+
+#######################
+## __all__ utilities ##
+#######################
+def company_news_google(
+        ticker,
+        pretty=True,
+        keep_google_links=False,
+        _source_override=GOOGLE_COMPANY_NEWS,
+        logger=LOGGER
+):
+    """get news items from Google for a given company
+
+    Args:
+        ticker (str): ticker to look up
+        pretty (bool, optional): human-readable column names
+        keep_google_links (bool, optional): include google metadata links
+        _source_override (str, optional): source URI; used to switch feeds
+        logger (:obj:`logging.logger`, optional): logging handle
+
+    Returns:
+        (:obj:`pandas.DataFrame`): tabularized data for news
+
+    """
+    logger.info('Fetching company raw data feed for `%s` -- GOOGLE', ticker)
+    raw_news_data = fetch_company_news_google(
+        ticker,
+        keep_google_links=keep_google_links,
+        uri=_source_override,
+        logger=logger
+    )
+
+    logger.info('--Pushing data into Pandas')
+    news_df = pd.DataFrame(raw_news_data)
+    news_df['tt'] = pd.to_datetime(news_df['tt'])
+
+    if pretty:
+        logger.info('--Prettifying data')
+        col_map = {
+            's': 'source',
+            'u': 'url',
+            't': 'title',
+            'sp': 'blurb',
+            'tt': 'datetime',
+            'd': 'age'
+        }
+        news_df.rename(columns=col_map)
+
+    logger.debug(news_df)
+    return news_df
+
+GOOGLE_MARKET_NEWS = 'https://www.google.com/finance/market_news'
+def market_news_google(
+        pretty=True,
+        keep_google_links=False,
+        _source_override=GOOGLE_MARKET_NEWS,
+        logger=LOGGER
+):
+    """Get all of today's general finance news from Google
+
+    Args:
+        pretty (bool, optional): human-readable column names
+        keep_google_links (bool, optional): include google metadata links
+        _source_override (str, optional): source URI; used to switch feeds
+        logger (:obj:`logging.logger`, optional): logging handle
+
+    Returns:
+        (:obj:`pandas.DataFrame`): tabularized data for news
+
+    """
+    logger.info('Fetching general finance news -- GOOGLE')
+    news_df = company_news_google(
+        '',
+        keep_google_links=keep_google_links,
+        _source_override=_source_override,
+        logger=logger
+    )
+    logger.debug(news_df)
+    return news_df
+
+def company_news_rh(
+        ticker,
+        page_limit=PAGE_HARDBREAK,
+        logger=LOGGER
+):
+    """get news items from Robinhood for a given company
+
+    Args:
+        ticker (str): stock ticker for desired company
+        page_limit (int, optional): how many pages to allow in call
+        logger (:obj:`logging.logger`, optional): logging handle
+
+    Returns:
+        (:obj:`pandas.DataFrame`): tabularized data for news
+
+    """
+    logger.info('Fetching company raw data feed for `%s` -- ROBINHOOD', ticker)
+    raw_news_data = fetch_company_news_rh(
+        ticker.upper(),
+        page_limit=page_limit,
+        logger=logger
+    )
+
+    logger.info('--Pushing data into Pandas')
+    news_df = pd.DataFrame(raw_news_data)
+    news_df['published_at'] = pd.to_datetime(news_df['published_at'])
+
+    logger.debug(news_df)
+    return news_df

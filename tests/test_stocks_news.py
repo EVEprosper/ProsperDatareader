@@ -48,27 +48,46 @@ class TestValidateGoogleResponse:
         )
 
 class TestMarketNewsGoogle:
-    config = helpers.CONFIG
+    """valdiate behavior on market_news_google()"""
+    @pytest.mark.long()
+    def test_fetch_market_news_raw(self):
+        """validate data coming in matches expected shape"""
+        pass
 
-    @pytest.mark.long
-    def test_default_happypath(self):
-        """validate default behavior -- minimum args"""
-        news_list = news.fetch_market_news_google()
+    def test_market_news_google_happypath(self):
+        """validate default behavior"""
+        pass
 
-        assert isinstance(news_list, list)
+    def test_market_news_google_no_pretty(self):
+        """validate not-pretty return works as expected"""
+        pass
 
-        sample_article = news_list[0]
-        assert isinstance(sample_article, dict)
-        assert 'primary' in sample_article
-        assert 'usg' in sample_article
-        assert 'sru' in sample_article
+    def test_market_news_google_keep_google_links(self):
+        """validate expected output with keep_google_links"""
+        pass
 
-        for article in news_list:
-            assert isinstance(article, dict)
-            helpers.validate_schema(
-                article,
-                path.join('stocks', 'google_company_news.schema')
-            )
+#class TestMarketNewsGoogle:
+#    config = helpers.CONFIG
+#
+#    @pytest.mark.long
+#    def test_default_happypath(self):
+#        """validate default behavior -- minimum args"""
+#        news_list = news.fetch_market_news_google()
+#
+#        assert isinstance(news_list, list)
+#
+#        sample_article = news_list[0]
+#        assert isinstance(sample_article, dict)
+#        assert 'primary' in sample_article
+#        assert 'usg' in sample_article
+#        assert 'sru' in sample_article
+#
+#        for article in news_list:
+#            assert isinstance(article, dict)
+#            helpers.validate_schema(
+#                article,
+#                path.join('stocks', 'google_company_news.schema')
+#            )
 
 class TestCompanyNewsGoogle:
     """validate behavior for news.fetch_company_news_google()"""
@@ -99,6 +118,23 @@ class TestCompanyNewsGoogle:
         """validate behavior -- incorrect ticker"""
         with pytest.raises(requests.exceptions.HTTPError):
             news_list = news.fetch_company_news_google(self.bad_ticker)
+
+    def test_company_news_happypath(self):
+        """make sure pandas wrapper works as expected"""
+        pass
+
+    def test_company_news_no_pretty(self):
+        """validate not-pretty return works as expected"""
+        pass
+
+    def test_company_news_google_links(self):
+        """validate expected output with keep_google_links"""
+        pass
+
+    @pytest.mark.xfail
+    def test_vader_application(self):
+        """make sure use-case for news + vader works"""
+        pass
 
 class TestCompanyNewsRobinhood:
     """validate behavior for news.fetch_company_news_rh()"""
@@ -144,3 +180,9 @@ class TestCompanyNewsRobinhood:
             news_list = news.fetch_company_news_rh(self.good_ticker)
 
         news.PAGE_HARDBREAK = default_page_hardbreak
+
+
+    @pytest.mark.xfail
+    def test_vader_application(self):
+        """make sure use-case for news + vader works"""
+        pass
