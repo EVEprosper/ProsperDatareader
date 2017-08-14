@@ -147,7 +147,7 @@ def fetch_instruments_rh(
 
     return data
 
-def market_is_open(market_uri, logger=LOGGER):  #pragma: no cover
+def market_is_open(market_uri, logger=LOGGER):
     """checks if market is open right now
 
     Args:

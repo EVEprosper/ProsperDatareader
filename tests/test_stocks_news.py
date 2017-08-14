@@ -130,20 +130,48 @@ class TestCompanyNewsGoogle:
 
     def test_company_news_happypath(self):
         """make sure pandas wrapper works as expected"""
-        pass
+        all_news_df = news.company_news_google(self.good_ticker)
+
+        assert isinstance(all_news_df, pandas.DataFrame)
+
+        expected_cols = [
+            'age', 'primary', 'source', 'blurb',
+            'sru', 'title', 'datetime', 'url', 'usg'
+        ]
+
+        assert list(all_news_df.columns.values) == expected_cols
+
 
     def test_company_news_no_pretty(self):
         """validate not-pretty return works as expected"""
-        pass
+        all_news_df = news.company_news_google(
+            self.good_ticker,
+            pretty=False
+        )
 
-    def test_company_news_google_links(self):
-        """validate expected output with keep_google_links"""
-        pass
+        assert isinstance(all_news_df, pandas.DataFrame)
 
-    @pytest.mark.xfail
+        expected_cols = [
+            'd', 'primary', 's', 'sp', 'sru', 't', 'tt', 'u', 'usg'
+        ]
+
+        assert list(all_news_df.columns.values) == expected_cols
+
+    @pytest.mark.long
     def test_vader_application(self):
         """make sure use-case for news + vader works"""
-        pass
+        import prosper.datareader.utils as utils
+        all_news_df = news.company_news_google(self.good_ticker)
+
+        graded_news = utils.vader_sentiment(all_news_df, 'title')
+
+        expected_cols = [
+            'age', 'primary', 'source', 'blurb',
+            'sru', 'title', 'datetime', 'url', 'usg',
+            'neu', 'pos', 'compound', 'neg'
+        ]
+
+        assert list(graded_news.columns.values) == expected_cols
 
 class TestCompanyNewsRobinhood:
     """validate behavior for news.fetch_company_news_rh()"""
@@ -191,7 +219,30 @@ class TestCompanyNewsRobinhood:
         news.PAGE_HARDBREAK = default_page_hardbreak
 
 
-    @pytest.mark.xfail
+    def test_company_news_rh_happypath(self):
+        """make sure production endpoint works as expected"""
+        all_news_df = news.company_news_rh(self.good_ticker)
+
+        assert isinstance(all_news_df, pandas.DataFrame)
+
+        expected_cols = [
+            'api_source', 'author', 'instrument', 'published_at',
+            'source', 'summary', 'title', 'updated_at', 'url'
+        ]
+        assert list(all_news_df.columns.values) == expected_cols
+
+    @pytest.mark.long
     def test_vader_application(self):
         """make sure use-case for news + vader works"""
-        pass
+        import prosper.datareader.utils as utils
+        all_news_df = news.company_news_rh(self.good_ticker)
+
+        graded_news = utils.vader_sentiment(all_news_df, 'title')
+
+        expected_cols = [
+            'api_source', 'author', 'instrument', 'published_at',
+            'source', 'summary', 'title', 'updated_at', 'url',
+            'neu', 'pos', 'compound', 'neg'
+        ]
+
+        assert list(graded_news.columns.values) == expected_cols
