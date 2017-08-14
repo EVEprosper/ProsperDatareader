@@ -30,6 +30,10 @@ Notes
 Supported Feeds
 ===============
 
+**Utils**: General utilities for additional insights 
+
+- `vader_sentiment`_: grade text blobs with NLTK
+
 **Stocks**: meant as companion APIs to `pandas-datareader`_
 
 - Company News Feeds: Google, Robinhood
@@ -37,6 +41,7 @@ Supported Feeds
 - Price Quote: Robinhood
 
 .. _pandas-datareader: https://pandas-datareader.readthedocs.io/en/latest/index.html
+.. _vader_sentiment: http://www.nltk.org/api/nltk.sentiment.html#module-nltk.sentiment.vader
 
 .. |Show Logo| image:: http://dl.eveprosper.com/podcast/logo-colour-17_sm2.png
    :target: http://eveprosper.com
