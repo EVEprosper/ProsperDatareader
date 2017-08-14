@@ -34,8 +34,7 @@ Index
 
    getting_started.rst
    utils_help.rst
-   stocks_help.rst   
-   contribute_checklist.rst
+   stocks_help.rst
 
 Indices and tables
 ==================
