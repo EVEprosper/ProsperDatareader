@@ -9,10 +9,13 @@
         "summary": {"type":"string"},
         "api_source": {"type":"string", "enum":["yahoo_finance", "seeking_alpha"]},
         "updated_at": {"type":"string"},
-        "instrument": {"type":"string", "format":"uri"}
+        "instrument": {"type":"string", "format":"uri"},
+        "num_clicks": {"type":"integer"},
+        "uuid": {"type":"null"}
     },
     "requires": [
         "url", "title", "source", "published_at", "author", 
-        "summary", "api_source", "updated_at", "instrument"],
+        "summary", "api_source", "updated_at", "instrument", 
+        "num_clicks", "uuid"],
     "additionalProperties": false
 }

@@ -177,6 +177,10 @@ class TestCompanyNewsRobinhood:
     """validate behavior for news.fetch_company_news_rh()"""
     good_ticker = helpers.CONFIG.get('STOCKS', 'good_ticker')
     bad_ticker = helpers.CONFIG.get('STOCKS', 'bad_ticker')
+    expected_news_cols = [
+        'api_source', 'author', 'instrument', 'num_clicks', 'published_at',
+        'source', 'summary', 'title', 'updated_at', 'url', 'uuid'
+    ]
 
     @pytest.mark.long
     def test_default_happypath(self):
@@ -225,11 +229,7 @@ class TestCompanyNewsRobinhood:
 
         assert isinstance(all_news_df, pandas.DataFrame)
 
-        expected_cols = [
-            'api_source', 'author', 'instrument', 'published_at',
-            'source', 'summary', 'title', 'updated_at', 'url'
-        ]
-        assert list(all_news_df.columns.values) == expected_cols
+        assert list(all_news_df.columns.values) == self.expected_news_cols
 
     @pytest.mark.long
     def test_vader_application(self):
@@ -239,10 +239,7 @@ class TestCompanyNewsRobinhood:
 
         graded_news = utils.vader_sentiment(all_news_df, 'title')
 
-        expected_cols = [
-            'api_source', 'author', 'instrument', 'published_at',
-            'source', 'summary', 'title', 'updated_at', 'url',
-            'neu', 'pos', 'compound', 'neg'
-        ]
+        expected_cols = self.expected_news_cols
+        expected_cols.extend(['neu', 'pos', 'compound', 'neg'])
 
         assert list(graded_news.columns.values) == expected_cols
