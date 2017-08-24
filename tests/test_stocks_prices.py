@@ -160,7 +160,7 @@ class TestGetQuoteRH:
             'maintenance_ratio', 'margin_initial_ratio', 'market', 'market_cap',
             'min_tick_size', 'name', 'num_employees', 'open', 'pe_ratio',
             'previous_close', 'previous_close_date', 'quote', 'simple_name',
-            'splits', 'state', 'symbol', 'tradeable', 'trading_halted', 'type',
+            'splits', 'state', 'symbol', 'tradeable', 'tradability', 'trading_halted', 'type',
             'updated_at', 'url', 'volume', 'year_founded', 'pct_change'
         ]
         assert set(list(no_filter.columns.values)) == set(all_keys)
