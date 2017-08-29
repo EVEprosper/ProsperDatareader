@@ -39,7 +39,7 @@ def get_supported_symbols(
     return data[data_key]
 
 
-def supported_commodity(
+def supported_commodities(
         force_refresh=False,
         logger=LOGGER
 ):
@@ -117,8 +117,8 @@ def get_symbol(
 
     symbol = symbols_df.query(
         'commodity==\'{commodity}\' & currency==\'{currency}\''.format(
-            commodity=commodity_ticker,
-            currency=currency_ticker
+            commodity=commodity_ticker.upper(),
+            currency=currency_ticker.upper()
         ))
 
     if symbol.empty:

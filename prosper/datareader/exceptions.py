@@ -32,3 +32,13 @@ class StocksPricesException(StocksException):
 class StocksNewsException(StocksException):
     """base class for Datareader.stocks.prices"""
     pass
+
+###########
+## Coins ##
+###########
+class CoinsException(DatareaderException):
+    """base class for Datareader.coins"""
+    pass
+class SymbolNotSupported(CoinsException):
+    """symbol not supported by API source"""
+    pass
