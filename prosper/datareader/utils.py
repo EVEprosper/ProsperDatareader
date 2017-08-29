@@ -9,11 +9,14 @@ try:
 except ImportError: #pragma: no cover
     NLTK_IMPORT = False
 import pandas as pd
+import tinydb
 
 from prosper.datareader.config import LOGGER as G_LOGGER
 import prosper.datareader.exceptions as exceptions
 
+HERE = path.abspath(path.dirname(__file__))
 _TESTMODE = False
+
 INSTALLED_PACKAGES = []
 def _validate_install(
         package_name,
@@ -154,3 +157,20 @@ def vader_sentiment(
     )
 
     return joined_df
+
+def check_cache(
+        cache_name,
+        cache_age=3600,
+        cache_filepath=HERE,
+        logger=G_LOGGER
+):
+    pass
+
+def write_cache(
+        cache_name,
+        cache_filepath=HERE,
+        logger=G_LOGGER
+):
+    pass
+
+
