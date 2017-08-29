@@ -42,3 +42,6 @@ class CoinsException(DatareaderException):
 class SymbolNotSupported(CoinsException):
     """symbol not supported by API source"""
     pass
+class TickerNotFound(CoinsException):
+    """unable to find more information about requested ticker"""
+    pass

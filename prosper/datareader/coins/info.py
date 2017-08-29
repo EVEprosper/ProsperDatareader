@@ -127,3 +127,32 @@ def get_symbol(
     #TODO: update cache
 
     return symbol['symbol'].iloc[0]
+
+def get_ticker_info(
+        ticker,
+        force_refresh=False,
+        logger=LOGGER
+):
+    """reverse lookup, get more info about a requested ticker
+
+    Args:
+        ticker (str): info ticker for coin (ex: BTCUSD)
+        force_refresh (bool, optional): ignore local cacne and fetch directly from API
+        logger (:obj:`logging.logger`, optional): logging handle
+
+    Returns:
+        (:obj:`dict`): hitBTC info about requested ticker
+
+    """
+    #TODO: check cache
+    if force_refresh:
+        logger.info('--Fetching symbol list from API')
+        data = get_supported_symbols()
+
+    ## Skip pandas, vanilla list search ok here
+    for ticker_info in data:
+        if ticker_info['symbol'] == ticker.upper():
+            return ticker_info
+
+    #TODO: update cache
+    raise exceptions.TickerNotFound()

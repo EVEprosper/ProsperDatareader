@@ -90,3 +90,24 @@ class TestGetSymbol:
                 'BUTTS',
                 force_refresh=True #TODO: remove
             )
+
+class TestGetTickerInfo:
+    """tests info.get_ticker_info()"""
+    good_symbol = 'BTCUSD'
+
+    def test_get_ticker_info_happypath_nocache(self):
+        """validate expected behavior for get_ticker_info()"""
+        symbol_info = info.get_ticker_info(
+            self.good_symbol,
+            force_refresh=True
+        )
+        assert symbol_info['symbol'] == self.good_symbol
+        assert symbol_info['currency'] == 'USD'
+
+    def test_get_ticker_info_bad_symbol(self):
+        """validate exception case when bad symbol inputs requested"""
+        with pytest.raises(exceptions.TickerNotFound):
+            bad_symbol = info.get_ticker_info(
+                'BUTTS',
+                force_refresh=True #TODO: remove
+            )
