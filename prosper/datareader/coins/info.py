@@ -1,8 +1,7 @@
-"""datareader.coins.info.py: tools for fetching stock news"""
+"""datareader.coins.info.py: tools for fetching cryptocoin metadata"""
 from datetime import datetime
 import itertools
 from os import path
-import warnings
 
 import requests
 import pandas as pd
@@ -12,6 +11,10 @@ import prosper.datareader.exceptions as exceptions
 
 LOGGER = G_LOGGER
 HERE = path.abspath(path.dirname(__file__))
+
+__all__ = (
+    'get_symbol', 'get_ticker_info', 'supported_commodities', 'supported_currencies'
+)
 
 SYMBOLS_URI = 'http://api.hitbtc.com/api/1/public/symbols'
 def get_supported_symbols(

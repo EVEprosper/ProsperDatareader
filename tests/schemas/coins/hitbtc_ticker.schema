@@ -1,0 +1,19 @@
+{
+	"type": "object",
+	"properties":{
+		"ask": {"type":"string"},
+		"bid": {"type":"string"},
+		"last": {"type":"string"},
+		"low": {"type":"string"},
+		"high": {"type":"string"},
+		"open": {"type":"string"},
+		"volume": {"type":"string"},
+		"volume_quote": {"type":"string"},
+		"timestamp": {"type":"integer"}
+	},
+	"required": [
+		"ask", "bid", "last", "low", "high", "open", "volume", 
+		"volume_quote", "timestamp"
+	],
+	"additionalProperties": false
+}
