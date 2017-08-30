@@ -47,3 +47,7 @@ get_ticker_info()
     ``ticker_info = coins.info.get_ticker_info('TICKER')``
 
 If working backwards from a ticker, this function returns the original `hitBTC symbols`_ data.  
+
+.. _pandas-datareader: https://pandas-datareader.readthedocs.io/en/latest/index.html
+.. _hitBTC: https://hitbtc.com/
+.. _hitBTC symbols: https://hitbtc.com/api#symbols
