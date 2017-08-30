@@ -9,7 +9,8 @@
 		"open": {"type":"string"},
 		"volume": {"type":"string"},
 		"volume_quote": {"type":"string"},
-		"timestamp": {"type":"integer"}
+		"timestamp": {"type":"integer"},
+		"symbol": {"type":"string"}
 	},
 	"required": [
 		"ask", "bid", "last", "low", "high", "open", "volume", 

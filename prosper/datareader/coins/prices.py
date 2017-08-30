@@ -12,7 +12,29 @@ import prosper.datareader.exceptions as exceptions
 LOGGER = G_LOGGER
 HERE = path.abspath(path.dirname(__file__))
 
-COIN_TICKER_URI = 'http://api.hitbtc.com/api/1/public/{ticker}/ticker'
+def _listify(
+        data,
+        key_name
+):
+    """recast data from dict to list, compress keys into sub-dict
+
+    Args:
+        data (:obj:`dict`): data to transform (dict(dict))
+        key_name (str): name to recast key to
+
+    Returns:
+        (:obj:`list`): fixed data
+
+    """
+    listified_data = []
+    for key, value in data.items():
+        row = dict(value)
+        row[key_name] = key
+        listified_data.append(row)
+
+    return listified_data
+
+COIN_TICKER_URI = 'http://api.hitbtc.com/api/1/public/{symbol}/ticker'
 def get_ticker(
         symbol,
         uri=COIN_TICKER_URI
@@ -30,6 +52,17 @@ def get_ticker(
         (:obj:`dict`): ticker data for desired coin
 
     """
-    req = requests.get(uri.format(ticker=symbol))
+    full_uri = ''
+    if not symbol:
+        full_uri = uri.replace(r'{symbol}/', '')
+    else:
+        full_uri = uri.format(symbol=symbol)
+
+    req = requests.get(full_uri)
     req.raise_for_status()
-    return req.json()
+
+    data = req.json()
+    if not symbol:
+        data = _listify(data, 'symbol')
+
+    return data
