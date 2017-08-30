@@ -10,6 +10,24 @@ import pandas
 import prosper.datareader.coins.prices as prices
 import prosper.datareader.exceptions as exceptions
 
+def test_listify():
+    """validate expected behavior for _listify()"""
+    demo_data = {
+        'key1': {
+            'val1': 1,
+            'val2': 2
+        },
+        'key2': {
+            'val1': 10,
+            'val2': 20
+        }
+    }
+    fixed_data = prices._listify(demo_data, 'key')
+    assert isinstance(fixed_data, list)
+    expected_keys = ['val1', 'val2', 'key']
+    for row in fixed_data:
+        assert list(row.keys()) == expected_keys
+
 def test_get_ticker_single():
     """validate get_ticker() returns valid schema"""
     data = prices.get_ticker('BTCUSD')
