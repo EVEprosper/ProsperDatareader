@@ -41,58 +41,23 @@ def get_supported_symbols_hitbtc(
 
     return data[data_key]
 
-def supported_commodities(
-        force_refresh=False,
-        logger=LOGGER
+def supported_symbol_info(
+        key_name
 ):
-    """list supported symbols
+    """find unique values for key_name in symbol feed
 
     Args:
-        force_refresh (bool, optional): ignore local cache and fetch directly from API
-        logger (:obj:`logging.logger`, optional): logging handle
+        key_name (str): name of key to search
 
     Returns:
-        (:obj:`list`): list of supported crypto coins
+        (:obj:`list`): list of unique values
 
     """
+    symbols_df = pd.DataFrame(get_supported_symbols_hitbtc())
 
-    #TODO: check cache
-    if force_refresh:
-        logger.info('--Fetching symbol list from API')
-        symbols_df = pd.DataFrame(get_supported_symbols_hitbtc())
+    unique_list = list(symbols_df[key_name].unique())
 
-
-    commodities = list(symbols_df['commodity'].unique())
-
-    #TODO: save cache
-
-    return commodities
-
-def supported_currencies(
-        force_refresh=False,
-        logger=LOGGER
-):
-    """list supported currency conversions
-
-    Args:
-        force_refresh (bool, optional): ignore local cache and fetch directly from API
-        logger (:obj:`logging.logger`, optional): logging handle
-
-    Returns:
-        (:obj:`list`): list of supported currency conversions
-
-    """
-    #TODO: check cache
-    if force_refresh:
-        logger.info('--Fetching symbol list from API')
-        symbols_df = pd.DataFrame(get_supported_symbols_hitbtc())
-
-
-    currencies = list(symbols_df['currency'].unique())
-
-    #TODO: save cache
-
-    return currencies
+    return unique_list
 
 def get_symbol(
         commodity_ticker,

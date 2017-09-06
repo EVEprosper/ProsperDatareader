@@ -11,6 +11,7 @@ import numpy
 
 import prosper.datareader.stocks.prices as prices
 import prosper.datareader.exceptions as exceptions
+import prosper.datareader.config as config
 
 class TestExpectedSchemas:
     good_ticker = helpers.CONFIG.get('STOCKS', 'good_ticker')
@@ -68,24 +69,24 @@ def test_ticker_list_to_str():
     """make sure ticker_list_to_str returns as expected"""
     no_caps_pattern = re.compile('[a-z]+')
 
-    single_stock = prices.ticker_list_to_str('MU')
+    single_stock = config._list_to_str('MU')
     assert not no_caps_pattern.match(single_stock)
     assert single_stock == 'MU'
 
-    lower_stock = prices.ticker_list_to_str('mu')
+    lower_stock = config._list_to_str('mu')
     assert not no_caps_pattern.match(lower_stock)
     assert lower_stock == 'MU'
 
-    multi_stock = prices.ticker_list_to_str(['MU', 'INTC', 'BA'])
+    multi_stock = config._list_to_str(['MU', 'INTC', 'BA'])
     assert not no_caps_pattern.match(multi_stock)
     assert multi_stock == 'MU,INTC,BA'
 
-    lower_multi_stock = prices.ticker_list_to_str(['MU', 'intc', 'BA'])
+    lower_multi_stock = config._list_to_str(['MU', 'intc', 'BA'])
     assert not no_caps_pattern.match(lower_multi_stock)
     assert lower_multi_stock == 'MU,INTC,BA'
 
     with pytest.raises(TypeError):
-        bad_stock = prices.ticker_list_to_str({'butts':1})
+        bad_stock = config._list_to_str({'butts':1})
 
 def test_cast_str_to_int():
     """validate behavior for cast_str_to_int"""

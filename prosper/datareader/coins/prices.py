@@ -39,6 +39,22 @@ def _listify(
 
     return listified_data
 
+def coin_list_to_ticker_list(
+        coin_list,
+        currency='USD'
+):
+    """convert list of crypto currencies to HitBTC tickers
+
+    Args:
+        coin_list (str or :obj:`list`): list of coins to convert
+        currency (str, optional): currency to FOREX against
+
+    Returns:
+        (:obj:`list`): list of valid coins and tickers
+
+    """
+    pass
+
 COIN_TICKER_URI = 'http://api.hitbtc.com/api/1/public/{symbol}/ticker'
 def get_ticker_hitbtc(
         symbol,
@@ -108,3 +124,36 @@ def get_order_book_hitbtc(
     data = req.json()
 
     return data #return both bids/asks for other steps to clean up later
+
+def get_quote_hitbtc(
+        coin_list,
+        currency='USD',
+        logger=LOGGER
+):
+    """fetch common summary data for crypto-coins
+
+    Args:
+        coin_list (:obj:`list`): list of tickers to look up
+        logger (:obj:`logging.logger`, optional): logging handle
+
+    Returns:
+        (:obj:`pandas.DataFrame`): coin info for the day, JSONable
+
+    """
+    logger.info('Generating quote for %s -- HitBTC', config._list_to_str(coin_list))
+    #singleton = False
+    #if isinstance(coin_list, str):
+    #    singleton = True
+    #    logger.info('--singleton mode')
+
+    logger.info('--fetching ticker data')
+    raw_quote = get_ticker_hitbtc('')
+
+    quote_df = df.DataFrame(raw_quote)
+
+    logger.info('--filtering ticker data')
+
+
+
+
+
