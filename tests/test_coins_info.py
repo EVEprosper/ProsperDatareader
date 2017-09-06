@@ -1,4 +1,4 @@
-"""test_stocks_news.py: validate behavior for datareader.stocks.news"""
+"""test_coins_info.py: validate behavior for datareader.coins.info"""
 from datetime import datetime
 from os import path
 
@@ -10,9 +10,9 @@ import pandas
 import prosper.datareader.coins.info as info
 import prosper.datareader.exceptions as exceptions
 
-def test_get_supported_symbols():
-    """validate get_supported_symbols() returns valid schema"""
-    data = info.get_supported_symbols()
+def test_get_supported_symbols_hitbtc():
+    """validate get_supported_symbols_hitbtc() returns valid schema"""
+    data = info.get_supported_symbols_hitbtc()
 
     for symbol in data:
         helpers.validate_schema(
@@ -41,10 +41,16 @@ class TestSupportedCommodity:
             'AVT', 'TFL', 'COSS', 'PBKX', 'PQT', '8BT', 'EVX', 'IML', 'ROOTS', 'DELTA',
             'QAU', 'MANA', 'DNT', 'FYP', 'OPT', 'GRPH', 'TNT', 'STX', 'CAT', 'BCC',
             'ECAT', 'BAS', 'ZRX', 'RVT', 'ICOS', 'PPC', 'VERI', 'IGNIS', 'QTUM',
-            'PRG', 'BMC', 'CND', 'ANT', 'EMGO', 'SKIN'
+            'PRG', 'BMC', 'CND', 'ANT', 'EMGO', 'SKIN', 'FUN', 'HVN', 'AMB', 'CDT',
+            'AIR', 'POE'
         ]
-        assert commodity_list == expected_commodities
+        unique_commodities = list(set(commodity_list) - set(expected_commodities))
+        missing_commodities = list(set(expected_commodities) - set(commodity_list))
+        print('unique_commodities={}'.format(unique_commodities))
+        print('missing_commodities={}'.format(missing_commodities))
 
+        assert unique_commodities == []
+        assert missing_commodities == []
     #TODO: CACHE TESTS
 
 class TestSupportedCurrencies:

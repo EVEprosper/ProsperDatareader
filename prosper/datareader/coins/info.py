@@ -17,7 +17,7 @@ __all__ = (
 )
 
 SYMBOLS_URI = 'http://api.hitbtc.com/api/1/public/symbols'
-def get_supported_symbols(
+def get_supported_symbols_hitbtc(
         uri=SYMBOLS_URI,
         data_key='symbols'
 ):
@@ -41,7 +41,6 @@ def get_supported_symbols(
 
     return data[data_key]
 
-
 def supported_commodities(
         force_refresh=False,
         logger=LOGGER
@@ -60,7 +59,7 @@ def supported_commodities(
     #TODO: check cache
     if force_refresh:
         logger.info('--Fetching symbol list from API')
-        symbols_df = pd.DataFrame(get_supported_symbols())
+        symbols_df = pd.DataFrame(get_supported_symbols_hitbtc())
 
 
     commodities = list(symbols_df['commodity'].unique())
@@ -86,7 +85,7 @@ def supported_currencies(
     #TODO: check cache
     if force_refresh:
         logger.info('--Fetching symbol list from API')
-        symbols_df = pd.DataFrame(get_supported_symbols())
+        symbols_df = pd.DataFrame(get_supported_symbols_hitbtc())
 
 
     currencies = list(symbols_df['currency'].unique())
@@ -116,7 +115,7 @@ def get_symbol(
     #TODO: check cache
     if force_refresh:
         logger.info('--Fetching symbol list from API')
-        symbols_df = pd.DataFrame(get_supported_symbols())
+        symbols_df = pd.DataFrame(get_supported_symbols_hitbtc())
 
     symbol = symbols_df.query(
         'commodity==\'{commodity}\' & currency==\'{currency}\''.format(
@@ -150,7 +149,7 @@ def get_ticker_info(
     #TODO: check cache
     if force_refresh:
         logger.info('--Fetching symbol list from API')
-        data = get_supported_symbols()
+        data = get_supported_symbols_hitbtc()
 
     ## Skip pandas, vanilla list search ok here
     for ticker_info in data:

@@ -29,8 +29,8 @@ def test_listify():
         assert list(row.keys()) == expected_keys
 
 def test_get_ticker_single():
-    """validate get_ticker() returns valid schema"""
-    data = prices.get_ticker('BTCUSD')
+    """validate get_ticker_hitbtc() returns valid schema"""
+    data = prices.get_ticker_hitbtc('BTCUSD')
 
     assert isinstance(data, dict)
     helpers.validate_schema(
@@ -39,11 +39,11 @@ def test_get_ticker_single():
     )
 
     with pytest.raises(requests.exceptions.HTTPError):
-        bad_data = prices.get_ticker('BUTTS')
+        bad_data = prices.get_ticker_hitbtc('BUTTS')
 
 def test_get_ticker_all():
     """validate get_ticker() behavior with blank args"""
-    data = prices.get_ticker('')
+    data = prices.get_ticker_hitbtc('')
 
     assert isinstance(data, list)
     helpers.validate_schema(
@@ -51,3 +51,11 @@ def test_get_ticker_all():
         path.join('coins', 'hitbtc_ticker.schema')
     )
     assert len(data) >= 190 * 0.9 #expect ~same data or more
+
+def test_get_orderbook():
+    """validate get_order_book_hitbtc() returns valid schema"""
+    data = prices.get_order_book_hitbtc('BTCUSD')
+
+    assert isinstance(data, dict)
+    assert isinstance(data['asks'], list)
+    assert isinstance(data['bids'], list)
