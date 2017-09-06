@@ -25,8 +25,11 @@ def test_listify():
     fixed_data = prices._listify(demo_data, 'key')
     assert isinstance(fixed_data, list)
     expected_keys = ['val1', 'val2', 'key']
+    expected_keys.sort()
     for row in fixed_data:
-        assert list(row.keys()) == expected_keys
+        keys = list(row.keys())
+        keys.sort()
+        assert keys == expected_keys
 
 def test_get_ticker_single():
     """validate get_ticker_hitbtc() returns valid schema"""
