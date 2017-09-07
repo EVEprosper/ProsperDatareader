@@ -12,6 +12,14 @@ datareader\.coins\.info module
     :undoc-members:
     :show-inheritance:
 
+datareader\.coins\.prices module
+--------------------------------
+
+.. automodule:: datareader.coins.prices
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 
 Module contents
 ---------------

@@ -48,6 +48,25 @@ get_ticker_info()
 
 If working backwards from a ticker, this function returns the original `hitBTC symbols`_ data.  
 
+Prices
+======
+
+get_quote_hitbtc()
+------------------
+
+    ``quote_df = coins.prices.get_quote_hitbtc(['BTC', 'ETH'])``
+
+Get a peek at the current price and trend of your favorite crypto currency.  This feed helps get OHLC data as well as mimic `pandas-datareader`_ quote behavior with keys like ``pct_change``.
+
+get_orderbook_hitbtc()
+----------------------
+
+    ``orderbook = coins.prices.get_orderbook_hitbtc('BTC', 'asks')``
+
+When you absolutely, positively, need all the data... go to the orderbook.  This supports ``asks`` and ``bids`` for lookup.
+
+## TODO: add ``both`` behavior
+
 .. _pandas-datareader: https://pandas-datareader.readthedocs.io/en/latest/index.html
 .. _hitBTC: https://hitbtc.com/
 .. _hitBTC symbols: https://hitbtc.com/api#symbols
