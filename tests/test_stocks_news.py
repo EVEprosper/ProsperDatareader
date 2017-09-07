@@ -178,8 +178,9 @@ class TestCompanyNewsRobinhood:
     good_ticker = helpers.CONFIG.get('STOCKS', 'good_ticker')
     bad_ticker = helpers.CONFIG.get('STOCKS', 'bad_ticker')
     expected_news_cols = [
-        'api_source', 'author', 'instrument', 'num_clicks', 'published_at',
-        'source', 'summary', 'title', 'updated_at', 'url', 'uuid'
+        'api_source', 'author', 'instrument', 'num_clicks', 'preview_image_url',
+        'published_at', 'relay_url', 'source', 'summary', 'title', 'updated_at',
+        'url', 'uuid'
     ]
 
     @pytest.mark.long
@@ -242,4 +243,5 @@ class TestCompanyNewsRobinhood:
         expected_cols = self.expected_news_cols
         expected_cols.extend(['neu', 'pos', 'compound', 'neg'])
 
+        print(list(graded_news.columns.values))
         assert list(graded_news.columns.values) == expected_cols

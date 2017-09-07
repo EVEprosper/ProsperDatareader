@@ -138,9 +138,7 @@ setup(
         'requests',
         'six',
         'semantic-version',
-        'demjson~=2.2.4',
-        'ujson~=1.35',
-        'tinydb~=3.4.1'
+        'demjson~=2.2.4'
     ],
     tests_require=[
         'jsonschema',

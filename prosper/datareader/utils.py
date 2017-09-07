@@ -9,7 +9,6 @@ try:
 except ImportError: #pragma: no cover
     NLTK_IMPORT = False
 import pandas as pd
-import tinydb
 
 from prosper.datareader.config import LOGGER as G_LOGGER
 import prosper.datareader.exceptions as exceptions
