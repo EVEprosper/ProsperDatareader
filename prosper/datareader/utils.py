@@ -156,20 +156,3 @@ def vader_sentiment(
     )
 
     return joined_df
-
-def check_cache(
-        cache_name,
-        cache_age=3600,
-        cache_filepath=HERE,
-        logger=G_LOGGER
-):
-    pass
-
-def write_cache(
-        cache_name,
-        cache_filepath=HERE,
-        logger=G_LOGGER
-):
-    pass
-
-
