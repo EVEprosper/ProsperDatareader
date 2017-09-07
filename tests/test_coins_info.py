@@ -78,11 +78,7 @@ class TestGetSymbol:
 
     def test_get_symbol_happypath_nocache(self):
         """validate expected behavior for get_symbol()"""
-        symbol = info.get_symbol(
-            self.good_commodity,
-            self.good_currency,
-            force_refresh=True
-        )
+        symbol = info.get_symbol(self.good_commodity, self.good_currency)
 
         assert isinstance(symbol, str)
         assert symbol == self.good_symbol
@@ -90,18 +86,10 @@ class TestGetSymbol:
     def test_get_symbol_bad_symbol(self):
         """validate exception case when bad symbol inputs requested"""
         with pytest.raises(exceptions.SymbolNotSupported):
-            bad_symbol = info.get_symbol(
-                'BUTTS',
-                self.good_currency,
-                force_refresh=True #TODO: remove
-            )
+            bad_symbol = info.get_symbol('BUTTS', self.good_currency)
 
         with pytest.raises(exceptions.SymbolNotSupported):
-            bad_symbol = info.get_symbol(
-                self.good_commodity,
-                'BUTTS',
-                force_refresh=True #TODO: remove
-            )
+            bad_symbol = info.get_symbol(self.good_commodity, 'BUTTS')
 
 class TestGetTickerInfo:
     """tests info.get_ticker_info()"""
@@ -109,17 +97,11 @@ class TestGetTickerInfo:
 
     def test_get_ticker_info_happypath_nocache(self):
         """validate expected behavior for get_ticker_info()"""
-        symbol_info = info.get_ticker_info(
-            self.good_symbol,
-            force_refresh=True
-        )
+        symbol_info = info.get_ticker_info(self.good_symbol)
         assert symbol_info['symbol'] == self.good_symbol
         assert symbol_info['currency'] == 'USD'
 
     def test_get_ticker_info_bad_symbol(self):
         """validate exception case when bad symbol inputs requested"""
         with pytest.raises(exceptions.TickerNotFound):
-            bad_symbol = info.get_ticker_info(
-                'BUTTS',
-                force_refresh=True #TODO: remove
-            )
+            bad_symbol = info.get_ticker_info('BUTTS')

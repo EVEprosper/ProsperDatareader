@@ -13,7 +13,7 @@ LOGGER = G_LOGGER
 HERE = path.abspath(path.dirname(__file__))
 
 __all__ = (
-    'get_symbol', 'get_ticker_info', 'supported_commodities', 'supported_currencies'
+    'get_symbol', 'get_ticker_info', 'supported_symbol_info'
 )
 
 SYMBOLS_URI = 'http://api.hitbtc.com/api/1/public/symbols'
@@ -62,7 +62,6 @@ def supported_symbol_info(
 def get_symbol(
         commodity_ticker,
         currency_ticker,
-        force_refresh=False,
         logger=LOGGER
 ):
     """get valid ticker to look up
@@ -70,17 +69,14 @@ def get_symbol(
     Args:
         commodity_ticker (str): short-name for crypto coin
         currency_ticker (str): short-name for currency
-        force_refresh (bool, optional): ignore local cacne and fetch directly from API
         logger (:obj:`logging.logger`, optional): logging handle
 
     Returns:
         (str): valid ticker for HITBTC
 
     """
-    #TODO: check cache
-    if force_refresh:
-        logger.info('--Fetching symbol list from API')
-        symbols_df = pd.DataFrame(get_supported_symbols_hitbtc())
+    logger.info('--Fetching symbol list from API')
+    symbols_df = pd.DataFrame(get_supported_symbols_hitbtc())
 
     symbol = symbols_df.query(
         'commodity==\'{commodity}\' & currency==\'{currency}\''.format(
@@ -91,13 +87,10 @@ def get_symbol(
     if symbol.empty:
         raise exceptions.SymbolNotSupported()
 
-    #TODO: update cache
-
     return symbol['symbol'].iloc[0]
 
 def get_ticker_info(
         ticker,
-        force_refresh=False,
         logger=LOGGER
 ):
     """reverse lookup, get more info about a requested ticker
@@ -111,15 +104,12 @@ def get_ticker_info(
         (:obj:`dict`): hitBTC info about requested ticker
 
     """
-    #TODO: check cache
-    if force_refresh:
-        logger.info('--Fetching symbol list from API')
-        data = get_supported_symbols_hitbtc()
+    logger.info('--Fetching symbol list from API')
+    data = get_supported_symbols_hitbtc()
 
     ## Skip pandas, vanilla list search ok here
     for ticker_info in data:
         if ticker_info['symbol'] == ticker.upper():
             return ticker_info
 
-    #TODO: update cache
     raise exceptions.TickerNotFound()

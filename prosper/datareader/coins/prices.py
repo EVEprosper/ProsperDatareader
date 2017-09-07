@@ -13,6 +13,7 @@ import prosper.datareader.coins.info as info
 LOGGER = config.LOGGER
 HERE = path.abspath(path.dirname(__file__))
 
+__all__ = ('get_orderbook_hitbtc', 'get_quote_hitbtc')
 class OrderBook(Enum):
     """enumerator for handling order book info"""
     asks = 'asks'
