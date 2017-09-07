@@ -1,0 +1,25 @@
+{
+    "type": "object",
+    "properties":{
+        "asks":{
+            "type": "array",
+            "items": {
+                "type": "array",
+                "items": {
+                    "type":"number"
+                }
+            }
+        },
+        "bids":{
+            "type": "array",
+            "items": {
+                "type": "array",
+                "items": {
+                    "type":"number"
+                }
+            }
+        }
+    },
+    "required": ["asks", "bids"],
+    "additionalProperties": false
+}

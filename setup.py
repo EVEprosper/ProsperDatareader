@@ -138,8 +138,7 @@ setup(
         'requests',
         'six',
         'semantic-version',
-        'demjson~=2.2.4',
-        'ujson~=1.35'
+        'demjson~=2.2.4'
     ],
     tests_require=[
         'jsonschema',

@@ -9,27 +9,11 @@ import dateutil.parser
 import requests
 import pandas as pd
 
-from prosper.datareader.config import LOGGER as G_LOGGER
+import prosper.datareader.config as config
 
-LOGGER = G_LOGGER
+LOGGER = config.LOGGER
 HERE = path.abspath(path.dirname(__file__))
 
-def ticker_list_to_str(ticker_list):
-    """parses/joins ticker list
-
-    Args:
-        ticker_list (:obj:`list` or str): ticker(s) to parse
-
-    Returns:
-        (str): list of tickers
-
-    """
-    if isinstance(ticker_list, str):
-        return ticker_list.upper()
-    elif isinstance(ticker_list, list):
-        return ','.join(ticker_list).upper()
-    else:
-        raise TypeError
 
 def cast_str_to_int(dataframe):
     """tries to apply to_numeric to each str column
@@ -70,7 +54,7 @@ def fetch_price_quotes_rh(
         (:obj:`list`): results from endpoint, JSONable
 
     """
-    ticker_list_str = ticker_list_to_str(ticker_list)
+    ticker_list_str = config._list_to_str(ticker_list)
     logger.info('fetching quote data for %s -- Robinhood', ticker_list_str)
 
     params = {
@@ -202,7 +186,7 @@ def get_quote_rh(
         {'ticker', 'company_name', 'price', 'percent_change', 'PE', 'short_ratio', 'quote_datetime'}
 
     """
-    logger.info('Generating quote for %s -- Robinhood', ticker_list_to_str(ticker_list))
+    logger.info('Generating quote for %s -- Robinhood', config._list_to_str(ticker_list))
 
     ## Gather Required Data ##
     summary_raw_data = []

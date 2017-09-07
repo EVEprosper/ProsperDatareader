@@ -11,11 +11,13 @@
         "updated_at": {"type":"string"},
         "instrument": {"type":"string", "format":"uri"},
         "num_clicks": {"type":"integer"},
-        "uuid": {"type":"null"}
+        "uuid": {"type":"null"},
+        "relay_url": {"type":"string", "format":"date-time"},
+        "preview_image_url": {"type":"string"}
     },
     "requires": [
         "url", "title", "source", "published_at", "author", 
         "summary", "api_source", "updated_at", "instrument", 
-        "num_clicks", "uuid"],
+        "num_clicks", "uuid", "relay_url", "preview_image_url"],
     "additionalProperties": false
 }
