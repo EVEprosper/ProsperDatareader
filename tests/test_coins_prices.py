@@ -62,3 +62,16 @@ def test_get_orderbook():
     assert isinstance(data, dict)
     assert isinstance(data['asks'], list)
     assert isinstance(data['bids'], list)
+
+def test_coin_list_to_ticker_list():
+    """validate coin_list_to_ticker_list() works as expected"""
+    test_coin_list = ['BTC', 'ETH']
+
+    ticker_list = prices.coin_list_to_ticker_list(test_coin_list)
+
+    expected_tickers = ['BTCUSD', 'ETHUSD']
+    assert isinstance(ticker_list, list)
+    assert ticker_list == expected_tickers
+
+    with pytest.raises(KeyError):
+        bad_ticker = prices.coin_list_to_ticker_list(['BUTTS'], strict=True)

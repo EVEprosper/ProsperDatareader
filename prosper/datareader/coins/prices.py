@@ -6,10 +6,11 @@ from enum import Enum
 import requests
 import pandas as pd
 
-from prosper.datareader.config import LOGGER as G_LOGGER
+import prosper.datareader.config as config
 import prosper.datareader.exceptions as exceptions
+import prosper.datareader.coins.info as info
 
-LOGGER = G_LOGGER
+LOGGER = config.LOGGER
 HERE = path.abspath(path.dirname(__file__))
 
 class OrderBook(Enum):
@@ -41,19 +42,35 @@ def _listify(
 
 def coin_list_to_ticker_list(
         coin_list,
-        currency='USD'
+        currency='USD',
+        strict=False
 ):
     """convert list of crypto currencies to HitBTC tickers
 
     Args:
         coin_list (str or :obj:`list`): list of coins to convert
         currency (str, optional): currency to FOREX against
+        strict (bool, optional): throw if unsupported ticker is requested
 
     Returns:
         (:obj:`list`): list of valid coins and tickers
 
     """
-    pass
+    valid_ticker_list = info.supported_symbol_info('symbol')
+
+    ticker_list = []
+    invalid_tickers = []
+    for coin in coin_list:
+        ticker = str(coin) + currency
+        if ticker not in valid_ticker_list:
+            invalid_tickers.append(ticker)
+
+        ticker_list.append(ticker)
+
+    if invalid_tickers and strict:
+        raise KeyError('Unsupported ticker requested: {}'.format(invalid_tickers))
+
+    return ticker_list
 
 COIN_TICKER_URI = 'http://api.hitbtc.com/api/1/public/{symbol}/ticker'
 def get_ticker_hitbtc(
