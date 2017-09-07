@@ -40,12 +40,12 @@ def _listify(
 
     return listified_data
 
-def coin_list_to_ticker_list(
+def coin_list_to_symbol_list(
         coin_list,
         currency='USD',
         strict=False
 ):
-    """convert list of crypto currencies to HitBTC tickers
+    """convert list of crypto currencies to HitBTC symbols
 
     Args:
         coin_list (str or :obj:`list`): list of coins to convert
@@ -56,21 +56,21 @@ def coin_list_to_ticker_list(
         (:obj:`list`): list of valid coins and tickers
 
     """
-    valid_ticker_list = info.supported_symbol_info('symbol')
+    valid_symbol_list = info.supported_symbol_info('symbol')
 
-    ticker_list = []
-    invalid_tickers = []
+    symbols_list = []
+    invalid_symbols = []
     for coin in coin_list:
-        ticker = str(coin) + currency
-        if ticker not in valid_ticker_list:
-            invalid_tickers.append(ticker)
+        ticker = str(coin).upper() + currency
+        if ticker not in valid_symbol_list:
+            invalid_symbols.append(ticker)
 
-        ticker_list.append(ticker)
+        symbols_list.append(ticker)
 
-    if invalid_tickers and strict:
-        raise KeyError('Unsupported ticker requested: {}'.format(invalid_tickers))
+    if invalid_symbols and strict:
+        raise KeyError('Unsupported ticker requested: {}'.format(invalid_symbols))
 
-    return ticker_list
+    return symbols_list
 
 COIN_TICKER_URI = 'http://api.hitbtc.com/api/1/public/{symbol}/ticker'
 def get_ticker_hitbtc(
@@ -150,7 +150,8 @@ def get_quote_hitbtc(
     """fetch common summary data for crypto-coins
 
     Args:
-        coin_list (:obj:`list`): list of tickers to look up
+        coin_list (:obj:`list`): list of tickers to look up'
+        currency (str, optional): currency to FOREX against
         logger (:obj:`logging.logger`, optional): logging handle
 
     Returns:
@@ -160,7 +161,7 @@ def get_quote_hitbtc(
     logger.info('Generating quote for %s -- HitBTC', config._list_to_str(coin_list))
 
     logger.info('--validating coin_list')
-    ticker_list = coin_list_to_ticker_list(
+    ticker_list = coin_list_to_symbol_list(
         coin_list,
         currency=currency,
         strict=True
@@ -172,6 +173,48 @@ def get_quote_hitbtc(
 
     logger.info('--filtering ticker data')
     quote_df = quote_df[quote_df['symbol'].isin(ticker_list)]
+    quote_df = quote_df[list(quote_df.columns.values)].apply(pd.to_numeric, errors='ignore')
+    quote_df['pct_change'] = (quote_df['last'] - quote_df['open']) / quote_df['open'] * 100
 
     logger.debug(quote_df)
     return quote_df
+
+def get_orderbook_hitbtc(
+        coin,
+        which_book,
+        currency='USD',
+        logger=LOGGER
+):
+    """fetch current orderbook from hitBTC
+
+    Args:
+        coin (str): name of coin to fetch
+        which_book (str): Enum, 'asks' or 'bids'
+        currency (str, optional): currency to FOREX against
+
+    logger (:obj:`logging.logger`, optional): logging handle
+
+    Returns:
+        (:obj:`pandas.DataFrame`): current coin order book
+
+    """
+    logger.info('Generating orderbook for %s -- HitBTC', coin)
+    order_enum = OrderBook(which_book)  # validates which order book key to use
+
+    logger.info('--validating coin')
+    symbol = coin_list_to_symbol_list(
+        [coin],
+        currency=currency,
+        strict=True
+    )[0]
+
+    logger.info('--fetching orderbook')
+    raw_orderbook = get_order_book_hitbtc(symbol)[which_book]
+
+    orderbook_df = pd.DataFrame(raw_orderbook, columns=['price', 'ammount'])
+    orderbook_df['symbol'] = symbol
+    orderbook_df['coin'] = coin
+    orderbook_df['orderbook'] = which_book
+
+    logger.debug(orderbook_df)
+    return orderbook_df

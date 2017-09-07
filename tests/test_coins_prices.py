@@ -63,18 +63,18 @@ def test_get_orderbook():
     assert isinstance(data['asks'], list)
     assert isinstance(data['bids'], list)
 
-def test_coin_list_to_ticker_list():
-    """validate coin_list_to_ticker_list() works as expected"""
+def test_coin_list_to_symbol_list():
+    """validate coin_list_to_symbol_list() works as expected"""
     test_coin_list = ['BTC', 'ETH']
 
-    ticker_list = prices.coin_list_to_ticker_list(test_coin_list)
+    ticker_list = prices.coin_list_to_symbol_list(test_coin_list, currency='USD')
 
     expected_tickers = ['BTCUSD', 'ETHUSD']
     assert isinstance(ticker_list, list)
     assert ticker_list == expected_tickers
 
     with pytest.raises(KeyError):
-        bad_ticker = prices.coin_list_to_ticker_list(['BUTTS'], strict=True)
+        bad_ticker = prices.coin_list_to_symbol_list(['BUTTS'], strict=True)
 
 class TestGetQuoteHitBTC:
     """validate get_quote_hitbtc() behavior"""
@@ -82,7 +82,7 @@ class TestGetQuoteHitBTC:
     bad_list = ['BUTTS']
     expected_headers = [
         'ask', 'bid', 'high', 'last', 'low', 'open', 'symbol',
-        'timestamp', 'volume', 'volume_quote'
+        'timestamp', 'volume', 'volume_quote', 'pct_change'
     ]
 
     def test_get_quote_hitbtc_happypath(self):
@@ -109,3 +109,72 @@ class TestGetQuoteHitBTC:
         print(list(quote.columns.values))
         assert list(quote.columns.values) == self.expected_headers
         assert len(quote) == 1
+
+class TestGetOrderbookHitBTC:
+    """validate get_orderbook_hitbtc() behavior"""
+    coin = 'BTC'
+    expected_headers = ['price', 'ammount', 'symbol', 'coin', 'orderbook']
+
+    def test_get_orderbook_hitbtc_happypath_asks(self):
+        """validate expected normal behavior"""
+        asks_orderbook = prices.get_orderbook_hitbtc(
+            self.coin,
+            'asks',
+            currency='USD'
+        )
+
+        assert isinstance(asks_orderbook, pandas.DataFrame)
+        print(list(asks_orderbook.columns.values))
+        assert list(asks_orderbook.columns.values) == self.expected_headers
+
+        orderbook = asks_orderbook['orderbook'].unique()
+        assert len(orderbook) == 1
+        assert orderbook[0] == 'asks'
+
+        coin = asks_orderbook['coin'].unique()
+        assert len(coin) == 1
+        assert coin[0] == self.coin
+
+        symbol = asks_orderbook['symbol'].unique()
+        assert len(symbol) == 1
+        assert symbol[0] == self.coin + 'USD'
+
+    def test_get_orderbook_hitbtc_happypath_bids(self):
+        """validate expected normal behavior"""
+        bids_orderbook = prices.get_orderbook_hitbtc(
+            self.coin,
+            'bids',
+            currency='USD'
+        )
+
+        assert isinstance(bids_orderbook, pandas.DataFrame)
+        print(list(bids_orderbook.columns.values))
+        assert list(bids_orderbook.columns.values) == self.expected_headers
+
+        orderbook = bids_orderbook['orderbook'].unique()
+        assert len(orderbook) == 1
+        assert orderbook[0] == 'bids'
+
+        coin = bids_orderbook['coin'].unique()
+        assert len(coin) == 1
+        assert coin[0] == self.coin
+
+        symbol = bids_orderbook['symbol'].unique()
+        assert len(symbol) == 1
+        assert symbol[0] == self.coin + 'USD'
+
+    def test_get_orderbook_hitbtc_bad_book(self):
+        """validate expected error for asking for bad enum"""
+        with pytest.raises(ValueError):
+            bad_book = prices.get_orderbook_hitbtc(
+                self.coin,
+                'butts'
+            )
+
+    def test_get_orderbook_hitbtc_bad_coin(self):
+        """validate expected error for asking for bad enum"""
+        with pytest.raises(KeyError):
+            bad_book = prices.get_orderbook_hitbtc(
+                'BUTTS',
+                'asks'
+            )
