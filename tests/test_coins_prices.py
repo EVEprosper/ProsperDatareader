@@ -75,3 +75,37 @@ def test_coin_list_to_ticker_list():
 
     with pytest.raises(KeyError):
         bad_ticker = prices.coin_list_to_ticker_list(['BUTTS'], strict=True)
+
+class TestGetQuoteHitBTC:
+    """validate get_quote_hitbtc() behavior"""
+    coin_list = ['BTC', 'ETH']
+    bad_list = ['BUTTS']
+    expected_headers = [
+        'ask', 'bid', 'high', 'last', 'low', 'open', 'symbol',
+        'timestamp', 'volume', 'volume_quote'
+    ]
+
+    def test_get_quote_hitbtc_happypath(self):
+        """validate expected normal behavior"""
+        quote = prices.get_quote_hitbtc(self.coin_list)
+
+        assert isinstance(quote, pandas.DataFrame)
+
+        print(list(quote.columns.values))
+        assert list(quote.columns.values) == self.expected_headers
+        assert len(quote) == len(self.coin_list)
+
+    def test_get_quote_hitbtc_error(self):
+        """validate system throws as expected"""
+        with pytest.raises(KeyError):
+            bad_quote = prices.get_quote_hitbtc(self.bad_list)
+
+    def test_get_quote_hitbtc_singleton(self):
+        """validate quote special case for 1 value"""
+        quote = prices.get_quote_hitbtc([self.coin_list[0]])
+
+        assert isinstance(quote, pandas.DataFrame)
+
+        print(list(quote.columns.values))
+        assert list(quote.columns.values) == self.expected_headers
+        assert len(quote) == 1

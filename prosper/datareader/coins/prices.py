@@ -158,19 +158,20 @@ def get_quote_hitbtc(
 
     """
     logger.info('Generating quote for %s -- HitBTC', config._list_to_str(coin_list))
-    #singleton = False
-    #if isinstance(coin_list, str):
-    #    singleton = True
-    #    logger.info('--singleton mode')
+
+    logger.info('--validating coin_list')
+    ticker_list = coin_list_to_ticker_list(
+        coin_list,
+        currency=currency,
+        strict=True
+    )
 
     logger.info('--fetching ticker data')
     raw_quote = get_ticker_hitbtc('')
-
-    quote_df = df.DataFrame(raw_quote)
+    quote_df = pd.DataFrame(raw_quote)
 
     logger.info('--filtering ticker data')
+    quote_df = quote_df[quote_df['symbol'].isin(ticker_list)]
 
-
-
-
-
+    logger.debug(quote_df)
+    return quote_df
