@@ -11,7 +11,7 @@
         "updated_at": {"type":"string"},
         "instrument": {"type":"string", "format":"uri"},
         "num_clicks": {"type":"integer"},
-        "uuid": {"type":"null"},
+        "uuid": {"type":["string", "null"]},
         "relay_url": {"type":"string", "format":"date-time"},
         "preview_image_url": {"type":"string"}
     },
