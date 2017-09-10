@@ -130,7 +130,8 @@ setup(
     packages=hack_find_packages('prosper'),
     include_package_data=True,
     package_data={
-        '': ['LICENSE', 'README.rst']
+        '': ['LICENSE', 'README.rst'],
+        'prosper': ['datareader/version.txt']
     },
     install_requires=[
         'prospercommon',
