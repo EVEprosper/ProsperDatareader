@@ -41,6 +41,8 @@ def get_supported_symbols_hitbtc(
 
     return data[data_key]
 
+################################################################################
+
 def supported_symbol_info(
         key_name
 ):

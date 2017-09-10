@@ -14,6 +14,8 @@ LOGGER = config.LOGGER
 HERE = path.abspath(path.dirname(__file__))
 
 __all__ = ('get_orderbook_hitbtc', 'get_quote_hitbtc')
+
+
 class OrderBook(Enum):
     """enumerator for handling order book info"""
     asks = 'asks'
@@ -93,15 +95,17 @@ def get_ticker_hitbtc(
     """
     full_uri = ''
     if not symbol:
+        ## fetching entire ticker list ##
         full_uri = uri.replace(r'{symbol}/', '')
     else:
         full_uri = uri.format(symbol=symbol)
 
     req = requests.get(full_uri)
     req.raise_for_status()
-
     data = req.json()
+
     if not symbol:
+        ## fetching entire ticker list ##
         data = _listify(data, 'symbol')
 
     return data
@@ -142,6 +146,8 @@ def get_order_book_hitbtc(
     data = req.json()
 
     return data #return both bids/asks for other steps to clean up later
+
+################################################################################
 
 def get_quote_hitbtc(
         coin_list,

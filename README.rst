@@ -44,7 +44,6 @@ Supported Feeds
 
 - Ticker Info: get info about coin<->currency conversion metadata
 - Price Quote: get latest OHLC data for given coin 
-- Price History: get history of coin price 
 - Order Book: view current orders
 
 .. _pandas-datareader: https://pandas-datareader.readthedocs.io/en/latest/index.html
