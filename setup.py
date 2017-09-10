@@ -130,7 +130,8 @@ setup(
     packages=hack_find_packages('prosper'),
     include_package_data=True,
     package_data={
-        '': ['LICENSE', 'README.rst']
+        '': ['LICENSE', 'README.rst'],
+        'prosper': ['datareader/version.txt']
     },
     install_requires=[
         'prospercommon',
@@ -138,8 +139,7 @@ setup(
         'requests',
         'six',
         'semantic-version',
-        'demjson~=2.2.4',
-        'ujson~=1.35'
+        'demjson~=2.2.4'
     ],
     tests_require=[
         'jsonschema',

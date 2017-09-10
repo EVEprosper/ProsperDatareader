@@ -40,8 +40,15 @@ Supported Feeds
 - Market News Feed: Google
 - Price Quote: Robinhood
 
+**Coins**: helper libraries for fetching info on crypto currencies (via `hitBTC`_)
+
+- Ticker Info: get info about coin<->currency conversion metadata
+- Price Quote: get latest OHLC data for given coin 
+- Order Book: view current orders
+
 .. _pandas-datareader: https://pandas-datareader.readthedocs.io/en/latest/index.html
 .. _vader_sentiment: http://www.nltk.org/api/nltk.sentiment.html#module-nltk.sentiment.vader
+.. _hitBTC: https://hitbtc.com
 
 .. |Show Logo| image:: http://dl.eveprosper.com/podcast/logo-colour-17_sm2.png
    :target: http://eveprosper.com

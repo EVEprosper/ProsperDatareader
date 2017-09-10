@@ -1,0 +1,14 @@
+{
+    "type": "object",
+    "properties":{
+        "symbol": {"type":"string", "pattern":"([A-Z])+"},
+        "step": {"type":"string"},
+        "lot": {"type":"string"},
+        "currency": {"type":"string", "pattern":"([A-Z])+"},
+        "commodity": {"type":"string", "pattern":"([A-Z])+"},
+        "takeLiquidityRate": {"type":"string"},
+        "provideLiquidityRate": {"type":"string"}
+    },
+    "required": ["symbol", "currency", "commodity"],
+    "additionalProperties": false
+}

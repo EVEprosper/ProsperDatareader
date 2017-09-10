@@ -6,6 +6,7 @@ Subpackages
 
 .. toctree::
 
+    datareader.coins
     datareader.stocks
 
 Submodules

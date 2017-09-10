@@ -23,7 +23,7 @@ Supported Feeds
 
 * `Utils`_: General utilities for additional insights
 * `Stocks`_: Parse IRL stock quote data
-
+* `Coins`_: Data utilities for cryptocoin price quotes
 
 Index
 =====
@@ -33,9 +33,10 @@ Index
    :caption: Contents:
 
    getting_started.rst
-   utils_help.rst
    stocks_help.rst
-
+   coins_help.rst
+   utils_help.rst
+   
 Indices and tables
 ==================
 
@@ -47,6 +48,7 @@ Indices and tables
 .. _pandas-datareader: https://pandas-datareader.readthedocs.io/en/latest/index.html
 .. _Stocks: stocks_help.html
 .. _Utils: utils_help.html
+.. _Coins: coins_help.html
 
 .. |Build Status| image:: https://travis-ci.org/EVEprosper/ProsperDatareader.svg?branch=master
    :target: https://travis-ci.org/EVEprosper/ProsperDatareader
