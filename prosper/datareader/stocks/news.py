@@ -9,10 +9,10 @@ import requests
 from six.moves.html_parser import HTMLParser
 import pandas as pd
 
-from prosper.datareader.config import LOGGER as G_LOGGER
-import prosper.datareader.exceptions as exceptions
+from .. import config
+from .. import exceptions
 
-LOGGER = G_LOGGER
+LOGGER = config.LOGGER
 HERE = path.abspath(path.dirname(__file__))
 #PARSER = HTMLParser()
 

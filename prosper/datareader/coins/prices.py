@@ -6,9 +6,8 @@ from enum import Enum
 import requests
 import pandas as pd
 
-import prosper.datareader.config as config
-import prosper.datareader.exceptions as exceptions
-import prosper.datareader.coins.info as info
+from .. import config
+from . import info
 
 LOGGER = config.LOGGER
 HERE = path.abspath(path.dirname(__file__))

@@ -9,7 +9,7 @@ import dateutil.parser
 import requests
 import pandas as pd
 
-import prosper.datareader.config as config
+from .. import config
 
 LOGGER = config.LOGGER
 HERE = path.abspath(path.dirname(__file__))

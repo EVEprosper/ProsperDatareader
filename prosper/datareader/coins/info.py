@@ -6,10 +6,12 @@ from os import path
 import requests
 import pandas as pd
 
-from prosper.datareader.config import LOGGER as G_LOGGER
-import prosper.datareader.exceptions as exceptions
+from .. import config
+from .. import exceptions
+#from prosper.datareader.config import LOGGER as G_LOGGER
+#import prosper.datareader.exceptions as exceptions
 
-LOGGER = G_LOGGER
+LOGGER = config.LOGGER
 HERE = path.abspath(path.dirname(__file__))
 
 __all__ = (
