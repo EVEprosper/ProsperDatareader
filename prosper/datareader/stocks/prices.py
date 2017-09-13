@@ -210,7 +210,10 @@ def get_quote_rh(
 
     summary_df['change_pct'] = (summary_df['current_price'] - summary_df['previous_close']) / summary_df['previous_close']
 
-    summary_df['change_pct'] = map('{:+.2%}'.format, summary_df['change_pct'])
+    summary_df['change_pct'] = list(map(
+        '{:+.2%}'.format,
+        summary_df['change_pct']
+    ))
     if keys:
         return summary_df[keys]
     else:
