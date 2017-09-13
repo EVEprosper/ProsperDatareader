@@ -168,7 +168,7 @@ def market_is_open(market_uri, logger=LOGGER):
         return True
 
 SUMMARY_KEYS = [
-    'symbol', 'simple_name', 'pe_ratio', 'pct_change', 'current_price', 'updated_at']
+    'symbol', 'name', 'pe_ratio', 'change_pct', 'current_price', 'updated_at']
 def get_quote_rh(
         ticker_list,
         keys=SUMMARY_KEYS,
@@ -208,8 +208,9 @@ def get_quote_rh(
     summary_df = pd.DataFrame(summary_raw_data)
     summary_df = cast_str_to_int(summary_df)
 
-    summary_df['pct_change'] = (summary_df['current_price'] - summary_df['previous_close']) / summary_df['previous_close'] * 100
+    summary_df['change_pct'] = (summary_df['current_price'] - summary_df['previous_close']) / summary_df['previous_close']
 
+    summary_df['change_pct'] = map('{:+.2%}'.format, summary_df['change_pct'])
     if keys:
         return summary_df[keys]
     else:
