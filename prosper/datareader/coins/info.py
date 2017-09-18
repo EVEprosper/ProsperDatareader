@@ -18,12 +18,12 @@ __all__ = (
     'get_symbol', 'get_ticker_info', 'supported_symbol_info'
 )
 
-SYMBOLS_URI = 'http://api.hitbtc.com/api/1/public/symbols'
+SYMBOLS_URI_HITBTC = 'http://api.hitbtc.com/api/1/public/symbols'
 def get_supported_symbols_hitbtc(
-        uri=SYMBOLS_URI,
+        uri=SYMBOLS_URI_HITBTC,
         data_key='symbols'
 ):
-    """fetch supported symbols from API
+    """fetch supported symbols from API -- hitBTC
 
     Note:
         Supported by hitbtc
@@ -42,6 +42,32 @@ def get_supported_symbols_hitbtc(
     data = req.json()
 
     return data[data_key]
+
+SYMBOLS_URI_CRYPTOCOMPARE = 'https://www.cryptocompare.com/api/data/coinlist/'
+def get_supported_symbols_cc(
+        uri=SYMBOLS_URI_CRYPTOCOMPARE,
+        data_key='Data'
+):
+    """fetch supported symbols data from API  -- cryptocompare
+
+
+    Note:
+        Supported by cryptocompare
+        https://www.cryptocompare.com/api/#-api-data-coinlist-
+
+    Args:
+        uri (str, optional): address for API
+        data_key (str, optional): data key name in JSON data
+
+    Returns:
+        (:obj:`list`): list of supported feeds
+
+    """
+    req = requests.get(uri)
+    req.raise_for_status()
+    data = req.json()
+
+    return data[data_key].values()
 
 ################################################################################
 

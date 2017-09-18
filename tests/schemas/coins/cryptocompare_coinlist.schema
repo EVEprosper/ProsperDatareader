@@ -1,0 +1,23 @@
+{
+    "type": "object",
+    "properties":{
+        "Id": {"type":"string"},
+        "Url": {"type":"string", "format":"uri"},
+        "ImageUrl": {"type":"string", "format":"uri"},
+        "Name": {"type":"string"},
+        "CoinName": {"type":"string"},
+        "FullName": {"type":"string"},
+        "Algorithm": {"type":"string"},
+        "ProofType": {"type":"string"},
+        "FullyPremined": {"type":"string", "enum":["0","1"]},
+        "TotalCoinSupply": {"type":"string"},
+        "PreMinedValue": {"type":"string"},
+        "TotalCoinsFreeFloat": {"type":"string"},
+        "SortOrder": {"type":"string"}
+    },
+    "required": [
+        "Id", "Url", "Name", "CoinName", "FullName", "Algorithm", "ProofType", 
+        "FullyPremined", "TotalCoinSupply", "PreMinedValue", "TotalCoinsFreeFloat", "SortOrder"
+    ],
+    "additionalProperties": false
+}

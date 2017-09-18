@@ -20,6 +20,16 @@ def test_get_supported_symbols_hitbtc():
             path.join('coins', 'hitbtc_symbols.schema')
         )
 
+def test_get_supported_symbols_cc():
+    """validate get_supported_symbols_cc() return valid schema"""
+    data = info.get_supported_symbols_cc()
+
+    for symbol in data:
+        helpers.validate_schema(
+            symbol,
+            path.join('coins', 'cryptocompare_coinlist.schema')
+        )
+
 class TestSupportedSymbolInfo:
     """validate supported_symbol_info() behavior"""
     def test_supported_commodities(self):
