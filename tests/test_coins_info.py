@@ -52,7 +52,7 @@ class TestSupportedSymbolInfo:
             'QAU', 'MANA', 'DNT', 'FYP', 'OPT', 'GRPH', 'TNT', 'STX', 'CAT', 'BCC',
             'ECAT', 'BAS', 'ZRX', 'RVT', 'ICOS', 'PPC', 'VERI', 'IGNIS', 'QTUM',
             'PRG', 'BMC', 'CND', 'ANT', 'EMGO', 'SKIN', 'FUN', 'HVN', 'AMB', 'CDT',
-            'AIR', 'POE', 'FUEL', 'MCAP'
+            'AIR', 'POE', 'FUEL', 'MCAP', 'RKC', 'PING', 'NTO', 'GAME', 'ICO', 'WEALTH'
         ]
         unique_commodities = list(set(commodity_list) - set(expected_commodities))
         missing_commodities = list(set(expected_commodities) - set(commodity_list))
