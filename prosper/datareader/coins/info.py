@@ -72,7 +72,7 @@ def get_supported_symbols_cc(
     req.raise_for_status()
     data = req.json()
 
-    return data[data_key].values()
+    return list(data[data_key].values())
 
 ################################################################################
 
