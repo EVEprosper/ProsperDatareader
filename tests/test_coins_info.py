@@ -79,6 +79,26 @@ class TestSupportedSymbolInfo:
 
         #TODO: validate values?
 
+    def test_supported_symbol_info_switching(self):
+        """make sure source-switching works"""
+        symbols_list = info.supported_symbol_info(
+            'CoinName',
+            info.Sources.cc
+        )
+        assert isinstance(symbols_list, list)
+
+        assert 'Bitcoin' in symbols_list
+        assert 'Ethereum ' in symbols_list
+
+    def test_supported_symbol_info_strswitch(self):
+        """check source-switching with str"""
+        symbols_list = info.supported_symbol_info(
+            'CoinName',
+            'cryptocompare'
+        )
+
+        assert isinstance(symbols_list, list)
+
 
 class TestGetSymbol:
     """tests for info.get_symbol()"""

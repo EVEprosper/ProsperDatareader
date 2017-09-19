@@ -2,6 +2,7 @@
 from datetime import datetime
 import itertools
 from os import path
+from enum import Enum
 
 import requests
 import pandas as pd
@@ -17,6 +18,10 @@ HERE = path.abspath(path.dirname(__file__))
 __all__ = (
     'get_symbol', 'get_ticker_info', 'supported_symbol_info'
 )
+
+class Sources(Enum):
+    hitbtc = 'hitbtc'
+    cc = 'cryptocompare'
 
 SYMBOLS_URI_HITBTC = 'http://api.hitbtc.com/api/1/public/symbols'
 def get_supported_symbols_hitbtc(
@@ -72,18 +77,28 @@ def get_supported_symbols_cc(
 ################################################################################
 
 def supported_symbol_info(
-        key_name
+        key_name,
+        source=Sources.hitbtc
 ):
     """find unique values for key_name in symbol feed
 
     Args:
         key_name (str): name of key to search
+        source (:obj:`Enum`): source name
 
     Returns:
         (:obj:`list`): list of unique values
 
     """
-    symbols_df = pd.DataFrame(get_supported_symbols_hitbtc())
+    if isinstance(source, str):
+        source = Sources(source)
+
+    if source == Sources.hitbtc:
+        symbols_df = pd.DataFrame(get_supported_symbols_hitbtc())
+    elif source == Sources.cc:
+        symbols_df = pd.DataFrame(get_supported_symbols_cc())
+    else:  # pragma: no cover
+        raise exceptions.UnsupportedSource()
 
     unique_list = list(symbols_df[key_name].unique())
 

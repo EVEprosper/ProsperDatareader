@@ -9,6 +9,9 @@ class DatareaderWarning(UserWarning):
 class PaginationWarning(DatareaderWarning):
     """hard limit reached for recursive page diving"""
     pass
+class UnsupportedSource(DatareaderException):
+    """unsupported source requested (CYA)"""
+    pass
 
 ###########
 ## Utils ##
