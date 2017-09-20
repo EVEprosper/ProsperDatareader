@@ -35,11 +35,11 @@ def test_listify():
 
 class TestGetTickerCC:
     """validate get_ticker_cc() behavior"""
-    coin_list = ['BTC', 'ETH', 'DOGE']
+    coin_list = ['BTC', 'ETH', 'LTC']
+    market = 'Coinbase'
     def test_get_ticker_cc_happypath(self):
         """validate expected behavior"""
         data = prices.get_ticker_cc(self.coin_list)
-        print(data)
         assert isinstance(data, list)
         for row in data:
             helpers.validate_schema(
@@ -47,14 +47,60 @@ class TestGetTickerCC:
                 path.join('coins', 'cryptocompare_pricemultifull.schema')
             )
 
+    def test_get_ticker_cc_strs(self):
+        """make sure endpoint works with str data"""
+        data = prices.get_ticker_cc(self.coin_list[0])
+        assert len(data) == 1
+        assert data[0]['FROMSYMBOL'] == self.coin_list[0]
+
+        data = prices.get_ticker_cc(','.join(self.coin_list))
+        assert len(data) == len(self.coin_list)
+
+    def test_get_ticker_cc_marketlist(self):
+        """make sure we can switch market"""
+        data = prices.get_ticker_cc(
+            self.coin_list, market_list=[self.market]
+        )
+
+        print(data)
+        for row in data:
+            assert row['MARKET'] == self.market
+
+    def test_get_ticker_cc_bad_coin(self):
+        """validate exception throw for bad coins"""
+        data = prices.get_ticker_cc('DOGE')  # works as expected
+        with pytest.raises(exceptions.SymbolNotSupported):
+            data = prices.get_ticker_cc('DOGE', market_list=['Coinbase'])
+
+    def test_get_ticker_cc_bad_key(self):
+        """validate exception throw for bad price key"""
+        with pytest.raises(KeyError):
+            data = prices.get_ticker_cc(self.coin_list, price_key='BUTTS')
+
 class TestGetQuoteCC:
     """validate get_quote_cc behavior"""
     coin_list = ['BTC', 'ETH', 'DOGE']
     def test_get_quote_cc_happypath(self):
         """validate expected behavior"""
         data = prices.get_quote_cc(self.coin_list)
-        print(data)
-        assert False
+        print(data.columns.values)
+        expected_columns = [
+            'CHANGE24HOUR', 'CHANGEPCT24HOUR', 'FLAGS', 'FROMSYMBOL', 'HIGH24HOUR',
+            'LASTMARKET', 'LASTTRADEID', 'LASTUPDATE', 'LASTVOLUME', 'LASTVOLUMETO',
+            'LOW24HOUR', 'MARKET', 'MKTCAP', 'OPEN24HOUR', 'PRICE', 'SUPPLY', 'TICKER',
+            'TOSYMBOL', 'TYPE', 'VOLUME24HOUR', 'VOLUME24HOURTO', 'Algorithm', 'CoinName',
+            'FullName', 'FullyPremined', 'Id', 'ImageUrl', 'Name', 'PreMinedValue',
+            'ProofType', 'SortOrder', 'TotalCoinSupply', 'TotalCoinsFreeFloat', 'Url'
+        ]
+        unique_values, unique_expected = helpers.find_uniques(
+            list(data.columns.values),
+            expected_columns
+        )
+
+        assert unique_expected == []
+
+        if unique_values:
+            pytest.xfail('Unexpected values from get_quote_cc(): {}'.format(unique_values))
 
 class TestColumnsToYahoo:
     """validate expected return for columns_to_yahoo"""

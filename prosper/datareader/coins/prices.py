@@ -165,6 +165,9 @@ def get_ticker_cc(
         (:obj:`list`): ticker data for desired coin
 
     """
+    if isinstance(symbol_list, str):
+        symbol_list = symbol_list.split(',')
+
     params = {
         'fsyms': ','.join(symbol_list).upper(),
         'tsyms': currency
@@ -175,6 +178,10 @@ def get_ticker_cc(
     req = requests.get(uri, params=params)
     req.raise_for_status()
     data = req.json()
+
+    if 'Response' in data.keys():
+        ## CC returns unique schema in error case ##
+        raise exceptions.SymbolNotSupported(data['Message'])
 
     clean_data = []
     for symbol in symbol_list:
@@ -268,6 +275,7 @@ def get_quote_hitbtc(
 def get_quote_cc(
         coin_list,
         currency='USD',
+        market_list=None,
         summary_keys=['symbol', 'name', 'change_pct', 'current_price', 'updated_at'],
         to_yahoo=True,
         logger=LOGGER
@@ -277,6 +285,7 @@ def get_quote_cc(
     Args:
         coin_list (:obj:`list`): list of tickers to look up'
         currency (str, optional): currency to FOREX against
+        market_list (:obj:`list`, optional): which market to pull from
         to_yahoo (bool, optional): convert names to yahoo analog
         logger (:obj:`logging.logger`, optional): logging handle
 
@@ -295,12 +304,11 @@ def get_quote_cc(
     #TODO: only fetch symbol list when required?
     coin_info_df = pd.DataFrame(info.get_supported_symbols_cc())
 
-    ticker_df = pd.DataFrame(get_quote_cc(coin_list))
-
+    ticker_df = pd.DataFrame(get_ticker_cc(coin_list))
 
     ticker_df = pd.merge(
         ticker_df, coin_info_df,
-        how='left',
+        how='inner',
         left_on='FROMSYMBOL',
         right_on='Name'
     )

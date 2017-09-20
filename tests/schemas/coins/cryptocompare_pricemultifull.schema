@@ -21,13 +21,14 @@
         "CHANGEPCT24HOUR": {"type":"number"},
         "SUPPLY": {"type":"number"},
         "MKTCAP": {"type":"number"},
-        "TICKER": {"type":"string"}
+        "TICKER": {"type":"string"},
+        "MARKET": {"type":"string"}
     },
     "required": [
         "TYPE", "MARKET", "FROMSYMBOL", "TOSYMBOL", "FLAGS", "PRICE", "LASTUPDATE",
         "LASTVOLUME", "LASTVOLUMETO", "LASTTRADEID", "VOLUME24HOUR", "VOLUME24HOURTO", 
-        "OPEN24HOUR", "HIGH24HOUR", "LOW24HOUR", "LASTMARKET", "CHANGE24HOUR", 
-        "CHANGEPCT24HOUR", "SUPPLY", "MKTCAP", "TICKER"
+        "OPEN24HOUR", "HIGH24HOUR", "LOW24HOUR", "CHANGE24HOUR", "CHANGEPCT24HOUR", 
+        "SUPPLY", "MKTCAP", "TICKER"
     ],
     "additionalProperties": false
 }

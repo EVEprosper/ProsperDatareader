@@ -81,3 +81,26 @@ def dump_debug(
     """
     with open(path.join(dump_path, filename), 'w') as dump_fh:
         json.dump(data, dump_fh, indent=4)
+
+def find_uniques(
+        test_list,
+        expected_list
+):
+    """checks for unique values between two lists.
+
+    Args:
+        test_list (:obj:`list`): values found in test
+        expected_list (:obj:`list`): values expected
+
+    Returns:
+        (:obj:`list`): unique_test
+        (:obj:`list`): unique_expected
+
+    """
+    unique_test = list(set(test_list) - set(expected_list))
+    print('Unique test vals: {}'.format(unique_test))
+
+    unique_expected = list(set(expected_list) - set(test_list))
+    print('Unique expected vals: {}'.format(unique_expected))
+
+    return unique_test, unique_expected
