@@ -16,7 +16,7 @@ LOGGER = config.LOGGER
 HERE = path.abspath(path.dirname(__file__))
 
 __all__ = (
-    'get_symbol', 'get_ticker_info', 'supported_symbol_info'
+    'get_symbol_hitbtc', 'get_ticker_info', 'supported_symbol_info'
 )
 
 class Sources(Enum):
@@ -104,7 +104,7 @@ def supported_symbol_info(
 
     return unique_list
 
-def get_symbol(
+def get_symbol_hitbtc(
         commodity_ticker,
         currency_ticker,
         logger=LOGGER

@@ -1,0 +1,33 @@
+{
+    "type": "object",
+    "properties": {
+        "TYPE": {"type":"string"},
+        "MARKET": {"type":"string"},
+        "FROMSYMBOL": {"type":"string"},
+        "TOSYMBOL": {"type":"string"},
+        "FLAGS": {"type":"string"},
+        "PRICE": {"type":"number"},
+        "LASTUPDATE": {"type":"number"},
+        "LASTVOLUME": {"type":"number"},
+        "LASTVOLUMETO": {"type":"number"},
+        "LASTTRADEID": {"type":"number"},
+        "VOLUME24HOUR": {"type":"number"},
+        "VOLUME24HOURTO": {"type":"number"},
+        "OPEN24HOUR": {"type":"number"},
+        "HIGH24HOUR": {"type":"number"},
+        "LOW24HOUR": {"type":"number"},
+        "LASTMARKET": {"type":"string"},
+        "CHANGE24HOUR": {"type":"number"},
+        "CHANGEPCT24HOUR": {"type":"number"},
+        "SUPPLY": {"type":"number"},
+        "MKTCAP": {"type":"number"},
+        "TICKER": {"type":"string"}
+    },
+    "required": [
+        "TYPE", "MARKET", "FROMSYMBOL", "TOSYMBOL", "FLAGS", "PRICE", "LASTUPDATE",
+        "LASTVOLUME", "LASTVOLUMETO", "LASTTRADEID", "VOLUME24HOUR", "VOLUME24HOURTO", 
+        "OPEN24HOUR", "HIGH24HOUR", "LOW24HOUR", "LASTMARKET", "CHANGE24HOUR", 
+        "CHANGEPCT24HOUR", "SUPPLY", "MKTCAP", "TICKER"
+    ],
+    "additionalProperties": false
+}

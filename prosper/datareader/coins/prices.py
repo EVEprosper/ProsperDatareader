@@ -7,6 +7,7 @@ import requests
 import pandas as pd
 
 from .. import config
+from .. import exceptions
 from . import info
 
 LOGGER = config.LOGGER
@@ -19,6 +20,40 @@ class OrderBook(Enum):
     """enumerator for handling order book info"""
     asks = 'asks'
     bids = 'bids'
+
+def columns_to_yahoo(
+        quote_df,
+        source
+):
+    """recast column names to yahoo equivalent
+
+    Args:
+        quote_df (:obj:`pandas.DataFrame`): dataframe to update
+        source (:obj:`Enum`): source info
+
+    Returns:
+        (:obj:`pandas.DataFrame`): updated dataframe cols
+
+    """
+    if source == info.Sources.hitbtc:
+        pass
+    elif source == info.Sources.cc:
+        drop_columns = [
+            'Algorithm', 'FullyPremined', 'Id', 'ImageUrl', 'PreMinedValue', 'ProofType',
+            'ProofType', 'SortOrder', 'Url']
+        index_key = 'symbol'
+        column_map = {
+            'CoinName': 'name',
+            'FullName': 'more_info',
+            'Name': 'symbol',
+            'TotalCoinSupply': 'shares_outstanding',
+            'TotalCoinsFreeFloat': 'float_shares',
+
+        }
+    else:  # pragma: no cover
+        raise exceptions.UnsupportedSource()
+
+    return quote_df
 
 def _listify(
         data,
@@ -74,10 +109,10 @@ def coin_list_to_symbol_list(
 
     return symbols_list
 
-COIN_TICKER_URI = 'http://api.hitbtc.com/api/1/public/{symbol}/ticker'
+COIN_TICKER_URI_HITBTC = 'http://api.hitbtc.com/api/1/public/{symbol}/ticker'
 def get_ticker_hitbtc(
         symbol,
-        uri=COIN_TICKER_URI
+        uri=COIN_TICKER_URI_HITBTC
 ):
     """fetch quote for coin
 
@@ -108,6 +143,46 @@ def get_ticker_hitbtc(
         data = _listify(data, 'symbol')
 
     return data
+
+COIN_TICKER_URI_CC = 'https://min-api.cryptocompare.com/data/pricemultifull'
+def get_ticker_cc(
+        symbol_list,
+        currency='USD',
+        price_key='RAW',
+        market_list=None,
+        uri=COIN_TICKER_URI_CC
+):
+    """get current price quote from cryptocompare
+
+    Args:
+        symbol_list (:obj:`list`): list of coins to look up
+        currency (str, optional): which currency to convert to
+        price_key (str, optional): which group of data to read (RAW|DISPLAY)
+        market_list (:obj:`list`, optional): which market to pull from
+        uri (str, optional): resource link
+
+    Returns:
+        (:obj:`list`): ticker data for desired coin
+
+    """
+    params = {
+        'fsyms': ','.join(symbol_list).upper(),
+        'tsyms': currency
+    }
+    if market_list:
+        params['e'] = ','.join(market_list)
+
+    req = requests.get(uri, params=params)
+    req.raise_for_status()
+    data = req.json()
+
+    clean_data = []
+    for symbol in symbol_list:
+        symbol_row = data[price_key][symbol][currency]
+        symbol_row['TICKER'] = symbol + currency
+        clean_data.append(symbol_row)
+
+    return clean_data
 
 COIN_ORDER_BOOK_URI = 'http://api.hitbtc.com/api/1/public/{symbol}/orderbook'
 def get_order_book_hitbtc(
@@ -151,6 +226,7 @@ def get_order_book_hitbtc(
 def get_quote_hitbtc(
         coin_list,
         currency='USD',
+        to_yahoo=False,
         logger=LOGGER
 ):
     """fetch common summary data for crypto-coins
@@ -158,6 +234,7 @@ def get_quote_hitbtc(
     Args:
         coin_list (:obj:`list`): list of tickers to look up'
         currency (str, optional): currency to FOREX against
+        to_yahoo (bool, optional): convert names to yahoo analog
         logger (:obj:`logging.logger`, optional): logging handle
 
     Returns:
@@ -176,6 +253,9 @@ def get_quote_hitbtc(
     logger.info('--fetching ticker data')
     raw_quote = get_ticker_hitbtc('')
     quote_df = pd.DataFrame(raw_quote)
+    if to_yahoo:
+        logger.info('--converting column names to yahoo style')
+        quote_df = columns_to_yahoo(quote_df, info.Sources.hitbtc)
 
     logger.info('--filtering ticker data')
     quote_df = quote_df[quote_df['symbol'].isin(ticker_list)]
@@ -184,6 +264,48 @@ def get_quote_hitbtc(
 
     logger.debug(quote_df)
     return quote_df
+
+def get_quote_cc(
+        coin_list,
+        currency='USD',
+        summary_keys=['symbol', 'name', 'change_pct', 'current_price', 'updated_at'],
+        to_yahoo=True,
+        logger=LOGGER
+):
+    """fetch common summary data for crypto-coins
+
+    Args:
+        coin_list (:obj:`list`): list of tickers to look up'
+        currency (str, optional): currency to FOREX against
+        to_yahoo (bool, optional): convert names to yahoo analog
+        logger (:obj:`logging.logger`, optional): logging handle
+
+    Returns:
+        (:obj:`pandas.DataFrame`): coin info for the day, JSONable
+
+    """
+    logger.info('Generating quote for %s -- CryptoCompare', config._list_to_str(coin_list))
+
+    logger.info('--validating coin_list')
+    ticker_list = coin_list_to_symbol_list(
+        coin_list,
+        currency=currency,
+        strict=True
+    )
+    #TODO: only fetch symbol list when required?
+    coin_info_df = pd.DataFrame(info.get_supported_symbols_cc())
+
+    ticker_df = pd.DataFrame(get_quote_cc(coin_list))
+
+
+    ticker_df = pd.merge(
+        ticker_df, coin_info_df,
+        how='left',
+        left_on='FROMSYMBOL',
+        right_on='Name'
+    )
+
+    return ticker_df
 
 def get_orderbook_hitbtc(
         coin,

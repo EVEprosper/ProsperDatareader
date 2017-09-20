@@ -100,7 +100,7 @@ class TestSupportedSymbolInfo:
         assert isinstance(symbols_list, list)
 
 
-class TestGetSymbol:
+class TestGetSymbolHitBTC:
     """tests for info.get_symbol()"""
     good_commodity = 'BTC'
     good_currency = 'USD'
@@ -108,7 +108,7 @@ class TestGetSymbol:
 
     def test_get_symbol_happypath_nocache(self):
         """validate expected behavior for get_symbol()"""
-        symbol = info.get_symbol(self.good_commodity, self.good_currency)
+        symbol = info.get_symbol_hitbtc(self.good_commodity, self.good_currency)
 
         assert isinstance(symbol, str)
         assert symbol == self.good_symbol
@@ -116,10 +116,10 @@ class TestGetSymbol:
     def test_get_symbol_bad_symbol(self):
         """validate exception case when bad symbol inputs requested"""
         with pytest.raises(exceptions.SymbolNotSupported):
-            bad_symbol = info.get_symbol('BUTTS', self.good_currency)
+            bad_symbol = info.get_symbol_hitbtc('BUTTS', self.good_currency)
 
         with pytest.raises(exceptions.SymbolNotSupported):
-            bad_symbol = info.get_symbol(self.good_commodity, 'BUTTS')
+            bad_symbol = info.get_symbol_hitbtc(self.good_commodity, 'BUTTS')
 
 class TestGetTickerInfo:
     """tests info.get_ticker_info()"""

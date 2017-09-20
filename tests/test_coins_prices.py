@@ -8,6 +8,7 @@ import helpers
 import pandas
 
 import prosper.datareader.coins.prices as prices
+import prosper.datareader.coins.info as info
 import prosper.datareader.exceptions as exceptions
 
 def test_listify():
@@ -30,6 +31,46 @@ def test_listify():
         keys = list(row.keys())
         keys.sort()
         assert keys == expected_keys
+
+
+class TestGetTickerCC:
+    """validate get_ticker_cc() behavior"""
+    coin_list = ['BTC', 'ETH', 'DOGE']
+    def test_get_ticker_cc_happypath(self):
+        """validate expected behavior"""
+        data = prices.get_ticker_cc(self.coin_list)
+        print(data)
+        assert isinstance(data, list)
+        for row in data:
+            helpers.validate_schema(
+                row,
+                path.join('coins', 'cryptocompare_pricemultifull.schema')
+            )
+
+class TestGetQuoteCC:
+    """validate get_quote_cc behavior"""
+    coin_list = ['BTC', 'ETH', 'DOGE']
+    def test_get_quote_cc_happypath(self):
+        """validate expected behavior"""
+        data = prices.get_quote_cc(self.coin_list)
+        print(data)
+        assert False
+
+class TestColumnsToYahoo:
+    """validate expected return for columns_to_yahoo"""
+    def test_columns_to_yahoo_hitbtc(self):
+        """validate columns_to_yahoo() works for hitbtc data"""
+        data = pandas.DataFrame(info.get_supported_symbols_hitbtc())
+        print(data)
+        updated = prices.columns_to_yahoo(data, info.Sources.hitbtc)
+        assert False
+
+    def test_columns_to_yahoo_cc(self):
+        """validate column_to_yahoo() works for cryptocompare"""
+        data = pandas.DataFrame(info.get_supported_symbols_cc())
+        print(data)
+        updated = prices.columns_to_yahoo(data, info.Sources.cc)
+        assert False
 
 def test_get_ticker_single():
     """validate get_ticker_hitbtc() returns valid schema"""
