@@ -38,9 +38,7 @@ def columns_to_yahoo(
     if source == info.Sources.hitbtc:
         pass
     elif source == info.Sources.cc:
-        drop_columns = [
-            'Algorithm', 'FullyPremined', 'Id', 'ImageUrl', 'PreMinedValue', 'ProofType',
-            'ProofType', 'SortOrder', 'Url']
+        ## Remap column names ##
         index_key = 'symbol'
         column_map = {
             'CoinName': 'name',
@@ -48,11 +46,31 @@ def columns_to_yahoo(
             'Name': 'symbol',
             'TotalCoinSupply': 'shares_outstanding',
             'TotalCoinsFreeFloat': 'float_shares',
-
+            'LASTVOLUME': 'volume',
+            'MKTCAP': 'market_capitalization',
+            'CHANGEPCT24HOUR': 'change_pct',
+            'LASTUPDATE': 'last_trade_time',
+            'MARKET': 'stock_exchange',
+            'OPEN24HOUR': 'open',
+            'HIGH24HOUR': 'high',
+            'LOW24HOUR': 'low',
+            'PRICE': 'last'
         }
+
+        ## Trim unused data ##
+        keep_keys = list(column_map.keys())
+        keep_keys.append(index_key)
+        drop_keys = list(set(list(quote_df.columns.values)) - set(keep_keys))
+        quote_df = quote_df.drop(drop_keys, 1)
+
+        ## Apply remap ##
+        quote_df = quote_df.rename(index=index_key, columns=column_map)
+        quote_df['change_pct'] = quote_df['change_pct'] / 100
+
     else:  # pragma: no cover
         raise exceptions.UnsupportedSource()
 
+    ## reformat change_pct ##
     return quote_df
 
 def _listify(
@@ -267,7 +285,7 @@ def get_quote_hitbtc(
     logger.info('--filtering ticker data')
     quote_df = quote_df[quote_df['symbol'].isin(ticker_list)]
     quote_df = quote_df[list(quote_df.columns.values)].apply(pd.to_numeric, errors='ignore')
-    quote_df['pct_change'] = (quote_df['last'] - quote_df['open']) / quote_df['open'] * 100
+    quote_df['change_pct'] = (quote_df['last'] - quote_df['open']) / quote_df['open'] * 100
 
     logger.debug(quote_df)
     return quote_df
@@ -276,8 +294,8 @@ def get_quote_cc(
         coin_list,
         currency='USD',
         market_list=None,
-        summary_keys=['symbol', 'name', 'change_pct', 'current_price', 'updated_at'],
-        to_yahoo=True,
+        #summary_keys=['symbol', 'name', 'change_pct', 'current_price', 'updated_at'],
+        to_yahoo=False,
         logger=LOGGER
 ):
     """fetch common summary data for crypto-coins
@@ -295,17 +313,14 @@ def get_quote_cc(
     """
     logger.info('Generating quote for %s -- CryptoCompare', config._list_to_str(coin_list))
 
-    logger.info('--validating coin_list')
-    ticker_list = coin_list_to_symbol_list(
-        coin_list,
-        currency=currency,
-        strict=True
-    )
     #TODO: only fetch symbol list when required?
+    logger.info('--Gathering coin info')
     coin_info_df = pd.DataFrame(info.get_supported_symbols_cc())
 
+    logger.info('--Fetching ticker data')
     ticker_df = pd.DataFrame(get_ticker_cc(coin_list))
 
+    logger.info('--combining dataframes')
     ticker_df = pd.merge(
         ticker_df, coin_info_df,
         how='inner',
@@ -313,6 +328,14 @@ def get_quote_cc(
         right_on='Name'
     )
 
+    if to_yahoo:
+        logger.info('--converting headers to yahoo format')
+        ticker_df = columns_to_yahoo(
+            ticker_df,
+            info.Sources.cc
+        )
+
+    logger.debug(ticker_df)
     return ticker_df
 
 def get_orderbook_hitbtc(

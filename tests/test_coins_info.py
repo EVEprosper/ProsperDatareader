@@ -48,19 +48,22 @@ class TestSupportedSymbolInfo:
             'PAY', 'OAX', 'OMG', 'BQX', 'XTZ', 'CRS', 'DICE', 'XRP', 'MPK', 'NET',
             'STRAT', 'SNC', 'ADX', 'BET', 'EOS', 'DENT', 'SAN', 'MNE', 'MRV', 'MSP',
             'DDF', 'UET', 'MYB', 'SUR', 'IXT', 'HRB', 'PLR', 'TIX', 'NDC', 'PRO',
-            'AVT', 'TFL', 'COSS', 'PBKX', 'PQT', '8BT', 'EVX', 'IML', 'ROOTS', 'DELTA',
+            'AVT', 'TFL', 'COSS', 'PBKX', 'PQT', '8BT', 'EVX', 'IML', 'ROOTS', #'DELTA',
             'QAU', 'MANA', 'DNT', 'FYP', 'OPT', 'GRPH', 'TNT', 'STX', 'CAT', 'BCC',
             'ECAT', 'BAS', 'ZRX', 'RVT', 'ICOS', 'PPC', 'VERI', 'IGNIS', 'QTUM',
             'PRG', 'BMC', 'CND', 'ANT', 'EMGO', 'SKIN', 'FUN', 'HVN', 'AMB', 'CDT',
-            'AIR', 'POE', 'FUEL', 'MCAP', 'RKC', 'PING', 'NTO', 'GAME', 'ICO', 'WEALTH'
+            'AIR', 'POE', 'FUEL', 'MCAP', 'RKC', 'PING', 'NTO', 'GAME', 'ICO', 'WEALTH',
+            'DLT', 'TKR', 'PPT'
         ]
-        unique_commodities = list(set(commodity_list) - set(expected_commodities))
-        missing_commodities = list(set(expected_commodities) - set(commodity_list))
-        print('missing_commodities={}'.format(missing_commodities))
+        unique_values, unique_expected = helpers.find_uniques(
+            commodity_list,
+            expected_commodities
+        )
 
-        assert missing_commodities == []
-        if unique_commodities:
-            pytest.xfail('unique_commodities={}'.format(unique_commodities))
+        assert unique_expected == []
+        if unique_values:
+            pytest.xfail(
+                'Unexpected values from supported_symbol_info(): {}'.format(unique_values))
 
     def test_supported_currencies(self):
         """validate currency list"""
