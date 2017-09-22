@@ -114,10 +114,9 @@ class TestColumnsToYahoo:
 
         updated = prices.columns_to_yahoo(data, info.Sources.hitbtc)
         print(updated)
-        print(list(updated.columns.values))
         expected_headers = [
             'ask', 'bid', 'high', 'last', 'low', 'open', 'symbol', 'timestamp',
-            'volume', 'volume_quote', 'change_pct'
+            'volume', 'volume_quote', 'change_pct', 'datetime'
         ]
         unique_values, unique_expected = helpers.find_uniques(
             list(updated.columns.values),
@@ -136,10 +135,11 @@ class TestColumnsToYahoo:
         """validate column_to_yahoo() works for cryptocompare"""
         data = prices.get_quote_cc(self.coin_list, to_yahoo=False)
         updated = prices.columns_to_yahoo(data, info.Sources.cc)
+        print(updated)
         expected_headers = [
-            'change_pct', 'high', 'last_trade_time', 'volume', 'low', 'stock_exchange',
+            'change_pct', 'high', 'volume', 'low', 'stock_exchange',
             'market_capitalization', 'open', 'last', 'name', 'more_info', 'symbol',
-            'shares_outstanding', 'float_shares'
+            'shares_outstanding', 'float_shares', 'datetime', 'timestamp'
         ]
         unique_values, unique_expected = helpers.find_uniques(
             list(updated.columns.values),

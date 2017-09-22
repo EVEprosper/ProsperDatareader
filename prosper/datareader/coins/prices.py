@@ -51,12 +51,12 @@ def columns_to_yahoo(
             'LASTVOLUME': 'volume',
             'MKTCAP': 'market_capitalization',
             'CHANGEPCT24HOUR': 'change_pct',
-            'LASTUPDATE': 'last_trade_time',
             'MARKET': 'stock_exchange',
             'OPEN24HOUR': 'open',
             'HIGH24HOUR': 'high',
             'LOW24HOUR': 'low',
-            'PRICE': 'last'
+            'PRICE': 'last',
+            'LASTUPDATE': 'timestamp'
         }
 
         ## Trim unused data ##
@@ -79,6 +79,14 @@ def columns_to_yahoo(
         '{:+.2%}'.format,
         quote_df['change_pct']
     ))
+
+    ## Timestamp to datetime ##
+    quote_df['datetime'] = pd.to_datetime(
+        pd.to_numeric(quote_df['timestamp']),
+        infer_datetime_format=True,
+        #format='%Y-%m-%dT%H:%M:%S',
+        errors='coerce'
+    )
 
     return quote_df
 

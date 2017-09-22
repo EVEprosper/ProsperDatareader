@@ -17,10 +17,6 @@ DEMO_DATA = [
     {'text': 'Libraries have books', 'etc': 6}
 ]
 
-def test_prep():
-    """prep environemnt into known starting state"""
-    utils.INSTALLED_PACKAGES = []
-
 class TestNLTKInstall:
     """validate NLTK install checker works as expected"""
     fake_lexicon = 'fake_lexicon_name'
