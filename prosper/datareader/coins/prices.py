@@ -303,7 +303,6 @@ def get_quote_cc(
         coin_list,
         currency='USD',
         market_list=None,
-        #summary_keys=['symbol', 'name', 'change_pct', 'current_price', 'updated_at'],
         to_yahoo=False,
         logger=LOGGER
 ):
@@ -330,7 +329,7 @@ def get_quote_cc(
     ticker_df = pd.DataFrame(get_ticker_cc(coin_list))
 
     logger.info('--combining dataframes')
-    ticker_df = pd.merge(
+    quote_df = pd.merge(
         ticker_df, coin_info_df,
         how='inner',
         left_on='FROMSYMBOL',
@@ -339,13 +338,14 @@ def get_quote_cc(
 
     if to_yahoo:
         logger.info('--converting headers to yahoo format')
-        ticker_df = columns_to_yahoo(
-            ticker_df,
+        quote_df = columns_to_yahoo(
+            quote_df,
             info.Sources.cc
         )
 
-    logger.debug(ticker_df)
-    return ticker_df
+    quote_df = quote_df[list(quote_df.columns.values)].apply(pd.to_numeric, errors='ignore')
+    logger.debug(quote_df)
+    return quote_df
 
 def get_orderbook_hitbtc(
         coin,
