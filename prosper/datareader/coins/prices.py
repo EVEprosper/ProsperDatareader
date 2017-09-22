@@ -36,14 +36,16 @@ def columns_to_yahoo(
 
     """
     if source == info.Sources.hitbtc:
-        pass
+        index_key = 'symbol'
+        quote_df = quote_df.rename(index=quote_df[index_key])
+
     elif source == info.Sources.cc:
         ## Remap column names ##
-        index_key = 'symbol'
+        index_key = 'Name'
         column_map = {
-            'CoinName': 'name',
-            'FullName': 'more_info',
-            'Name': 'symbol',
+            'CoinName': 'name',                         #
+            'FullName': 'more_info',                    #
+            'Name': 'symbol',                           #
             'TotalCoinSupply': 'shares_outstanding',
             'TotalCoinsFreeFloat': 'float_shares',
             'LASTVOLUME': 'volume',
@@ -64,13 +66,20 @@ def columns_to_yahoo(
         quote_df = quote_df.drop(drop_keys, 1)
 
         ## Apply remap ##
-        quote_df = quote_df.rename(index=index_key, columns=column_map)
+        quote_df = quote_df.rename(
+            columns=column_map,
+            index=quote_df[index_key])
         quote_df['change_pct'] = quote_df['change_pct'] / 100
 
     else:  # pragma: no cover
         raise exceptions.UnsupportedSource()
 
     ## reformat change_pct ##
+    quote_df['change_pct'] = list(map(
+        '{:+.2%}'.format,
+        quote_df['change_pct']
+    ))
+
     return quote_df
 
 def _listify(

@@ -105,21 +105,54 @@ class TestGetQuoteCC:
         if unique_values:
             pytest.xfail('Unexpected values from get_quote_cc(): {}'.format(unique_values))
 
-#class TestColumnsToYahoo:
-#    """validate expected return for columns_to_yahoo"""
-#    def test_columns_to_yahoo_hitbtc(self):
-#        """validate columns_to_yahoo() works for hitbtc data"""
-#        data = pandas.DataFrame(info.get_supported_symbols_hitbtc())
-#        print(data)
-#        updated = prices.columns_to_yahoo(data, info.Sources.hitbtc)
-#        assert False
-#
-#    def test_columns_to_yahoo_cc(self):
-#        """validate column_to_yahoo() works for cryptocompare"""
-#        data = pandas.DataFrame(info.get_supported_symbols_cc())
-#        print(data)
-#        updated = prices.columns_to_yahoo(data, info.Sources.cc)
-#        assert False
+class TestColumnsToYahoo:
+    """validate expected return for columns_to_yahoo"""
+    coin_list = ['BTC', 'ETH', 'LTC']
+    def test_columns_to_yahoo_hitbtc(self):
+        """validate columns_to_yahoo() works for hitbtc data"""
+        data = prices.get_quote_hitbtc(self.coin_list, to_yahoo=False)
+
+        updated = prices.columns_to_yahoo(data, info.Sources.hitbtc)
+        print(updated)
+        print(list(updated.columns.values))
+        expected_headers = [
+            'ask', 'bid', 'high', 'last', 'low', 'open', 'symbol', 'timestamp',
+            'volume', 'volume_quote', 'change_pct'
+        ]
+        unique_values, unique_expected = helpers.find_uniques(
+            list(updated.columns.values),
+            expected_headers
+        )
+        assert unique_expected == []
+        if unique_values:
+            pytest.xfail(
+                'Unexpected values from columns_to_yahoo(): {}'.format(unique_values)
+            )
+
+        ## assert %change done correctly
+        ## assert cols not_na
+
+    def test_columns_to_yahoo_cc(self):
+        """validate column_to_yahoo() works for cryptocompare"""
+        data = prices.get_quote_cc(self.coin_list, to_yahoo=False)
+        updated = prices.columns_to_yahoo(data, info.Sources.cc)
+        expected_headers = [
+            'change_pct', 'high', 'last_trade_time', 'volume', 'low', 'stock_exchange',
+            'market_capitalization', 'open', 'last', 'name', 'more_info', 'symbol',
+            'shares_outstanding', 'float_shares'
+        ]
+        unique_values, unique_expected = helpers.find_uniques(
+            list(updated.columns.values),
+            expected_headers
+        )
+        assert unique_expected == []
+        if unique_values:
+            pytest.xfail(
+                'Unexpected values from columns_to_yahoo(): {}'.format(unique_values)
+            )
+
+        ## assert %change done correctly
+        ## assert cols not_na
 
 @flaky
 def test_get_ticker_single():
