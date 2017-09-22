@@ -77,6 +77,7 @@ class PyTest(TestCommand):
         self.pytest_args = [
             'tests',
             '-rx',
+            '-v',
             '--cov=prosper/' + __library_name__,
             '--cov-report=term-missing',
             '--cov-config=.coveragerc'
@@ -103,8 +104,8 @@ class QuickTest(PyTest):
         self.pytest_args = [
             'tests',
             '-rx',
-            '-m',
-            'not long',
+            '-n',
+            '4',
             '--cov=prosper/' + __library_name__,
             '--cov-report=term-missing',
             '--cov-config=.coveragerc'
@@ -144,8 +145,10 @@ setup(
     tests_require=[
         'jsonschema',
         'pytest',
+        'flaky',
         'testfixtures',
         'pytest_cov',
+        'pytest-xdist'
     ],
     extras_require={
         'dev':[
@@ -158,6 +161,6 @@ setup(
     },
     cmdclass={
         'test':PyTest,
-        'quicktest': QuickTest
+        'fast': QuickTest
     }
 )

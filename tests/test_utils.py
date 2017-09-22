@@ -25,12 +25,10 @@ class TestNLTKInstall:
     """validate NLTK install checker works as expected"""
     fake_lexicon = 'fake_lexicon_name'
     real_lexicon = 'vader_lexicon'
-    def test_empty_install(self):
-        """make sure virgin setup looks like expected (order checker)"""
-        assert utils.INSTALLED_PACKAGES == []
 
     def test_bad_install(self):
         """validate behavior for failed lexicon install"""
+        utils.INSTALLED_PACKAGES = []
         with pytest.raises(exceptions.UtilsNLTKDownloadFailed):
             utils._validate_install(self.fake_lexicon)
 
@@ -53,6 +51,7 @@ class TestNLTKInstall:
     def test_validate_already_installed(self):
         """validate expected skip if already installed"""
         utils._TESTMODE = True
+        utils._validate_install(self.real_lexicon)  #Make sure pre installed
         with pytest.warns(exceptions.DatareaderWarning):
             utils._validate_install(self.real_lexicon)
 

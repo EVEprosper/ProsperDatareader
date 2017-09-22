@@ -4,6 +4,7 @@ from os import path
 import re
 
 import pytest
+from flaky import flaky
 import requests
 import helpers
 import pandas as pd
@@ -21,6 +22,7 @@ class TestExpectedSchemas:
     instruments_ticker = helpers.CONFIG.get('STOCKS', 'instruments_ticker')
     today = datetime.utcnow().strftime('%Y-%m-%d')
 
+    @flaky
     def test_validate_quotes_endpoint(self):
         """make sure /quotes endpoint works as expected"""
         for ticker in self.ticker_list:
@@ -28,6 +30,7 @@ class TestExpectedSchemas:
 
             helpers.validate_schema(quote, 'stocks/rh_quotes.schema')
 
+    @flaky
     def test_validate_fundamentals_endpoint(self):
         """make sure /fundamentals endpoint works as expected"""
         for ticker in self.ticker_list:
@@ -35,6 +38,7 @@ class TestExpectedSchemas:
 
             helpers.validate_schema(fundamental, 'stocks/rh_fundamentals.schema')
 
+    @flaky
     def test_validate_instruments_rh(self):
         """make sure /instruments endpoint works as expected"""
         instrument = prices.fetch_instruments_rh(self.instruments_url)
@@ -43,6 +47,7 @@ class TestExpectedSchemas:
 
         assert instrument['symbol'] == self.instruments_ticker
 
+    @flaky
     def test_validate_market_info(self):
         """make sure /markets endpoint works as expected"""
         market_req = requests.get(self.markets_url)
@@ -52,6 +57,7 @@ class TestExpectedSchemas:
 
         helpers.validate_schema(market, 'stocks/rh_markets.schema')
 
+    @flaky
     def test_validate_market_hours(self):
         """make sure /markets/hours works as expected"""
         url = '{markets_url}hours/{today}'.format(
@@ -125,6 +131,7 @@ class TestGetQuoteRH:
     good_ticker = helpers.CONFIG.get('STOCKS', 'good_ticker')
     ticker_list = helpers.CONFIG.get('STOCKS', 'ticker_list').split(',')
 
+    @flaky
     def test_get_quote_rh_default(self):
         """validate expected default behavior for get_quote_rh()"""
         single_quote = prices.get_quote_rh(self.good_ticker)
@@ -134,6 +141,7 @@ class TestGetQuoteRH:
 
         assert set(list(single_quote.columns.values)) == set(prices.SUMMARY_KEYS)
 
+    @flaky
     def test_get_quote_rh_multi(self):
         """validate expected behavior with list of stocks"""
         multi_quote = prices.get_quote_rh(self.ticker_list)
@@ -143,6 +151,7 @@ class TestGetQuoteRH:
 
         assert set(list(multi_quote.columns.values)) == set(prices.SUMMARY_KEYS)
 
+    @flaky
     def test_get_quote_rh_no_filter(self):
         """look at all possible summary keys"""
         no_filter = prices.get_quote_rh(self.good_ticker, keys=None)

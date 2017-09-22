@@ -19,7 +19,6 @@ def test_get_supported_symbols_hitbtc():
             symbol,
             path.join('coins', 'hitbtc_symbols.schema')
         )
-
 def test_get_supported_symbols_cc():
     """validate get_supported_symbols_cc() return valid schema"""
     data = info.get_supported_symbols_cc()
@@ -109,7 +108,7 @@ class TestGetSymbolHitBTC:
     good_currency = 'USD'
     good_symbol = 'BTCUSD'
 
-    def test_get_symbol_happypath_nocache(self):
+    def test_get_symbol_happypath(self):
         """validate expected behavior for get_symbol()"""
         symbol = info.get_symbol_hitbtc(self.good_commodity, self.good_currency)
 

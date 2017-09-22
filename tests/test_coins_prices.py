@@ -3,6 +3,7 @@ from datetime import datetime
 from os import path
 
 import pytest
+from flaky import flaky
 import requests
 import helpers
 import pandas
@@ -37,6 +38,7 @@ class TestGetTickerCC:
     """validate get_ticker_cc() behavior"""
     coin_list = ['BTC', 'ETH', 'LTC']
     market = 'Coinbase'
+
     def test_get_ticker_cc_happypath(self):
         """validate expected behavior"""
         data = prices.get_ticker_cc(self.coin_list)
@@ -80,6 +82,7 @@ class TestGetTickerCC:
 class TestGetQuoteCC:
     """validate get_quote_cc behavior"""
     coin_list = ['BTC', 'ETH', 'DOGE']
+
     def test_get_quote_cc_happypath(self):
         """validate expected behavior"""
         data = prices.get_quote_cc(self.coin_list)
@@ -118,6 +121,7 @@ class TestGetQuoteCC:
 #        updated = prices.columns_to_yahoo(data, info.Sources.cc)
 #        assert False
 
+@flaky
 def test_get_ticker_single():
     """validate get_ticker_hitbtc() returns valid schema"""
     data = prices.get_ticker_hitbtc('BTCUSD')
@@ -131,6 +135,7 @@ def test_get_ticker_single():
     with pytest.raises(requests.exceptions.HTTPError):
         bad_data = prices.get_ticker_hitbtc('BUTTS')
 
+@flaky
 def test_get_ticker_all():
     """validate get_ticker() behavior with blank args"""
     data = prices.get_ticker_hitbtc('')
@@ -142,6 +147,7 @@ def test_get_ticker_all():
     )
     assert len(data) >= 190 * 0.9 #expect ~same data or more
 
+@flaky
 def test_get_orderbook():
     """validate get_order_book_hitbtc() returns valid schema"""
     data = prices.get_order_book_hitbtc('BTCUSD')
@@ -150,6 +156,7 @@ def test_get_orderbook():
     assert isinstance(data['asks'], list)
     assert isinstance(data['bids'], list)
 
+@flaky
 def test_coin_list_to_symbol_list():
     """validate coin_list_to_symbol_list() works as expected"""
     test_coin_list = ['BTC', 'ETH']
@@ -172,6 +179,7 @@ class TestGetQuoteHitBTC:
         'timestamp', 'volume', 'volume_quote', 'change_pct'
     ]
 
+    @flaky
     def test_get_quote_hitbtc_happypath(self):
         """validate expected normal behavior"""
         quote = prices.get_quote_hitbtc(self.coin_list)
@@ -195,6 +203,7 @@ class TestGetQuoteHitBTC:
         with pytest.raises(KeyError):
             bad_quote = prices.get_quote_hitbtc(self.bad_list)
 
+    @flaky
     def test_get_quote_hitbtc_singleton(self):
         """validate quote special case for 1 value"""
         quote = prices.get_quote_hitbtc([self.coin_list[0]])
@@ -218,6 +227,7 @@ class TestGetOrderbookHitBTC:
     coin = 'BTC'
     expected_headers = ['price', 'ammount', 'symbol', 'coin', 'orderbook']
 
+    @flaky
     def test_get_orderbook_hitbtc_happypath_asks(self):
         """validate expected normal behavior"""
         asks_orderbook = prices.get_orderbook_hitbtc(
@@ -242,6 +252,7 @@ class TestGetOrderbookHitBTC:
         assert len(symbol) == 1
         assert symbol[0] == self.coin + 'USD'
 
+    @flaky
     def test_get_orderbook_hitbtc_happypath_bids(self):
         """validate expected normal behavior"""
         bids_orderbook = prices.get_orderbook_hitbtc(
