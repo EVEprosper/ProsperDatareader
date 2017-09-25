@@ -154,6 +154,41 @@ class TestColumnsToYahoo:
         ## assert %change done correctly
         ## assert cols not_na
 
+class TestGetHistoDayCC:
+    """validate behavior for get_histo_day_cc"""
+    coin = 'BTC'
+    limit = 60
+
+    def test_get_histo_day_cc_happypath(self):
+        """validate expected default behavior for endpoint"""
+        data = prices.get_histo_day_cc(
+            self.coin,
+            self.limit
+        )
+
+        for row in data:
+            helpers.validate_schema(
+                row,
+                path.join('coins', 'cryptocompare_histo_day.schema')
+            )
+
+    def test_get_histo_day_cc_aggregate(self):
+        """validate `aggregate` path"""
+
+        data = prices.get_histo_day_cc(
+            self.coin,
+            self.limit,
+            aggregate=3
+        )
+        ## TODO VALIDATE ##
+
+    def test_get_histo_day_cc_badcoin(self):
+        """validate expected error for bad coin id"""
+        with pytest.raises(exceptions.SymbolNotSupported):
+            bad_data = prices.get_histo_day_cc(
+                'BUTTS',
+                self.limit
+            )
 @flaky
 def test_get_ticker_single():
     """validate get_ticker_hitbtc() returns valid schema"""

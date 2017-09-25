@@ -255,9 +255,9 @@ def get_histo_day_cc(
 
     """
     params = {
-        'fsym': coin,
-        'tsym': currency,
-        'limit': limit,
+        'fsym': coin.upper(),
+        'tsym': currency.upper(),
+        'limit': int(limit),
         'e': exchange
     }
     if aggregate:
@@ -267,7 +267,7 @@ def get_histo_day_cc(
     req.raise_for_status()
     data = req.json()
 
-    if 'Response' in data.keys():
+    if data['Response'] == 'Error':
         ## CC returns unique schema in error case ##
         raise exceptions.SymbolNotSupported(data['Message'])
 
