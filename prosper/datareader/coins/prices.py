@@ -226,6 +226,53 @@ def get_ticker_cc(
 
     return clean_data
 
+COIN_HISTO_DAY_URI = 'https://min-api.cryptocompare.com/data/histoday'
+def get_histo_day_cc(
+        coin,
+        limit,
+        exchange='CCCAGG',
+        aggregate=None,
+        currency='USD',
+        data_key='Data',
+        uri=COIN_HISTO_DAY_URI
+):
+    """generate OHLC data for coins
+
+    Notes:
+        https://www.cryptocompare.com/api/#-api-data-histoday-
+
+    Args:
+        coin (str): short-name of single coin
+        limit (int): range to query (max: 2000)
+        exchange (str, optional): name of exchange to pull from
+        aggregate (int, optional): IDK?
+        currenct (str, optional): which currency to convert to FOREX
+        data_key (str, optional): name of JSON-key with OHLC data
+        uri (str, optional): API endpoint uri
+
+    Returns:
+        (:obj:`list`): list of OHLC data
+
+    """
+    params = {
+        'fsym': coin,
+        'tsym': currency,
+        'limit': limit,
+        'e': exchange
+    }
+    if aggregate:
+        params['aggregate'] = aggregate
+
+    req = requests.get(uri, params=params)
+    req.raise_for_status()
+    data = req.json()
+
+    if 'Response' in data.keys():
+        ## CC returns unique schema in error case ##
+        raise exceptions.SymbolNotSupported(data['Message'])
+
+    return data[data_key]
+
 COIN_ORDER_BOOK_URI = 'http://api.hitbtc.com/api/1/public/{symbol}/orderbook'
 def get_order_book_hitbtc(
         symbol,
@@ -310,7 +357,7 @@ def get_quote_hitbtc(
 def get_quote_cc(
         coin_list,
         currency='USD',
-        market_list=None,
+        coin_info_df=None,
         to_yahoo=False,
         logger=LOGGER
 ):
@@ -319,7 +366,7 @@ def get_quote_cc(
     Args:
         coin_list (:obj:`list`): list of tickers to look up'
         currency (str, optional): currency to FOREX against
-        market_list (:obj:`list`, optional): which market to pull from
+        coin_info_df (:obj:`pandas.DataFrame`, optional): coin info (for caching)
         to_yahoo (bool, optional): convert names to yahoo analog
         logger (:obj:`logging.logger`, optional): logging handle
 
@@ -330,8 +377,14 @@ def get_quote_cc(
     logger.info('Generating quote for %s -- CryptoCompare', config._list_to_str(coin_list))
 
     #TODO: only fetch symbol list when required?
-    logger.info('--Gathering coin info')
-    coin_info_df = pd.DataFrame(info.get_supported_symbols_cc())
+    if coin_info_df is None:
+        logger.info('--Gathering coin info')
+        coin_info_df = pd.DataFrame(info.get_supported_symbols_cc())
+    else:
+        #make sure expected data is in there
+        headers = list(coin_info_df.columns.values)
+        assert 'Name' in headers   # avoid merge issue
+
 
     logger.info('--Fetching ticker data')
     ticker_df = pd.DataFrame(get_ticker_cc(coin_list))

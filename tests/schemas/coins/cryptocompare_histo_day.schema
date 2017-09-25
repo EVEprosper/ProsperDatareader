@@ -1,0 +1,16 @@
+{
+	"type": "object":
+	"properties": {
+		"time": {"type":"integer"},
+		"close": {"type":"number"},
+		"high": {"type":"number"},
+		"low": {"type":"number"},
+		"open": {"type":"number"},
+		"volumefrom": {"type":"number"},
+		"volumeto": {"type":"number"}
+	},
+	"required":[
+		"time", "close", "high", "low", "open", "volunefrom", "volumeto"
+	],
+	"additionalProperties": false
+}
