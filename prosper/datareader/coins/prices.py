@@ -13,7 +13,9 @@ from . import info
 LOGGER = config.LOGGER
 HERE = path.abspath(path.dirname(__file__))
 
-__all__ = ('get_orderbook_hitbtc', 'get_quote_hitbtc')
+__all__ = (
+    'get_orderbook_hitbtc', 'get_quote_hitbtc', 'get_quote_cc', 'get_ohlc_cc'
+)
 
 
 class OrderBook(Enum):

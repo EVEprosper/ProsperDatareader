@@ -16,6 +16,8 @@ import prosper.datareader.exceptions as exceptions
 HERE = path.abspath(path.dirname(__file__))
 _TESTMODE = False
 
+__all__ = ('vader_sentiment')
+
 INSTALLED_PACKAGES = []
 def _validate_install(
         package_name,
@@ -121,6 +123,8 @@ def map_vader_sentiment(
     )
 
     return new_df
+
+################################################################################
 
 def vader_sentiment(
         full_dataframe,

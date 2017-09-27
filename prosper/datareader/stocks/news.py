@@ -16,11 +16,9 @@ LOGGER = config.LOGGER
 HERE = path.abspath(path.dirname(__file__))
 #PARSER = HTMLParser()
 
-__all__ = [
-    'company_news_google',
-    'market_news_google',
-    'company_news_rh'
-]
+__all__ = (
+    'company_news_google', 'market_news_google', 'company_news_rh'
+)
 
 def validate_google_response(response, tag_primary=True):
     """crunches down google response for return
@@ -56,9 +54,6 @@ def validate_google_response(response, tag_primary=True):
 
     return article_list
 
-##############
-## Fetchers ##
-##############
 GOOGLE_COMPANY_NEWS = 'https://www.google.com/finance/company_news'
 def fetch_company_news_google(
         ticker,
@@ -166,9 +161,8 @@ def fetch_company_news_rh(
 
     return articles_list
 
-#######################
-## __all__ utilities ##
-#######################
+################################################################################
+
 def company_news_google(
         ticker,
         pretty=True,

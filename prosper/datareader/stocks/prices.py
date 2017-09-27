@@ -15,6 +15,10 @@ LOGGER = config.LOGGER
 HERE = path.abspath(path.dirname(__file__))
 
 
+__all__ = (
+    'get_quote_rh'
+)
+
 def cast_str_to_int(dataframe):
     """tries to apply to_numeric to each str column
 
@@ -167,8 +171,11 @@ def market_is_open(market_uri, logger=LOGGER):
     else:
         return True
 
+################################################################################
+
 SUMMARY_KEYS = [
-    'symbol', 'name', 'pe_ratio', 'change_pct', 'current_price', 'updated_at']
+    'symbol', 'name', 'pe_ratio', 'change_pct', 'current_price', 'updated_at'
+]
 def get_quote_rh(
         ticker_list,
         keys=SUMMARY_KEYS,
