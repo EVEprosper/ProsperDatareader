@@ -21,6 +21,23 @@ class OrderBook(Enum):
     asks = 'asks'
     bids = 'bids'
 
+class OHLCfrequency(Enum):
+    """enumerator for OHLC scopes"""
+    minute = 'minute'
+    hour = 'hour'
+    day = 'day'
+
+    def address(self):
+        """help figure out which address to use"""
+        if self == self.minute:
+            return 'https://min-api.cryptocompare.com/data/histominute'
+        elif self == self.hour:
+            return 'https://min-api.cryptocompare.com/data/histohour'
+        elif self == self.day:
+            return 'https://min-api.cryptocompare.com/data/histoday'
+        else:   # pragma: no cover
+            raise exceptions.InvalidEnum()
+
 def columns_to_yahoo(
         quote_df,
         source
@@ -43,9 +60,9 @@ def columns_to_yahoo(
         ## Remap column names ##
         index_key = 'Name'
         column_map = {
-            'CoinName': 'name',                         #
-            'FullName': 'more_info',                    #
-            'Name': 'symbol',                           #
+            'CoinName': 'name',
+            'FullName': 'more_info',
+            'Name': 'symbol',
             'TotalCoinSupply': 'shares_outstanding',
             'TotalCoinsFreeFloat': 'float_shares',
             'LASTVOLUME': 'volume',
@@ -230,7 +247,7 @@ COIN_HISTO_DAY_URI = 'https://min-api.cryptocompare.com/data/histoday'
 def get_histo_day_cc(
         coin,
         limit,
-        exchange='CCCAGG',
+        exchange=None,
         aggregate=None,
         currency='USD',
         data_key='Data',
@@ -257,9 +274,10 @@ def get_histo_day_cc(
     params = {
         'fsym': coin.upper(),
         'tsym': currency.upper(),
-        'limit': int(limit),
-        'e': exchange
+        'limit': int(limit)
     }
+    if exchange:
+        params['e'] = exchange
     if aggregate:
         params['aggregate'] = aggregate
 
@@ -407,6 +425,41 @@ def get_quote_cc(
     quote_df = quote_df[list(quote_df.columns.values)].apply(pd.to_numeric, errors='ignore')
     logger.debug(quote_df)
     return quote_df
+
+def get_ohlc_cc(
+        coin,
+        limit,
+        currency='USD',
+        frequency=OHLCfrequency.day,
+        logger=LOGGER
+):
+    """gather OHLC data for given coin
+
+    Args:
+        coin (str): name of coin to look up
+        limit (int): total range for OHLC data (max 2000)
+        currency (str, optional): currency to compare coin to
+        frequency (:obj;`Enum`, optional): which range to use (minute, hour, day)
+        logger (:obj:`logging.logger`, optional): logging handle
+
+    Returns:
+        (:obj:`pandas.DataFrame`): OHLC data
+
+    """
+    if isinstance(frequency, str):
+        frequency = OHLCfrequency(frequency)
+
+    logger.info('Fetching OHLC data @%s for %s -- CryptoCompare', frequency.value, coin)
+    data = get_histo_day_cc(
+        coin,
+        limit,
+        currency=currency,
+        uri=frequency.address()
+    )
+
+    ohlc_df = pd.DataFrame(data)
+
+    return ohlc_df
 
 def get_orderbook_hitbtc(
         coin,

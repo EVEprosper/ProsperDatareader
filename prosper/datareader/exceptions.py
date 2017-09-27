@@ -12,6 +12,9 @@ class PaginationWarning(DatareaderWarning):
 class UnsupportedSource(DatareaderException):
     """unsupported source requested (CYA)"""
     pass
+class InvalidEnum(DatareaderException):
+    """unsupported enum selection"""
+    pass
 
 ###########
 ## Utils ##
