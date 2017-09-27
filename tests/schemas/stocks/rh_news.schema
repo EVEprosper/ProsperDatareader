@@ -13,11 +13,12 @@
         "num_clicks": {"type":"integer"},
         "uuid": {"type":["string", "null"]},
         "relay_url": {"type":"string", "format":"date-time"},
-        "preview_image_url": {"type":"string"}
+        "preview_image_url": {"type":"string"},
+        "preview_image_height": {"type":["string", "null"]},
+        "preview_image_width": {"type":["string", "null"]}
     },
     "required": [
-        "url", "title", "source", "published_at", "author", 
-        "summary", "api_source", "updated_at", "instrument", 
-        "num_clicks", "uuid", "relay_url", "preview_image_url"],
-    "additionalProperties": false
+        "url", "title", "source", "published_at", "author", "summary", "api_source", 
+        "updated_at", "instrument", "relay_url", "preview_image_url"
+    ]
 }

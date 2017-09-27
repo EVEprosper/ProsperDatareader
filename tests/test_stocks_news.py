@@ -230,7 +230,15 @@ class TestCompanyNewsRobinhood:
 
         assert isinstance(all_news_df, pandas.DataFrame)
 
-        assert list(all_news_df.columns.values) == self.expected_news_cols
+        unique_values, unique_expected = helpers.find_uniques(
+            list(all_news_df.columns.values),
+            self.expected_news_cols
+        )
+        assert unique_expected == []
+        if unique_values:
+            pytest.xfail(
+                'Unexpected values from company_news_rh(): {}'.format(unique_values)
+            )
 
     @pytest.mark.long
     def test_vader_application(self):
@@ -243,5 +251,12 @@ class TestCompanyNewsRobinhood:
         expected_cols = self.expected_news_cols
         expected_cols.extend(['neu', 'pos', 'compound', 'neg'])
 
-        print(list(graded_news.columns.values))
-        assert list(graded_news.columns.values) == expected_cols
+        unique_values, unique_expected = helpers.find_uniques(
+            list(graded_news.columns.values),
+            expected_cols
+        )
+        assert unique_expected == []
+        if unique_values:
+            pytest.xfail(
+                'Unexpected values from vader_sentiment(): {}'.format(unique_values)
+            )
