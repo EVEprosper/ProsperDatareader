@@ -100,6 +100,15 @@ def find_uniques(
     unique_test = list(set(test_list) - set(expected_list))
     print('Unique test vals: {}'.format(unique_test))
 
+    #unique_expected = list(expected_list)
+    #for key in test_list:
+    #    try:
+    #        unique_expected.remove(key)
+    #        print('removed key: {}'.format(key))
+    #    except Exception:
+    #        print('key not in expected: {}'.format(key))
+    #        pass
+    #print(unique_expected)
     unique_expected = list(set(expected_list) - set(test_list))
     print('Unique expected vals: {}'.format(unique_expected))
 

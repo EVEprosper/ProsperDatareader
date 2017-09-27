@@ -189,6 +189,96 @@ class TestGetHistoDayCC:
                 'BUTTS',
                 self.limit
             )
+
+class TestGetOHLCCC:
+    """validate behavior for get_ohlc_cc()"""
+    coin = 'BTC'
+    limit = 60
+    max_limit = 2001
+    expected_headers = [
+        'high', 'open', 'time', 'volumefrom', 'low', 'close', 'volumeto'
+    ]
+
+    def test_get_ohlc_cc_happypath(self):
+        """validate expected default behavor for endpoint"""
+        data = prices.get_ohlc_cc(
+            self.coin,
+            self.limit
+        )
+
+        assert isinstance(data, pandas.DataFrame)
+
+        unique_values, unique_expected = helpers.find_uniques(
+            list(data.columns.values),
+            self.expected_headers
+        )
+        assert unique_expected == []
+        if unique_values:
+            pytest.xfail(
+                'Unexpected values from get_ohlc_cc(): {}'.format(unique_values)
+            )
+
+    def test_get_ohlc_cc_maxrange(self):
+        """make sure expected failure for too much data requested"""
+        requested_limit = self.max_limit + 10
+        data = prices.get_ohlc_cc(
+            self.coin,
+            requested_limit
+        )
+        if data.shape[0] > self.max_limit:
+            pytest.xfail('Max limit unexpected.  Expected={} Requested={} Returned={}'.format(
+                self.max_limit, requested_limit, data.shape[0]
+            ))
+
+    def test_get_ohlc_cc_hours(self):
+        """request hours data"""
+        data = prices.get_ohlc_cc(
+            self.coin,
+            self.limit,
+            frequency='hour'
+        )
+
+        assert isinstance(data, pandas.DataFrame)
+
+        unique_values, unique_expected = helpers.find_uniques(
+            list(data.columns.values),
+            self.expected_headers
+        )
+        assert unique_expected == []
+        if unique_values:
+            pytest.xfail(
+                'Unexpected values from get_ohlc_cc(frequency=hour): {}'.format(unique_values)
+            )
+
+    def test_get_ohlc_cc_seconds(self):
+        """request minute data"""
+        data = prices.get_ohlc_cc(
+            self.coin,
+            self.limit,
+            frequency='minute'
+        )
+
+        assert isinstance(data, pandas.DataFrame)
+
+        unique_values, unique_expected = helpers.find_uniques(
+            list(data.columns.values),
+            self.expected_headers
+        )
+        assert unique_expected == []
+        if unique_values:
+            pytest.xfail(
+                'Unexpected values from get_ohlc_cc(frequency=minute): {}'.format(unique_values)
+            )
+
+    def test_get_ohlc_cc_badfreq(self):
+        """ask for bad frequency"""
+        with pytest.raises(ValueError):
+            data = prices.get_ohlc_cc(
+                self.coin,
+                self.limit,
+                frequency='eons'
+            )
+
 @flaky
 def test_get_ticker_single():
     """validate get_ticker_hitbtc() returns valid schema"""
