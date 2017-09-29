@@ -13,11 +13,12 @@
         "TotalCoinSupply": {"type":"string"},
         "PreMinedValue": {"type":"string"},
         "TotalCoinsFreeFloat": {"type":"string"},
-        "SortOrder": {"type":"string"}
+        "SortOrder": {"type":"string"},
+        "Sponsored": {"type":"boolean"}
     },
     "required": [
         "Id", "Url", "Name", "CoinName", "FullName", "Algorithm", "ProofType", 
-        "FullyPremined", "TotalCoinSupply", "PreMinedValue", "TotalCoinsFreeFloat", "SortOrder"
+        "FullyPremined", "TotalCoinSupply", "PreMinedValue", "TotalCoinsFreeFloat", "SortOrder", "Sponsored"
     ],
     "additionalProperties": false
 }

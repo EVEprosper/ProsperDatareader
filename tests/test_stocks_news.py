@@ -139,8 +139,13 @@ class TestCompanyNewsGoogle:
             'sru', 'title', 'datetime', 'url', 'usg'
         ]
 
-        assert list(all_news_df.columns.values) == expected_cols
-
+        unique_values, unique_expected = helpers.find_uniques(
+            list(all_news_df.columns.values),
+            expected_cols
+        )
+        assert unique_expected == []
+        if unique_values:
+            pytest.xfail('Unexpected values from company_news_google(): {}'.format(unique_values))
 
     def test_company_news_no_pretty(self):
         """validate not-pretty return works as expected"""
@@ -154,8 +159,13 @@ class TestCompanyNewsGoogle:
         expected_cols = [
             'd', 'primary', 's', 'sp', 'sru', 't', 'tt', 'u', 'usg'
         ]
-
-        assert list(all_news_df.columns.values) == expected_cols
+        unique_values, unique_expected = helpers.find_uniques(
+            list(all_news_df.columns.values),
+            expected_cols
+        )
+        assert unique_expected == []
+        if unique_values:
+            pytest.xfail('Unexpected values from company_news_google(): {}'.format(unique_values))
 
     @pytest.mark.long
     def test_vader_application(self):
@@ -171,7 +181,13 @@ class TestCompanyNewsGoogle:
             'neu', 'pos', 'compound', 'neg'
         ]
 
-        assert list(graded_news.columns.values) == expected_cols
+        unique_values, unique_expected = helpers.find_uniques(
+            list(graded_news.columns.values),
+            expected_cols
+        )
+        assert unique_expected == []
+        if unique_values:
+            pytest.xfail('Unexpected values from company_news_google(): {}'.format(unique_values))
 
 class TestCompanyNewsRobinhood:
     """validate behavior for news.fetch_company_news_rh()"""
@@ -180,7 +196,7 @@ class TestCompanyNewsRobinhood:
     expected_news_cols = [
         'api_source', 'author', 'instrument', 'num_clicks', 'preview_image_url',
         'published_at', 'relay_url', 'source', 'summary', 'title', 'updated_at',
-        'url', 'uuid'
+        'url', 'uuid', 'preview_image_width', 'preview_image_height'
     ]
 
     @pytest.mark.long

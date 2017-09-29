@@ -460,6 +460,7 @@ def get_ohlc_cc(
     )
 
     ohlc_df = pd.DataFrame(data)
+    ohlc_df['datetime'] = pd.to_datetime(ohlc_df['time'], unit='s')
 
     return ohlc_df
 

@@ -93,7 +93,7 @@ class TestGetQuoteCC:
             'LOW24HOUR', 'MARKET', 'MKTCAP', 'OPEN24HOUR', 'PRICE', 'SUPPLY', 'TICKER',
             'TOSYMBOL', 'TYPE', 'VOLUME24HOUR', 'VOLUME24HOURTO', 'Algorithm', 'CoinName',
             'FullName', 'FullyPremined', 'Id', 'ImageUrl', 'Name', 'PreMinedValue',
-            'ProofType', 'SortOrder', 'TotalCoinSupply', 'TotalCoinsFreeFloat', 'Url'
+            'ProofType', 'SortOrder', 'TotalCoinSupply', 'TotalCoinsFreeFloat', 'Url', 'Sponsored'
         ]
         unique_values, unique_expected = helpers.find_uniques(
             list(data.columns.values),
@@ -196,7 +196,7 @@ class TestGetOHLCCC:
     limit = 60
     max_limit = 2001
     expected_headers = [
-        'high', 'open', 'time', 'volumefrom', 'low', 'close', 'volumeto'
+        'high', 'open', 'time', 'volumefrom', 'low', 'close', 'volumeto', 'datetime'
     ]
 
     def test_get_ohlc_cc_happypath(self):
