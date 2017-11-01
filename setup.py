@@ -122,6 +122,7 @@ setup(
     author='John Purcell',
     author_email='prospermarketshow@gmail.com',
     url='https://github.com/EVEprosper/' + __package_name__,
+    download_url='https://pypi.python.org/pypi/ProsperDatareader',
     license='MIT',
     classifiers=[
         'Programming Language :: Python :: 3.5',

@@ -7,15 +7,15 @@
         "published_at": {"type":"string", "format":"date-time"},
         "author": {"type":"string"},
         "summary": {"type":"string"},
-        "api_source": {"type":"string", "enum":["yahoo_finance", "seeking_alpha"]},
+        "api_source": {"type":"string"},
         "updated_at": {"type":"string"},
         "instrument": {"type":"string", "format":"uri"},
         "num_clicks": {"type":"integer"},
-        "uuid": {"type":["string", "null"]},
+        "uuid": {"type":"string"},
         "relay_url": {"type":"string", "format":"date-time"},
         "preview_image_url": {"type":"string"},
-        "preview_image_height": {"type":["string", "null"]},
-        "preview_image_width": {"type":["string", "null"]}
+        "preview_image_height": {"type":["integer", "null"]},
+        "preview_image_width": {"type":["integer", "null"]}
     },
     "required": [
         "url", "title", "source", "published_at", "author", "summary", "api_source", 

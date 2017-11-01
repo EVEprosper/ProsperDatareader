@@ -1,5 +1,5 @@
 [report]
-    omit = prosper/datareader/_version.py
+    omit = prosper/warehouse/_version.py
 
 [paths]
-    source = prosper/datareader
+    source = prosper/warehouse
