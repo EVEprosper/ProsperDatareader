@@ -39,20 +39,6 @@ class TestSupportedSymbolInfo:
 
         expected_commodities = [
             'BCN', 'BTC', 'DASH', 'DOGE', 'DSH', 'EMC', 'ETH', 'FCN', 'LSK', 'LTC',
-            'NXT', 'QCN', 'SBD', 'SC', 'STEEM', 'XDN', 'XEM', 'XMR', 'ARDR', 'ZEC',
-            'WAVES', 'MAID', 'AMP', 'BUS', 'DGD', 'ICN', 'SNGLS', '1ST', 'XLC', 'TRST',
-            'TIME', 'GNO', 'REP', 'ZRC', 'BOS', 'DCT', 'AEON', 'GUP', 'PLU', 'LUN',
-            'TAAS', 'NXC', 'EDG', 'RLC', 'SWT', 'TKN', 'WINGS', 'XAUR', 'AE', 'PTOY',
-            'WTT', 'ETC', 'CFI', 'PLBT', 'BNT', 'XDNCO', 'FYN', 'SNM', 'SNT', 'CVC',
-            'PAY', 'OAX', 'OMG', 'BQX', 'XTZ', 'CRS', 'DICE', 'XRP', 'MPK', 'NET',
-            'STRAT', 'SNC', 'ADX', 'BET', 'EOS', 'DENT', 'SAN', 'MNE', 'MRV', 'MSP',
-            'DDF', 'UET', 'MYB', 'SUR', 'IXT', 'HRB', 'PLR', 'TIX', 'NDC', 'PRO',
-            'AVT', 'TFL', 'COSS', 'PBKX', 'PQT', '8BT', 'EVX', 'IML', 'ROOTS', #'DELTA',
-            'QAU', 'MANA', 'DNT', 'FYP', 'OPT', 'GRPH', 'TNT', 'STX', 'CAT', 'BCC',
-            'ECAT', 'BAS', 'ZRX', 'RVT', 'ICOS', 'PPC', 'VERI', 'IGNIS', 'QTUM',
-            'PRG', 'BMC', 'CND', 'ANT', 'EMGO', 'SKIN', 'FUN', 'HVN', 'AMB', 'CDT',
-            'AIR', 'POE', 'FUEL', 'MCAP', 'RKC', 'PING', 'NTO', 'GAME', 'ICO', 'WEALTH',
-            'DLT', 'TKR', 'PPT'
         ]
         unique_values, unique_expected = helpers.find_uniques(
             commodity_list,
