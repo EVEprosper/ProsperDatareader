@@ -93,7 +93,9 @@ class TestGetQuoteCC:
             'LOW24HOUR', 'MARKET', 'MKTCAP', 'OPEN24HOUR', 'PRICE', 'SUPPLY', 'TICKER',
             'TOSYMBOL', 'TYPE', 'VOLUME24HOUR', 'VOLUME24HOURTO', 'Algorithm', 'CoinName',
             'FullName', 'FullyPremined', 'Id', 'ImageUrl', 'Name', 'PreMinedValue',
-            'ProofType', 'SortOrder', 'TotalCoinSupply', 'TotalCoinsFreeFloat', 'Url', 'Sponsored'
+            'ProofType', 'SortOrder', 'TotalCoinSupply', 'TotalCoinsFreeFloat', 'Url', 'Sponsored',
+            'HIGHDAY', 'TOTALVOLUME24H', 'VOLUMEDAYTO', 'Symbol', 'OPENDAY', 'TOTALVOLUME24HTO',
+            'VOLUMEDAY', 'CHANGEDAY', 'CHANGEPCTDAY', 'LOWDAY'
         ]
         unique_values, unique_expected = helpers.find_uniques(
             list(data.columns.values),
