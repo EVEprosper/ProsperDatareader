@@ -10,7 +10,7 @@
         "LASTUPDATE": {"type":"number"},
         "LASTVOLUME": {"type":"number"},
         "LASTVOLUMETO": {"type":"number"},
-        "LASTTRADEID": {"type":"number"},
+        "LASTTRADEID": {"type":"string"},
         "VOLUME24HOUR": {"type":"number"},
         "VOLUME24HOURTO": {"type":"number"},
         "OPEN24HOUR": {"type":"number"},
@@ -22,13 +22,23 @@
         "SUPPLY": {"type":"number"},
         "MKTCAP": {"type":"number"},
         "TICKER": {"type":"string"},
-        "MARKET": {"type":"string"}
+        "MARKET": {"type":"string"},
+        "CHANGEDAY": {"type":"number"},
+        "VOLUMEDAY": {"type":"number"},
+        "LOWDAY": {"type":"number"},
+        "TOTALVOLUME24HTO": {"type":"number"},
+        "VOLUMEDAYTO": {"type":"number"},
+        "CHANGEPCTDAY": {"type":"number"},
+        "OPENDAY": {"type":"number"},
+        "HIGHDAY": {"type":"number"},
+        "TOTALVOLUME24H": {"type":"number"}
     },
     "required": [
         "TYPE", "MARKET", "FROMSYMBOL", "TOSYMBOL", "FLAGS", "PRICE", "LASTUPDATE",
         "LASTVOLUME", "LASTVOLUMETO", "LASTTRADEID", "VOLUME24HOUR", "VOLUME24HOURTO", 
         "OPEN24HOUR", "HIGH24HOUR", "LOW24HOUR", "CHANGE24HOUR", "CHANGEPCT24HOUR", 
-        "SUPPLY", "MKTCAP", "TICKER"
+        "SUPPLY", "MKTCAP", "TICKER", "CHANGEDAY", "VOLUMEDAY", "LOWDAY", "TOTALVOLUME24HTO",
+        "VOLUMEDAYTO", "CHANGEPCTDAY", "OPENDAY", "HIGHDAY", "TOTALVOLUME24H"
     ],
     "additionalProperties": false
 }
