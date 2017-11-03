@@ -407,7 +407,7 @@ def get_quote_cc(
 
 
     logger.info('--Fetching ticker data')
-    ticker_df = pd.DataFrame(get_ticker_cc(coin_list))
+    ticker_df = pd.DataFrame(get_ticker_cc(coin_list, currency=currency))
 
     logger.info('--combining dataframes')
     quote_df = pd.merge(
