@@ -16,7 +16,8 @@ HERE = path.abspath(path.dirname(__file__))
 
 
 __all__ = (
-    'get_quote_rh'
+    'get_quote_rh',
+    'get_chart_iex'
 )
 
 def cast_str_to_int(dataframe):
@@ -225,3 +226,26 @@ def get_quote_rh(
         return summary_df[keys]
     else:
         return summary_df
+
+def get_chart_iex(
+        symbol,
+        range,
+        pdr_format=False,
+        logger=LOGGER
+):
+    """fetch OHLC data for a given stock from IEX
+
+    Notes:
+        https://iextrading.com/developer/docs/#chart
+
+    Args:
+        symbol (str): stock ticker
+        range (int): range to fetch
+        pdr_format (bool): recast dataframe to pandas-datareader format
+        logger (:obj:`logging.logger`, optional): logging handle
+
+    Returns:
+        pandas.DataFrame: OHLC data for a given stock
+
+    """
+    pass

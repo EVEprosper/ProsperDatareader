@@ -38,7 +38,8 @@ Supported Feeds
 
 - Company News Feeds: Google, Robinhood
 - Market News Feed: Google
-- Price Quote: Robinhood
+- Price Quote: Robinhood, IEX
+- Price History: IEX
 
 **Coins**: helper libraries for fetching info on crypto currencies (via `hitBTC`_)
 
