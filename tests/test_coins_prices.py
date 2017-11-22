@@ -301,6 +301,7 @@ def test_get_ticker_all():
     data = prices.get_ticker_hitbtc('')
 
     assert isinstance(data, list)
+    print(data[0])
     helpers.validate_schema(
         data[0],
         path.join('coins', 'hitbtc_ticker.schema')
