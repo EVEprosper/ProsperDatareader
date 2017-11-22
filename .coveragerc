@@ -2,6 +2,7 @@
     omit = 
         prosper/datareader/_version.py
         prosper/datareader/__init__.py
+        prosper/datareader/exceptions.py
         prosper/datareader/robinhood/__init__.py
         prosper/datareader/google/__init.py
 
