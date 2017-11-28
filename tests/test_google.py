@@ -11,6 +11,7 @@ import prosper.datareader.exceptions as exceptions
 
 class TestValidateGoogleResponse:
     """validate behavior for news.validate_google_response()"""
+    @flaky
     def test_validate_google_response_happypath(self):
         """expected default behavior"""
         article_list = google.news.validate_google_response(
@@ -32,6 +33,7 @@ class TestValidateGoogleResponse:
             path.join('stocks', 'google_company_news.schema')
         )
 
+    @flaky
     def test_validate_google_repsonse_no_primary(self):
         """"epected results without tag_primary"""
         no_primary_article_list = google.news.validate_google_response(
@@ -76,7 +78,7 @@ class TestCompanyNewsGoogleRaw:
     good_ticker = helpers.CONFIG.get('STOCKS', 'good_ticker')
     bad_ticker = helpers.CONFIG.get('STOCKS', 'bad_ticker')
 
-    @pytest.mark.long
+    @flaky
     def test_default_happypath(self):
         """validate default behavior -- minimum args"""
         news_list = google.news.fetch_company_news_google(self.good_ticker)
@@ -95,7 +97,7 @@ class TestCompanyNewsGoogleRaw:
                 article,
                 path.join('stocks', 'google_company_news.schema')
             )
-
+    @flaky
     def test_default_bad_ticker(self):
         """validate behavior -- incorrect ticker"""
         with pytest.raises(requests.exceptions.HTTPError):

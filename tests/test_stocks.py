@@ -102,7 +102,7 @@ class TestCompanyNewsRobinhood:
 
 class TestMarketNewsGoogle:
     """valdiate behavior on stocks.market_news_google()"""
-    @pytest.mark.long
+    @flaky
     def test_market_news_google_happypath(self):
         """validate default behavior"""
         all_news_df = stocks.market_news_google()
@@ -135,6 +135,7 @@ class TestCompanyNewsGoogle:
     good_ticker = helpers.CONFIG.get('STOCKS', 'good_ticker')
     bad_ticker = helpers.CONFIG.get('STOCKS', 'bad_ticker')
 
+    @flaky
     def test_company_news_happypath(self):
         """make sure pandas wrapper works as expected"""
         all_news_df = stocks.company_news_google(self.good_ticker)
@@ -175,7 +176,7 @@ class TestCompanyNewsGoogle:
         if unique_values:
             pytest.xfail('Unexpected values from company_news_google(): {}'.format(unique_values))
 
-    @pytest.mark.long
+    @flaky
     def test_vader_application(self):
         """make sure use-case for news + vader works"""
         import prosper.datareader.utils as utils
