@@ -3,6 +3,7 @@ from os import path
 import pytest
 import helpers
 import pandas as pd
+from flaky import flaky
 
 import prosper.datareader.stocks as stocks
 
@@ -115,6 +116,7 @@ class TestMarketNewsGoogle:
 
         assert list(all_news_df.columns.values) == expected_cols
 
+    @flaky
     def test_market_news_google_no_pretty(self):
         """validate not-pretty return works as expected"""
         all_news_df = stocks.market_news_google(pretty=False)
@@ -152,6 +154,7 @@ class TestCompanyNewsGoogle:
         if unique_values:
             pytest.xfail('Unexpected values from company_news_google(): {}'.format(unique_values))
 
+    @flaky
     def test_company_news_no_pretty(self):
         """validate not-pretty return works as expected"""
         all_news_df = stocks.company_news_google(

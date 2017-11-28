@@ -98,7 +98,6 @@ def get_ticker_hitbtc(
 
     return data
 
-
 def get_ticker_info_hitbtc(
         ticker,
         logger=config.LOGGER
@@ -123,3 +122,40 @@ def get_ticker_info_hitbtc(
             return ticker_info
 
     raise exceptions.TickerNotFound()
+
+COIN_ORDER_BOOK_URI = 'http://api.hitbtc.com/api/1/public/{symbol}/orderbook'
+def get_order_book_hitbtc(
+        symbol,
+        format_price='number',
+        format_amount='number',
+        uri=COIN_ORDER_BOOK_URI
+):
+    """fetch orderbook data
+
+    Notes:
+        incurs a .format(ticker=symbol) call, be careful with overriding uri
+
+    Args:
+        symbol (str): name of coin-ticker to pull
+        format_price (str, optional): optional format helper
+        format_amount (str, optional): optional format helper
+        uri (str, optional): resource link
+
+    Returns:
+        (:obj:`dict`): order book for coin-ticker
+
+    """
+    params = {}
+    #TODO: this sucks
+    if format_price:
+        params['format_price'] = format_price
+    if format_amount:
+        params['format_amount'] = format_amount
+
+    full_uri = uri.format(symbol=symbol)
+    req = requests.get(full_uri, params=params)
+    req.raise_for_status()
+
+    data = req.json()
+
+    return data #return both bids/asks for other steps to clean up later

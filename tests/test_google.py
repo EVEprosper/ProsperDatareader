@@ -4,6 +4,7 @@ from os import path
 import pytest
 import helpers
 import requests
+from flaky import flaky
 
 import prosper.datareader.google as google
 import prosper.datareader.exceptions as exceptions
@@ -46,6 +47,7 @@ class TestValidateGoogleResponse:
             path.join('stocks', 'google_company_news.schema')
         )
 
+@flaky
 def test_fetch_market_news_raw():
     """validate data coming in matches expected shape"""
     news_list = google.news.fetch_company_news_google(

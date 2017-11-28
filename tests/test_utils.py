@@ -17,6 +17,28 @@ DEMO_DATA = [
     {'text': 'Libraries have books', 'etc': 6}
 ]
 
+def test_listify():
+    """validate expected behavior for _listify()"""
+    demo_data = {
+        'key1': {
+            'val1': 1,
+            'val2': 2
+        },
+        'key2': {
+            'val1': 10,
+            'val2': 20
+        }
+    }
+    fixed_data = utils._listify(demo_data, 'key')
+    assert isinstance(fixed_data, list)
+    expected_keys = ['val1', 'val2', 'key']
+    expected_keys.sort()
+    for row in fixed_data:
+        keys = list(row.keys())
+        keys.sort()
+        assert keys == expected_keys
+
+
 class TestNLTKInstall:
     """validate NLTK install checker works as expected"""
     fake_lexicon = 'fake_lexicon_name'

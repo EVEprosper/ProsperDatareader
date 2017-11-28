@@ -282,7 +282,7 @@ def get_ohlc_cc(
         frequency = OHLCfrequency(frequency)
 
     logger.info('Fetching OHLC data @%s for %s -- CryptoCompare', frequency.value, coin)
-    data = cryptocompare.quote.get_histo_day_cc(
+    data = cryptocompare.quotes.get_histo_day_cc(
         coin,
         limit,
         currency=currency,
@@ -317,14 +317,14 @@ def get_orderbook_hitbtc(
     order_enum = OrderBook(which_book)  # validates which order book key to use
 
     logger.info('--validating coin')
-    symbol = hitbtc.quote.coin_list_to_symbol_list(
+    symbol = hitbtc.quotes.coin_list_to_symbol_list(
         [coin],
         currency=currency,
         strict=True
     )[0]
 
     logger.info('--fetching orderbook')
-    raw_orderbook = hitbtc.quote.get_order_book_hitbtc(symbol)[which_book]
+    raw_orderbook = hitbtc.quotes.get_order_book_hitbtc(symbol)[which_book]
 
     orderbook_df = pd.DataFrame(raw_orderbook, columns=['price', 'ammount'])
     orderbook_df['symbol'] = symbol
