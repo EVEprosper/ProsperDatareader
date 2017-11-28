@@ -226,12 +226,12 @@ def get_quote_cc(
     """
     logger.info('Generating quote for %s -- CryptoCompare', config._list_to_str(coin_list))
 
-    #TODO: only fetch symbol list when required?
+    # TODO: only fetch symbol list when required?
     if coin_info_df is None:
         logger.info('--Gathering coin info')
         coin_info_df = pd.DataFrame(cryptocompare.quotes.get_supported_symbols_cc())
     else:
-        #make sure expected data is in there
+        # make sure expected data is in there
         headers = list(coin_info_df.columns.values)
         assert 'Name' in headers   # avoid merge issue
 
