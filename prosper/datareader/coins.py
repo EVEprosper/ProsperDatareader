@@ -13,6 +13,28 @@ class Sources(Enum):
     hitbtc = 'hitbtc'
     cc = 'cryptocompare'
 
+class OrderBook(Enum):
+    """enumerator for handling order book info"""
+    asks = 'asks'
+    bids = 'bids'
+
+class OHLCfrequency(Enum):
+    """enumerator for OHLC scopes"""
+    minute = 'minute'
+    hour = 'hour'
+    day = 'day'
+
+    def address(self):
+        """help figure out which address to use"""
+        if self == self.minute:
+            return 'https://min-api.cryptocompare.com/data/histominute'
+        elif self == self.hour:
+            return 'https://min-api.cryptocompare.com/data/histohour'
+        elif self == self.day:
+            return 'https://min-api.cryptocompare.com/data/histoday'
+        else:   # pragma: no cover
+            raise exceptions.InvalidEnum()
+
 def columns_to_yahoo(
         quote_df,
         source
@@ -140,27 +162,174 @@ def get_symbol_hitbtc(
 
     return symbol['symbol'].iloc[0]
 
-def get_ticker_info_hitbtc(
-        ticker,
+def get_quote_hitbtc(
+        coin_list,
+        currency='USD',
+        to_yahoo=False,
         logger=config.LOGGER
 ):
-    """reverse lookup, get more info about a requested ticker
+    """fetch common summary data for crypto-coins
 
     Args:
-        ticker (str): info ticker for coin (ex: BTCUSD)
-        force_refresh (bool, optional): ignore local cacne and fetch directly from API
+        coin_list (:obj:`list`): list of tickers to look up'
+        currency (str, optional): currency to FOREX against
+        to_yahoo (bool, optional): convert names to yahoo analog
         logger (:obj:`logging.logger`, optional): logging handle
 
     Returns:
-        (:obj:`dict`): hitBTC info about requested ticker
+        (:obj:`pandas.DataFrame`): coin info for the day, JSONable
 
     """
-    logger.info('--Fetching symbol list from API')
-    data = hitbtc.quotes.get_supported_symbols_hitbtc()
+    logger.info('Generating quote for %s -- HitBTC', config._list_to_str(coin_list))
 
-    ## Skip pandas, vanilla list search ok here
-    for ticker_info in data:
-        if ticker_info['symbol'] == ticker.upper():
-            return ticker_info
+    logger.info('--validating coin_list')
+    ticker_list = hitbtc.quotes.coin_list_to_symbol_list(
+        coin_list,
+        currency=currency,
+        strict=True
+    )
 
-    raise exceptions.TickerNotFound()
+    logger.info('--fetching ticker data')
+    raw_quote = hitbtc.quotes.get_ticker_hitbtc('')
+    quote_df = pd.DataFrame(raw_quote)
+    if to_yahoo:
+        logger.info('--converting column names to yahoo style')
+        quote_df = columns_to_yahoo(quote_df, Sources.hitbtc)
+
+    logger.info('--filtering ticker data')
+    quote_df = quote_df[quote_df['symbol'].isin(ticker_list)]
+    quote_df = quote_df[list(quote_df.columns.values)].apply(pd.to_numeric, errors='ignore')
+    quote_df['change_pct'] = (quote_df['last'] - quote_df['open']) / quote_df['open'] * 100
+
+    logger.debug(quote_df)
+    return quote_df
+
+def get_quote_cc(
+        coin_list,
+        currency='USD',
+        coin_info_df=None,
+        to_yahoo=False,
+        logger=config.LOGGER
+):
+    """fetch common summary data for crypto-coins
+
+    Args:
+        coin_list (:obj:`list`): list of tickers to look up'
+        currency (str, optional): currency to FOREX against
+        coin_info_df (:obj:`pandas.DataFrame`, optional): coin info (for caching)
+        to_yahoo (bool, optional): convert names to yahoo analog
+        logger (:obj:`logging.logger`, optional): logging handle
+
+    Returns:
+        (:obj:`pandas.DataFrame`): coin info for the day, JSONable
+
+    """
+    logger.info('Generating quote for %s -- CryptoCompare', config._list_to_str(coin_list))
+
+    #TODO: only fetch symbol list when required?
+    if coin_info_df is None:
+        logger.info('--Gathering coin info')
+        coin_info_df = pd.DataFrame(cryptocompare.quotes.get_supported_symbols_cc())
+    else:
+        #make sure expected data is in there
+        headers = list(coin_info_df.columns.values)
+        assert 'Name' in headers   # avoid merge issue
+
+
+    logger.info('--Fetching ticker data')
+    ticker_df = pd.DataFrame(cryptocompare.quotes.get_ticker_cc(coin_list, currency=currency))
+
+    logger.info('--combining dataframes')
+    quote_df = pd.merge(
+        ticker_df, coin_info_df,
+        how='inner',
+        left_on='FROMSYMBOL',
+        right_on='Name'
+    )
+
+    if to_yahoo:
+        logger.info('--converting headers to yahoo format')
+        quote_df = columns_to_yahoo(
+            quote_df,
+            Sources.cc
+        )
+
+    quote_df = quote_df[list(quote_df.columns.values)].apply(pd.to_numeric, errors='ignore')
+    logger.debug(quote_df)
+    return quote_df
+
+def get_ohlc_cc(
+        coin,
+        limit,
+        currency='USD',
+        frequency=OHLCfrequency.day,
+        logger=config.LOGGER
+):
+    """gather OHLC data for given coin
+
+    Args:
+        coin (str): name of coin to look up
+        limit (int): total range for OHLC data (max 2000)
+        currency (str, optional): currency to compare coin to
+        frequency (:obj;`Enum`, optional): which range to use (minute, hour, day)
+        logger (:obj:`logging.logger`, optional): logging handle
+
+    Returns:
+        (:obj:`pandas.DataFrame`): OHLC data
+
+    """
+    if isinstance(frequency, str):
+        frequency = OHLCfrequency(frequency)
+
+    logger.info('Fetching OHLC data @%s for %s -- CryptoCompare', frequency.value, coin)
+    data = cryptocompare.quote.get_histo_day_cc(
+        coin,
+        limit,
+        currency=currency,
+        uri=frequency.address()
+    )
+
+    ohlc_df = pd.DataFrame(data)
+    ohlc_df['datetime'] = pd.to_datetime(ohlc_df['time'], unit='s')
+
+    return ohlc_df
+
+def get_orderbook_hitbtc(
+        coin,
+        which_book,
+        currency='USD',
+        logger=config.LOGGER
+):
+    """fetch current orderbook from hitBTC
+
+    Args:
+        coin (str): name of coin to fetch
+        which_book (str): Enum, 'asks' or 'bids'
+        currency (str, optional): currency to FOREX against
+
+    logger (:obj:`logging.logger`, optional): logging handle
+
+    Returns:
+        (:obj:`pandas.DataFrame`): current coin order book
+
+    """
+    logger.info('Generating orderbook for %s -- HitBTC', coin)
+    order_enum = OrderBook(which_book)  # validates which order book key to use
+
+    logger.info('--validating coin')
+    symbol = hitbtc.quote.coin_list_to_symbol_list(
+        [coin],
+        currency=currency,
+        strict=True
+    )[0]
+
+    logger.info('--fetching orderbook')
+    raw_orderbook = hitbtc.quote.get_order_book_hitbtc(symbol)[which_book]
+
+    orderbook_df = pd.DataFrame(raw_orderbook, columns=['price', 'ammount'])
+    orderbook_df['symbol'] = symbol
+    orderbook_df['coin'] = coin
+    orderbook_df['orderbook'] = which_book
+
+    logger.debug(orderbook_df)
+    return orderbook_df

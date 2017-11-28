@@ -74,6 +74,28 @@ def _get_analyzer():
 
     return sentiment.vader.SentimentIntensityAnalyzer()
 
+def _listify(
+        data,
+        key_name
+):
+    """recast data from dict to list, compress keys into sub-dict
+
+    Args:
+        data (:obj:`dict`): data to transform (dict(dict))
+        key_name (str): name to recast key to
+
+    Returns:
+        (:obj:`list`): fixed data
+
+    """
+    listified_data = []
+    for key, value in data.items():
+        row = dict(value)
+        row[key_name] = key
+        listified_data.append(row)
+
+    return listified_data
+
 COLUMN_NAMES = ['neu', 'pos', 'compound', 'neg']
 def map_vader_sentiment(
         string_series,

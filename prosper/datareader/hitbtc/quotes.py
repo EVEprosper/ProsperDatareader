@@ -1,10 +1,10 @@
 """prosper.datareader.hitbtc.quotes: utilities for fetching price/info -- HITBTC"""
-
 import requests
+import pandas as pd
 
 from .. import config
 from .. import exceptions
-from ..coins import supported_symbol_info
+#from ..coins import supported_symbol_info
 
 SYMBOLS_URI_HITBTC = 'http://api.hitbtc.com/api/1/public/symbols'
 def get_supported_symbols_hitbtc(
@@ -47,7 +47,7 @@ def coin_list_to_symbol_list(
         (:obj:`list`): list of valid coins and tickers
 
     """
-    valid_symbol_list = supported_symbol_info('symbol')
+    valid_symbol_list = list(pd.DataFrame(get_supported_symbols_hitbtc())['symbol'].unique())
 
     symbols_list = []
     invalid_symbols = []
@@ -97,3 +97,29 @@ def get_ticker_hitbtc(
         data = config._listify(data, 'symbol')
 
     return data
+
+
+def get_ticker_info_hitbtc(
+        ticker,
+        logger=config.LOGGER
+):
+    """reverse lookup, get more info about a requested ticker
+
+    Args:
+        ticker (str): info ticker for coin (ex: BTCUSD)
+        force_refresh (bool, optional): ignore local cacne and fetch directly from API
+        logger (:obj:`logging.logger`, optional): logging handle
+
+    Returns:
+        (:obj:`dict`): hitBTC info about requested ticker
+
+    """
+    logger.info('--Fetching symbol list from API')
+    data = get_supported_symbols_hitbtc()
+
+    ## Skip pandas, vanilla list search ok here
+    for ticker_info in data:
+        if ticker_info['symbol'] == ticker.upper():
+            return ticker_info
+
+    raise exceptions.TickerNotFound()
