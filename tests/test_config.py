@@ -7,6 +7,28 @@ import numpy
 
 import prosper.datareader.config as config
 
+def test_listify():
+    """validate expected behavior for _listify()"""
+    demo_data = {
+        'key1': {
+            'val1': 1,
+            'val2': 2
+        },
+        'key2': {
+            'val1': 10,
+            'val2': 20
+        }
+    }
+    fixed_data = config._listify(demo_data, 'key')
+    assert isinstance(fixed_data, list)
+    expected_keys = ['val1', 'val2', 'key']
+    expected_keys.sort()
+    for row in fixed_data:
+        keys = list(row.keys())
+        keys.sort()
+        assert keys == expected_keys
+
+
 def test_ticker_list_to_str():
     """make sure ticker_list_to_str returns as expected"""
     no_caps_pattern = re.compile('[a-z]+')
