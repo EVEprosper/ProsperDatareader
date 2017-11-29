@@ -4,28 +4,6 @@ import prosper.common.prosper_logging as p_logging
 
 LOGGER = p_logging.DEFAULT_LOGGER
 
-def _listify(
-        data,
-        key_name
-):
-    """recast data from dict to list, compress keys into sub-dict
-
-    Args:
-        data (:obj:`dict`): data to transform (dict(dict))
-        key_name (str): name to recast key to
-
-    Returns:
-        (:obj:`list`): fixed data
-
-    """
-    listified_data = []
-    for key, value in data.items():
-        row = dict(value)
-        row[key_name] = key
-        listified_data.append(row)
-
-    return listified_data
-
 def _list_to_str(ticker_list):
     """parses/joins ticker list
 

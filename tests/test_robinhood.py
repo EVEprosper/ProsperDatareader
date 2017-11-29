@@ -104,10 +104,9 @@ class TestFetchCompanyNewsRobinhood:
 
     def test_hard_page_stop(self):
         """make sure anti-recursion stop works as intended"""
-        default_page_hardbreak = robinhood.news.PAGE_HARDBREAK
-        robinhood.news.PAGE_HARDBREAK = 2
-
         with pytest.warns(exceptions.PaginationWarning):
-            news_list = robinhood.news.fetch_company_news_rh(self.good_ticker)
+            news_list = robinhood.news.fetch_company_news_rh(
+                'AAPL',
+                _page_hardbreak=2
+            )
 
-        robinhood.news.PAGE_HARDBREAK = default_page_hardbreak
