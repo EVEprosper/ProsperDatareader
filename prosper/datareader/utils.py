@@ -10,7 +10,7 @@ except ImportError: #pragma: no cover
     NLTK_IMPORT = False
 import pandas as pd
 
-from prosper.datareader.config import LOGGER as G_LOGGER
+import prosper.datareader.config as config
 import prosper.datareader.exceptions as exceptions
 
 HERE = path.abspath(path.dirname(__file__))
@@ -21,7 +21,7 @@ __all__ = ('vader_sentiment')
 INSTALLED_PACKAGES = []
 def _validate_install(
         package_name,
-        logger=G_LOGGER
+        logger=config.LOGGER
 ):
     """make sure required NLTK lexicon is available
 
@@ -73,28 +73,6 @@ def _get_analyzer():
         _validate_install('vader_lexicon')
 
     return sentiment.vader.SentimentIntensityAnalyzer()
-
-def _listify(
-        data,
-        key_name
-):
-    """recast data from dict to list, compress keys into sub-dict
-
-    Args:
-        data (:obj:`dict`): data to transform (dict(dict))
-        key_name (str): name to recast key to
-
-    Returns:
-        (:obj:`list`): fixed data
-
-    """
-    listified_data = []
-    for key, value in data.items():
-        row = dict(value)
-        row[key_name] = key
-        listified_data.append(row)
-
-    return listified_data
 
 COLUMN_NAMES = ['neu', 'pos', 'compound', 'neg']
 def map_vader_sentiment(
@@ -152,7 +130,7 @@ def vader_sentiment(
         full_dataframe,
         grading_column_name,
         vader_columns=COLUMN_NAMES,
-        logger=G_LOGGER
+        logger=config.LOGGER
 ):
     """apply vader_sentiment analysis to dataframe
 
