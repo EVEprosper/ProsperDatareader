@@ -16,9 +16,30 @@ It is encouraged to import the smallest scope required.
 
    import prosper.datareader.stocks as stocks
 
-   todays_news = stocks.news.company_news_google('MU')
-
    todays_quote = stocks.prices.get_quote_rh('MU')
+
+Contributing Data Sources
+=========================
+
+The purpose of this project is to provide a common framework to fetch/parse data and put appropriate testing scaffolding around feeds.  New data sources are always encouraged!
+
+The template for adding new functions is:
+
+Consider Top-Level Needs
+------------------------
+
+If you are extending an existing framework, think of the common questions/data returned.  More stock functions should go with ``prosper.datareader.stocks``.  
+
+Adding a wild new segment?  A new top-level module should be considered.  EX: adding `Albion`_ data parsing should be added to ``prosper.datareader.albion``.  
+
+All functions in top-level scopes should return ``pandas.DataFrame``.
+
+Consider Data Sources
+---------------------
+
+Though functionality might be mixed between scopes, sources should be split by API provider.  ``prosper.datareader.cryptocompare`` contains all the API parsing required to interface with `CryptoCompare`_.  These individual REST interfaces should then be imported into their useage scope like ``prosper.datareader.coins`` to return the data users expect.
+
+Most data-source feeds should probably have `jsonschema`_ tests.
 
 Developing ProsperDatareader
 ============================
@@ -78,3 +99,5 @@ Release message should include useful update notes, and versions should follow `
 .. _currently broken: https://github.com/EVEprosper/ProsperUtilities/issues/2
 .. _PyPI: https://pypi.python.org/pypi/ProsperDatareader
 .. _Semantic Versioning: http://semver.org/
+.. _CryptoCompare: https://www.cryptocompare.com/api/#introduction
+.. _Albion: https://albion-data.com/

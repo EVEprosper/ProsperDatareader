@@ -109,4 +109,3 @@ class TestFetchCompanyNewsRobinhood:
                 'AAPL',
                 _page_hardbreak=2
             )
-

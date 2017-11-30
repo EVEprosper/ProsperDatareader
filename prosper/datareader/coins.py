@@ -204,6 +204,46 @@ def get_quote_hitbtc(
     logger.debug(quote_df)
     return quote_df
 
+def get_orderbook_hitbtc(
+        coin,
+        which_book,
+        currency='USD',
+        logger=config.LOGGER
+):
+    """fetch current orderbook from hitBTC
+
+    Args:
+        coin (str): name of coin to fetch
+        which_book (str): Enum, 'asks' or 'bids'
+        currency (str, optional): currency to FOREX against
+
+    logger (:obj:`logging.logger`, optional): logging handle
+
+    Returns:
+        (:obj:`pandas.DataFrame`): current coin order book
+
+    """
+    logger.info('Generating orderbook for %s -- HitBTC', coin)
+    order_enum = OrderBook(which_book)  # validates which order book key to use
+
+    logger.info('--validating coin')
+    symbol = hitbtc.quotes.coin_list_to_symbol_list(
+        [coin],
+        currency=currency,
+        strict=True
+    )[0]
+
+    logger.info('--fetching orderbook')
+    raw_orderbook = hitbtc.quotes.get_order_book_hitbtc(symbol)[which_book]
+
+    orderbook_df = pd.DataFrame(raw_orderbook, columns=['price', 'ammount'])
+    orderbook_df['symbol'] = symbol
+    orderbook_df['coin'] = coin
+    orderbook_df['orderbook'] = which_book
+
+    logger.debug(orderbook_df)
+    return orderbook_df
+
 def get_quote_cc(
         coin_list,
         currency='USD',
@@ -293,43 +333,3 @@ def get_ohlc_cc(
     ohlc_df['datetime'] = pd.to_datetime(ohlc_df['time'], unit='s')
 
     return ohlc_df
-
-def get_orderbook_hitbtc(
-        coin,
-        which_book,
-        currency='USD',
-        logger=config.LOGGER
-):
-    """fetch current orderbook from hitBTC
-
-    Args:
-        coin (str): name of coin to fetch
-        which_book (str): Enum, 'asks' or 'bids'
-        currency (str, optional): currency to FOREX against
-
-    logger (:obj:`logging.logger`, optional): logging handle
-
-    Returns:
-        (:obj:`pandas.DataFrame`): current coin order book
-
-    """
-    logger.info('Generating orderbook for %s -- HitBTC', coin)
-    order_enum = OrderBook(which_book)  # validates which order book key to use
-
-    logger.info('--validating coin')
-    symbol = hitbtc.quotes.coin_list_to_symbol_list(
-        [coin],
-        currency=currency,
-        strict=True
-    )[0]
-
-    logger.info('--fetching orderbook')
-    raw_orderbook = hitbtc.quotes.get_order_book_hitbtc(symbol)[which_book]
-
-    orderbook_df = pd.DataFrame(raw_orderbook, columns=['price', 'ammount'])
-    orderbook_df['symbol'] = symbol
-    orderbook_df['coin'] = coin
-    orderbook_df['orderbook'] = which_book
-
-    logger.debug(orderbook_df)
-    return orderbook_df

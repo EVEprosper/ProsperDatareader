@@ -24,6 +24,7 @@ Supported Feeds
 * `Utils`_: General utilities for additional insights
 * `Stocks`_: Parse IRL stock quote data
 * `Coins`_: Data utilities for cryptocoin price quotes
+* `News`_: Fetch relevant news data
 
 Index
 =====
@@ -49,6 +50,7 @@ Indices and tables
 .. _Stocks: stocks_help.html
 .. _Utils: utils_help.html
 .. _Coins: coins_help.html
+.. _News: news_help.html
 
 .. |Build Status| image:: https://travis-ci.org/EVEprosper/ProsperDatareader.svg?branch=master
    :target: https://travis-ci.org/EVEprosper/ProsperDatareader
