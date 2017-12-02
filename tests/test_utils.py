@@ -17,6 +17,7 @@ DEMO_DATA = [
     {'text': 'Libraries have books', 'etc': 6}
 ]
 
+
 class TestNLTKInstall:
     """validate NLTK install checker works as expected"""
     fake_lexicon = 'fake_lexicon_name'

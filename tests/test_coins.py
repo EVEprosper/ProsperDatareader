@@ -1,83 +1,63 @@
-"""test_coins_prices.py: validate behavior for datareader.coins.prices"""
+"""test_coins_info.py: validate behavior for datareader.coins.info"""
 from datetime import datetime
 from os import path
 
 import pytest
-from flaky import flaky
 import requests
 import helpers
 import pandas
 
-import prosper.datareader.coins.prices as prices
-import prosper.datareader.coins.info as info
+import prosper.datareader.coins as coins
 import prosper.datareader.exceptions as exceptions
 
-def test_listify():
-    """validate expected behavior for _listify()"""
-    demo_data = {
-        'key1': {
-            'val1': 1,
-            'val2': 2
-        },
-        'key2': {
-            'val1': 10,
-            'val2': 20
-        }
-    }
-    fixed_data = prices._listify(demo_data, 'key')
-    assert isinstance(fixed_data, list)
-    expected_keys = ['val1', 'val2', 'key']
-    expected_keys.sort()
-    for row in fixed_data:
-        keys = list(row.keys())
-        keys.sort()
-        assert keys == expected_keys
-
-
-class TestGetTickerCC:
-    """validate get_ticker_cc() behavior"""
+class TestColumnsToYahoo:
+    """validate expected return for columns_to_yahoo"""
     coin_list = ['BTC', 'ETH', 'LTC']
-    market = 'Coinbase'
+    def test_columns_to_yahoo_hitbtc(self):
+        """validate columns_to_yahoo() works for hitbtc data"""
+        data = coins.get_quote_hitbtc(self.coin_list, to_yahoo=False)
 
-    def test_get_ticker_cc_happypath(self):
-        """validate expected behavior"""
-        data = prices.get_ticker_cc(self.coin_list)
-        assert isinstance(data, list)
-        for row in data:
-            helpers.validate_schema(
-                row,
-                path.join('coins', 'cryptocompare_pricemultifull.schema')
+        updated = coins.columns_to_yahoo(data, coins.Sources.hitbtc)
+        print(updated)
+        expected_headers = [
+            'ask', 'bid', 'high', 'last', 'low', 'open', 'symbol', 'timestamp',
+            'volume', 'volume_quote', 'change_pct', 'datetime'
+        ]
+        unique_values, unique_expected = helpers.find_uniques(
+            list(updated.columns.values),
+            expected_headers
+        )
+        assert unique_expected == []
+        if unique_values:
+            pytest.xfail(
+                'Unexpected values from columns_to_yahoo(): {}'.format(unique_values)
             )
 
-    def test_get_ticker_cc_strs(self):
-        """make sure endpoint works with str data"""
-        data = prices.get_ticker_cc(self.coin_list[0])
-        assert len(data) == 1
-        assert data[0]['FROMSYMBOL'] == self.coin_list[0]
+        ## assert %change done correctly
+        ## assert cols not_na
 
-        data = prices.get_ticker_cc(','.join(self.coin_list))
-        assert len(data) == len(self.coin_list)
-
-    def test_get_ticker_cc_marketlist(self):
-        """make sure we can switch market"""
-        data = prices.get_ticker_cc(
-            self.coin_list, market_list=[self.market]
+    def test_columns_to_yahoo_cc(self):
+        """validate column_to_yahoo() works for cryptocompare"""
+        data = coins.get_quote_cc(self.coin_list, to_yahoo=False)
+        updated = coins.columns_to_yahoo(data, coins.Sources.cc)
+        print(updated)
+        expected_headers = [
+            'change_pct', 'high', 'volume', 'low', 'stock_exchange',
+            'market_capitalization', 'open', 'last', 'name', 'more_info', 'symbol',
+            'shares_outstanding', 'float_shares', 'datetime', 'timestamp'
+        ]
+        unique_values, unique_expected = helpers.find_uniques(
+            list(updated.columns.values),
+            expected_headers
         )
+        assert unique_expected == []
+        if unique_values:
+            pytest.xfail(
+                'Unexpected values from columns_to_yahoo(): {}'.format(unique_values)
+            )
 
-        print(data)
-        for row in data:
-            assert row['MARKET'] == self.market
-
-    def test_get_ticker_cc_bad_coin(self):
-        """validate exception throw for bad coins"""
-        data = prices.get_ticker_cc('DOGE')  # works as expected
-        with pytest.raises(exceptions.SymbolNotSupported):
-            data = prices.get_ticker_cc('DOGE', market_list=['Coinbase'])
-
-    def test_get_ticker_cc_bad_key(self):
-        """validate exception throw for bad price key"""
-        with pytest.raises(KeyError):
-            data = prices.get_ticker_cc(self.coin_list, price_key='BUTTS')
+        ## assert %change done correctly
+        ## assert cols not_na
 
 class TestGetQuoteCC:
     """validate get_quote_cc behavior"""
@@ -85,7 +65,7 @@ class TestGetQuoteCC:
 
     def test_get_quote_cc_happypath(self):
         """validate expected behavior"""
-        data = prices.get_quote_cc(self.coin_list)
+        data = coins.get_quote_cc(self.coin_list)
         print(data.columns.values)
         expected_columns = [
             'CHANGE24HOUR', 'CHANGEPCT24HOUR', 'FLAGS', 'FROMSYMBOL', 'HIGH24HOUR',
@@ -107,90 +87,84 @@ class TestGetQuoteCC:
         if unique_values:
             pytest.xfail('Unexpected values from get_quote_cc(): {}'.format(unique_values))
 
-class TestColumnsToYahoo:
-    """validate expected return for columns_to_yahoo"""
-    coin_list = ['BTC', 'ETH', 'LTC']
-    def test_columns_to_yahoo_hitbtc(self):
-        """validate columns_to_yahoo() works for hitbtc data"""
-        data = prices.get_quote_hitbtc(self.coin_list, to_yahoo=False)
+class TestSupportedSymbolInfo:
+    """validate supported_symbol_info() behavior"""
+    def test_supported_commodities(self):
+        """validate commoddity list"""
+        commodity_list = coins.supported_symbol_info('commodity')
 
-        updated = prices.columns_to_yahoo(data, info.Sources.hitbtc)
-        print(updated)
-        expected_headers = [
-            'ask', 'bid', 'high', 'last', 'low', 'open', 'symbol', 'timestamp',
-            'volume', 'volume_quote', 'change_pct', 'datetime'
+        assert isinstance(commodity_list, list)
+
+        expected_commodities = [
+            'BCN', 'BTC', 'DASH', 'DOGE', 'DSH', 'EMC', 'ETH', 'FCN', 'LSK', 'LTC',
         ]
         unique_values, unique_expected = helpers.find_uniques(
-            list(updated.columns.values),
-            expected_headers
+            commodity_list,
+            expected_commodities
         )
+
         assert unique_expected == []
         if unique_values:
             pytest.xfail(
-                'Unexpected values from columns_to_yahoo(): {}'.format(unique_values)
-            )
+                'Unexpected values from supported_symbol_info(): {}'.format(unique_values))
 
-        ## assert %change done correctly
-        ## assert cols not_na
+    def test_supported_currencies(self):
+        """validate currency list"""
+        currency_list = coins.supported_symbol_info('currency')
 
-    def test_columns_to_yahoo_cc(self):
-        """validate column_to_yahoo() works for cryptocompare"""
-        data = prices.get_quote_cc(self.coin_list, to_yahoo=False)
-        updated = prices.columns_to_yahoo(data, info.Sources.cc)
-        print(updated)
-        expected_headers = [
-            'change_pct', 'high', 'volume', 'low', 'stock_exchange',
-            'market_capitalization', 'open', 'last', 'name', 'more_info', 'symbol',
-            'shares_outstanding', 'float_shares', 'datetime', 'timestamp'
-        ]
-        unique_values, unique_expected = helpers.find_uniques(
-            list(updated.columns.values),
-            expected_headers
+        assert isinstance(currency_list, list)
+
+        expected_currencies = ['BTC', 'USD', 'ETH']
+        assert currency_list == expected_currencies
+
+    def test_supported_symbols(self):
+        """validate symbols list"""
+        symbols_list = coins.supported_symbol_info('symbol')
+
+        assert isinstance(symbols_list, list)
+
+        #TODO: validate values?
+
+    def test_supported_symbol_info_switching(self):
+        """make sure source-switching works"""
+        symbols_list = coins.supported_symbol_info(
+            'CoinName',
+            coins.Sources.cc
         )
-        assert unique_expected == []
-        if unique_values:
-            pytest.xfail(
-                'Unexpected values from columns_to_yahoo(): {}'.format(unique_values)
-            )
+        assert isinstance(symbols_list, list)
 
-        ## assert %change done correctly
-        ## assert cols not_na
+        assert 'Bitcoin' in symbols_list
+        #assert 'Ethereum ' in symbols_list
 
-class TestGetHistoDayCC:
-    """validate behavior for get_histo_day_cc"""
-    coin = 'BTC'
-    limit = 60
-
-    def test_get_histo_day_cc_happypath(self):
-        """validate expected default behavior for endpoint"""
-        data = prices.get_histo_day_cc(
-            self.coin,
-            self.limit
+    def test_supported_symbol_info_strswitch(self):
+        """check source-switching with str"""
+        symbols_list = coins.supported_symbol_info(
+            'CoinName',
+            'cryptocompare'
         )
 
-        for row in data:
-            helpers.validate_schema(
-                row,
-                path.join('coins', 'cryptocompare_histo_day.schema')
-            )
+        assert isinstance(symbols_list, list)
 
-    def test_get_histo_day_cc_aggregate(self):
-        """validate `aggregate` path"""
+class TestGetSymbolHitBTC:
+    """tests for info.get_symbol()"""
+    good_commodity = 'BTC'
+    good_currency = 'USD'
+    good_symbol = 'BTCUSD'
 
-        data = prices.get_histo_day_cc(
-            self.coin,
-            self.limit,
-            aggregate=3
-        )
-        ## TODO VALIDATE ##
+    def test_get_symbol_happypath(self):
+        """validate expected behavior for get_symbol()"""
+        symbol = coins.get_symbol_hitbtc(self.good_commodity, self.good_currency)
 
-    def test_get_histo_day_cc_badcoin(self):
-        """validate expected error for bad coin id"""
+        assert isinstance(symbol, str)
+        assert symbol == self.good_symbol
+
+    def test_get_symbol_bad_symbol(self):
+        """validate exception case when bad symbol inputs requested"""
         with pytest.raises(exceptions.SymbolNotSupported):
-            bad_data = prices.get_histo_day_cc(
-                'BUTTS',
-                self.limit
-            )
+            bad_symbol = coins.get_symbol_hitbtc('BUTTS', self.good_currency)
+
+        with pytest.raises(exceptions.SymbolNotSupported):
+            bad_symbol = coins.get_symbol_hitbtc(self.good_commodity, 'BUTTS')
 
 class TestGetOHLCCC:
     """validate behavior for get_ohlc_cc()"""
@@ -203,7 +177,7 @@ class TestGetOHLCCC:
 
     def test_get_ohlc_cc_happypath(self):
         """validate expected default behavor for endpoint"""
-        data = prices.get_ohlc_cc(
+        data = coins.get_ohlc_cc(
             self.coin,
             self.limit
         )
@@ -223,7 +197,7 @@ class TestGetOHLCCC:
     def test_get_ohlc_cc_maxrange(self):
         """make sure expected failure for too much data requested"""
         requested_limit = self.max_limit + 10
-        data = prices.get_ohlc_cc(
+        data = coins.get_ohlc_cc(
             self.coin,
             requested_limit
         )
@@ -234,7 +208,7 @@ class TestGetOHLCCC:
 
     def test_get_ohlc_cc_hours(self):
         """request hours data"""
-        data = prices.get_ohlc_cc(
+        data = coins.get_ohlc_cc(
             self.coin,
             self.limit,
             frequency='hour'
@@ -254,7 +228,7 @@ class TestGetOHLCCC:
 
     def test_get_ohlc_cc_seconds(self):
         """request minute data"""
-        data = prices.get_ohlc_cc(
+        data = coins.get_ohlc_cc(
             self.coin,
             self.limit,
             frequency='minute'
@@ -275,60 +249,12 @@ class TestGetOHLCCC:
     def test_get_ohlc_cc_badfreq(self):
         """ask for bad frequency"""
         with pytest.raises(ValueError):
-            data = prices.get_ohlc_cc(
+            data = coins.get_ohlc_cc(
                 self.coin,
                 self.limit,
                 frequency='eons'
             )
 
-@flaky
-def test_get_ticker_single():
-    """validate get_ticker_hitbtc() returns valid schema"""
-    data = prices.get_ticker_hitbtc('BTCUSD')
-
-    assert isinstance(data, dict)
-    helpers.validate_schema(
-        data,
-        path.join('coins', 'hitbtc_ticker.schema')
-    )
-
-    with pytest.raises(requests.exceptions.HTTPError):
-        bad_data = prices.get_ticker_hitbtc('BUTTS')
-
-@flaky
-def test_get_ticker_all():
-    """validate get_ticker() behavior with blank args"""
-    data = prices.get_ticker_hitbtc('')
-
-    assert isinstance(data, list)
-    helpers.validate_schema(
-        data[0],
-        path.join('coins', 'hitbtc_ticker.schema')
-    )
-    assert len(data) >= 190 * 0.9 #expect ~same data or more
-
-@flaky
-def test_get_orderbook():
-    """validate get_order_book_hitbtc() returns valid schema"""
-    data = prices.get_order_book_hitbtc('BTCUSD')
-
-    assert isinstance(data, dict)
-    assert isinstance(data['asks'], list)
-    assert isinstance(data['bids'], list)
-
-@flaky
-def test_coin_list_to_symbol_list():
-    """validate coin_list_to_symbol_list() works as expected"""
-    test_coin_list = ['BTC', 'ETH']
-
-    ticker_list = prices.coin_list_to_symbol_list(test_coin_list, currency='USD')
-
-    expected_tickers = ['BTCUSD', 'ETHUSD']
-    assert isinstance(ticker_list, list)
-    assert ticker_list == expected_tickers
-
-    with pytest.raises(KeyError):
-        bad_ticker = prices.coin_list_to_symbol_list(['BUTTS'], strict=True)
 
 class TestGetQuoteHitBTC:
     """validate get_quote_hitbtc() behavior"""
@@ -339,10 +265,9 @@ class TestGetQuoteHitBTC:
         'timestamp', 'volume', 'volume_quote', 'change_pct'
     ]
 
-    @flaky
     def test_get_quote_hitbtc_happypath(self):
         """validate expected normal behavior"""
-        quote = prices.get_quote_hitbtc(self.coin_list)
+        quote = coins.get_quote_hitbtc(self.coin_list)
 
         assert isinstance(quote, pandas.DataFrame)
 
@@ -361,12 +286,11 @@ class TestGetQuoteHitBTC:
     def test_get_quote_hitbtc_error(self):
         """validate system throws as expected"""
         with pytest.raises(KeyError):
-            bad_quote = prices.get_quote_hitbtc(self.bad_list)
+            bad_quote = coins.get_quote_hitbtc(self.bad_list)
 
-    @flaky
     def test_get_quote_hitbtc_singleton(self):
         """validate quote special case for 1 value"""
-        quote = prices.get_quote_hitbtc([self.coin_list[0]])
+        quote = coins.get_quote_hitbtc([self.coin_list[0]])
 
         assert isinstance(quote, pandas.DataFrame)
 
@@ -387,10 +311,9 @@ class TestGetOrderbookHitBTC:
     coin = 'BTC'
     expected_headers = ['price', 'ammount', 'symbol', 'coin', 'orderbook']
 
-    @flaky
     def test_get_orderbook_hitbtc_happypath_asks(self):
         """validate expected normal behavior"""
-        asks_orderbook = prices.get_orderbook_hitbtc(
+        asks_orderbook = coins.get_orderbook_hitbtc(
             self.coin,
             'asks',
             currency='USD'
@@ -412,10 +335,9 @@ class TestGetOrderbookHitBTC:
         assert len(symbol) == 1
         assert symbol[0] == self.coin + 'USD'
 
-    @flaky
     def test_get_orderbook_hitbtc_happypath_bids(self):
         """validate expected normal behavior"""
-        bids_orderbook = prices.get_orderbook_hitbtc(
+        bids_orderbook = coins.get_orderbook_hitbtc(
             self.coin,
             'bids',
             currency='USD'
@@ -440,7 +362,7 @@ class TestGetOrderbookHitBTC:
     def test_get_orderbook_hitbtc_bad_book(self):
         """validate expected error for asking for bad enum"""
         with pytest.raises(ValueError):
-            bad_book = prices.get_orderbook_hitbtc(
+            bad_book = coins.get_orderbook_hitbtc(
                 self.coin,
                 'butts'
             )
@@ -448,7 +370,7 @@ class TestGetOrderbookHitBTC:
     def test_get_orderbook_hitbtc_bad_coin(self):
         """validate expected error for asking for bad enum"""
         with pytest.raises(KeyError):
-            bad_book = prices.get_orderbook_hitbtc(
+            bad_book = coins.get_orderbook_hitbtc(
                 'BUTTS',
                 'asks'
             )
