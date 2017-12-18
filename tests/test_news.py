@@ -1,0 +1,55 @@
+"""test prosper.datareader.news top-level functions"""
+from os import path
+
+import pytest
+import helpers
+import pandas as pd
+
+import prosper.datareader.news as news
+
+class TestCompanyNewsRobinhood:
+    """valdiate stocks.company_news_rh"""
+    good_ticker = helpers.CONFIG.get('STOCKS', 'good_ticker')
+    bad_ticker = helpers.CONFIG.get('STOCKS', 'bad_ticker')
+    expected_news_cols = [
+        'api_source', 'author', 'instrument', 'num_clicks', 'preview_image_url',
+        'published_at', 'relay_url', 'source', 'summary', 'title', 'updated_at',
+        'url', 'uuid', 'preview_image_width', 'preview_image_height'
+    ]
+
+    def test_company_news_rh_happypath(self):
+        """make sure production endpoint works as expected"""
+        all_news_df = news.company_news_rh(self.good_ticker)
+
+        assert isinstance(all_news_df, pd.DataFrame)
+
+        unique_values, unique_expected = helpers.find_uniques(
+            list(all_news_df.columns.values),
+            self.expected_news_cols
+        )
+        assert unique_expected == []
+        if unique_values:
+            pytest.xfail(
+                'Unexpected values from company_news_rh(): {}'.format(unique_values)
+            )
+
+    @pytest.mark.long
+    def test_vader_application(self):
+        """make sure use-case for news + vader works"""
+        import prosper.datareader.utils as utils
+        all_news_df = news.company_news_rh(self.good_ticker)
+
+        graded_news = utils.vader_sentiment(all_news_df, 'title')
+
+        expected_cols = self.expected_news_cols
+        expected_cols.extend(['neu', 'pos', 'compound', 'neg'])
+
+        unique_values, unique_expected = helpers.find_uniques(
+            list(graded_news.columns.values),
+            expected_cols
+        )
+        assert unique_expected == []
+        if unique_values:
+            pytest.xfail(
+                'Unexpected values from vader_sentiment(): {}'.format(unique_values)
+            )

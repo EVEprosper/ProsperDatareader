@@ -10,7 +10,7 @@ except ImportError: #pragma: no cover
     NLTK_IMPORT = False
 import pandas as pd
 
-from prosper.datareader.config import LOGGER as G_LOGGER
+import prosper.datareader.config as config
 import prosper.datareader.exceptions as exceptions
 
 HERE = path.abspath(path.dirname(__file__))
@@ -21,7 +21,7 @@ __all__ = ('vader_sentiment')
 INSTALLED_PACKAGES = []
 def _validate_install(
         package_name,
-        logger=G_LOGGER
+        logger=config.LOGGER
 ):
     """make sure required NLTK lexicon is available
 
@@ -130,7 +130,7 @@ def vader_sentiment(
         full_dataframe,
         grading_column_name,
         vader_columns=COLUMN_NAMES,
-        logger=G_LOGGER
+        logger=config.LOGGER
 ):
     """apply vader_sentiment analysis to dataframe
 
