@@ -1,9 +1,24 @@
+"""datareader.robinhood.quotes: gather price quote data from Robinhood"""
+from enum import Enum
+
 from datetime import datetime, timezone
 import dateutil.parser
 
 import requests
 
 from .. import config
+
+class Interval(Enum):
+    """/quotes/historical helper for `interval` notation"""
+    minute5 = '5minute'
+    minute10 = '10minute'
+    day = 'day'
+
+class Span(Enum):
+    """/quotes/historical helper for `span` notation"""
+    day = 'day'
+    week = 'week'
+    year = 'year'
 
 def market_is_open(market_uri, logger=config.LOGGER):
     """checks if market is open right now
@@ -135,3 +150,4 @@ def fetch_instruments_rh(
     logger.debug(data)
 
     return data
+
