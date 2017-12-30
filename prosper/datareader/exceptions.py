@@ -15,6 +15,9 @@ class UnsupportedSource(DatareaderException):
 class InvalidEnum(DatareaderException):
     """unsupported enum selection"""
     pass
+class InvalidAuth(DatareaderException):
+    """unable to authenticate to private feed"""
+    pass
 
 ###########
 ## Utils ##
