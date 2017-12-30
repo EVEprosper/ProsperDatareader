@@ -1,11 +1,12 @@
 """prosper.datareader.intrinio.auth: handle authentication/validation"""
-import abc
+
 import requests
 
 from .. import exceptions
 from .. import config
 
-class IntrininoAuth(object):
+BASE_URL = 'https://api.intrinio.com/'
+class IntrininoHelper(object):
     """parent class for handling requests to Intrininio
 
     Notes:
@@ -20,7 +21,8 @@ class IntrininoAuth(object):
         InvalidAuth: will not be able to access Intrinio feeds
 
     """
-    def __init__(self, username='', password='', public_key=''):
+
+    def __init__(self, username='', password='', public_key='',):
         self.__user = username
         self.__password = password
         self.__public_key = public_key
@@ -50,7 +52,7 @@ class IntrininoAuth(object):
 
         return False
 
-    def _direct_auth_request(self, url, params=None, headers=None):
+    def _direct_auth_request(self, route, params=None, headers=None):
         """handle HTTP request for direct-auth
 
         Args:
@@ -66,7 +68,7 @@ class IntrininoAuth(object):
 
         """
         req = requests.get(
-            url=url,
+            url=BASE_URL + route,
             params=params,
             headers=headers,
             auth=(self.__user, self.__password),
@@ -74,7 +76,7 @@ class IntrininoAuth(object):
         req.raise_for_status()
         return req.json()
 
-    def _public_key_request(self, url, params=None, headers=None):
+    def _public_key_request(self, route, params=None, headers=None):
         """handle HTTP request for public-key
 
         Args:
@@ -94,7 +96,7 @@ class IntrininoAuth(object):
 
         headers = {**headers, 'X-Authorization-Public-Key':self.__public_key}
         req = requests.get(
-            url=url,
+            url=BASE_URL + route,
             params=params,
             headers=headers,
         )
