@@ -6,6 +6,14 @@ import helpers
 import pandas as pd
 
 import prosper.datareader.news as news
+import prosper.datareader.exceptions as exceptions
+
+CAN_DIRECT_AUTH = all([
+    helpers.CONFIG.get('INTRININO', 'username'),
+    helpers.CONFIG.get('INTRININO', 'password')
+])
+CAN_PUBLIC_KEY = bool(helpers.CONFIG.get('INTRININO', 'public_key'))
+
 
 class TestCompanyNewsRobinhood:
     """valdiate stocks.company_news_rh"""
@@ -42,6 +50,96 @@ class TestCompanyNewsRobinhood:
         graded_news = utils.vader_sentiment(all_news_df, 'title')
 
         expected_cols = self.expected_news_cols
+        expected_cols.extend(['neu', 'pos', 'compound', 'neg'])
+
+        unique_values, unique_expected = helpers.find_uniques(
+            list(graded_news.columns.values),
+            expected_cols
+        )
+        assert unique_expected == []
+        if unique_values:
+            pytest.xfail(
+                'Unexpected values from vader_sentiment(): {}'.format(unique_values)
+            )
+
+class TestCompanyNewsIntrinino:
+    """validate news.company_news_intrinino"""
+    good_ticker = helpers.CONFIG.get('STOCKS', 'good_ticker')
+    expected_cols = [
+        'ticker', 'figi_ticker', 'figi', 'title', 'publication_date', 'summary', 'url',
+    ]
+    def test_company_news_intrinino_happypath_direct(self):
+        """make sure production endpoint works as expected -- direct auth"""
+        if not CAN_DIRECT_AUTH:
+            pytest.xfail('Lacking creds for Intrinino -- direct auth')
+
+        all_news_df = news.company_news_intrinino(
+            self.good_ticker,
+            username=helpers.CONFIG.get('INTRININO', 'username'),
+            password=helpers.CONFIG.get('INTRININO', 'password')
+        )
+
+        assert isinstance(all_news_df, pd.DataFrame)
+        unique_values, unique_expected = helpers.find_uniques(
+            list(all_news_df.columns.values),
+            self.expected_cols
+        )
+        assert unique_expected == []
+        if unique_values:
+            pytest.xfail(
+                'Unexpected values from company_news_intrinino(): {}'.format(unique_values)
+            )
+
+    def test_company_news_intrinino_happypath_pubkey(self):
+        """make sure production endpoint work as expected -- pubkey auth"""
+        if not CAN_PUBLIC_KEY:
+            pytest.xfail('Lacking creds for Intrinino -- pubkey auth')
+
+        all_news_df = news.company_news_intrinino(
+            self.good_ticker,
+            public_key=helpers.CONFIG.get('INTRININO', 'public_key')
+        )
+
+        assert isinstance(all_news_df, pd.DataFrame)
+        unique_values, unique_expected = helpers.find_uniques(
+            list(all_news_df.columns.values),
+            self.expected_cols
+        )
+        assert unique_expected == []
+        if unique_values:
+            pytest.xfail(
+                'Unexpected values from company_news_intrinino(): {}'.format(unique_values)
+            )
+
+    def test_company_news_intrinino_badauth(self):
+        """make sure exceptions raise for bad auth patterns"""
+        with pytest.raises(exceptions.InvalidAuth):
+            bad_news_df = news.company_news_intrinino(
+                self.good_ticker
+            )
+
+        with pytest.raises(exceptions.InvalidAuth):
+            bad_news_df = news.company_news_intrinino(
+                self.good_ticker,
+                username='fake',
+                password='fake',
+                public_key='fake'
+            )
+
+    def test_vader_application(self):
+        """make sure Intrinino plays nice with vader"""
+        import prosper.datareader.utils as utils
+        if not CAN_DIRECT_AUTH:
+            pytest.xfail('Lacking creds for Intrinino -- direct auth')
+
+        all_news_df = news.company_news_intrinino(
+            self.good_ticker,
+            username=helpers.CONFIG.get('INTRININO', 'username'),
+            password=helpers.CONFIG.get('INTRININO', 'password')
+        )
+        graded_news = utils.vader_sentiment(all_news_df, 'summary')
+
+        expected_cols = self.expected_cols
         expected_cols.extend(['neu', 'pos', 'compound', 'neg'])
 
         unique_values, unique_expected = helpers.find_uniques(
