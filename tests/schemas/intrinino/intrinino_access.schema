@@ -1,7 +1,7 @@
 {
     "type": "array",
     "items": {
-        "type": "object":
+        "type": "object",
         "properties": {
             "access_code": {"type":"string"},
             "daily_limit": {"type":"integer"}

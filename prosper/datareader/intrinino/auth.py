@@ -30,7 +30,7 @@ class IntrininoHelper(object):
         if not bool(self):
             raise exceptions.InvalidAuth('Lacking required authentication')
 
-    def request(self, url, params=None, headers=None):
+    def request(self, route, params=None, headers=None):
         """empty metaclass for handling requests"""
         raise NotImplementedError()
 

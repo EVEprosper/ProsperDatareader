@@ -1,0 +1,16 @@
+{
+    "type": "object",
+    "properties": {
+        "ticker": {"type":"string"},
+        "figi_ticker": {"type":"string"},
+        "figi": {"type":"string"},
+        "title": {"type":"string"},
+        "publication_date": {"type":"string", "format":"date-time"},
+        "summary": {"type":"string"},
+        "url": {"type":"string", "format":"uri"}
+    },
+    "required": [
+        "ticker", "figi_ticker", "title", "publication_date", "summary", "url"
+    ],
+    "additionalProperties": false
+}
