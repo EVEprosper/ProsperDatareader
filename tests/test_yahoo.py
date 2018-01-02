@@ -8,9 +8,11 @@ import prosper.datareader.exceptions as exceptions
 def test_fetch_finance_headlines_happypath():
     """validate expected layout from yahoo raw feeds"""
     feed = yahoo.news.fetch_finance_headlines_yahoo('AAPL')
+    print(feed)
     assert isinstance(feed, list)
 
     [
         helpers.validate_schema(article, 'yahoo/yahoo_finance_headline.schema')
         for article in feed
     ]
+    assert False

@@ -33,9 +33,12 @@ def fetch_finance_headlines_yahoo(
     )
     req.raise_for_status()
 
-    feed_df = pd.DataFrame(feedparser.parse(req.text)['entries'])\
+    raw_response = req.content.decode('utf-8')
+    feed_df = pd.DataFrame(feedparser.parse(raw_response)['entries'])\
         .drop(drop_columns, axis=1, errors='ignore')
 
+    feed_df['title'] = feed_df['title'].map(HTMLParser().unescape)
+    feed_df['summary'] = feed_df['summary'].map(HTMLParser().unescape)
     # TODO: parse/encode utf-8
 
     return feed_df.to_dict(orient='records')
