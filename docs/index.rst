@@ -36,6 +36,7 @@ Index
     getting_started.rst
     stocks_help.rst
     coins_help.rst
+    news_help.rst
     utils_help.rst
 
 API Reference

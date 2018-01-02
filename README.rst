@@ -36,7 +36,7 @@ Supported Feeds
 
 **Stocks**: meant as companion APIs to `pandas-datareader`_
 
-- Company News Feeds: Robinhood, Intrinio
+- Company News Feeds: Robinhood, Intrinio, Yahoo
 - Price Quote: Robinhood
 
 **Coins**: helper libraries for fetching info on crypto currencies 
