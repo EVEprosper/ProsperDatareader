@@ -38,7 +38,17 @@ company_headlines_yahoo()
 
 Process `Yahoo Finance - Company News`_ feed for desired ticker.
 
+industry_headlines_yahoo()
+--------------------------
+
+    ``news_dataframe = news.industry_headlines_yahoo('ticker')``
+
+Process `Yahoo Finance - Industry News`_ feed for a desired ticker.  
+
+**NOTE**: only accepts company tickers, not industry segments.  Yahoo dictates the blend given the tickers, and gives no easy access to reverse engineer who's in what group.
+
 .. _Robinhood: https://www.robinhood.com/
 .. _Intrinino: https://intrinio.com/
 .. _Intrinino account: https://intrinio.com/account
 .. _Yahoo Finance - Company News: https://developer.yahoo.com/finance/company.html
+.. _Yahoo Finance - Industry News: https://developer.yahoo.com/finance/industry.html
