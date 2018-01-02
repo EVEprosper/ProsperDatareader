@@ -126,6 +126,7 @@ class TestCompanyNewsIntrinino:
                 public_key='fake'
             )
 
+    @pytest.mark.long
     def test_vader_application(self):
         """make sure Intrinino plays nice with vader"""
         import prosper.datareader.utils as utils
@@ -138,6 +139,49 @@ class TestCompanyNewsIntrinino:
             password=helpers.CONFIG.get('INTRININO', 'password')
         )
         graded_news = utils.vader_sentiment(all_news_df, 'summary')
+
+        expected_cols = self.expected_cols
+        expected_cols.extend(['neu', 'pos', 'compound', 'neg'])
+
+        unique_values, unique_expected = helpers.find_uniques(
+            list(graded_news.columns.values),
+            expected_cols
+        )
+        assert unique_expected == []
+        if unique_values:
+            pytest.xfail(
+                'Unexpected values from vader_sentiment(): {}'.format(unique_values)
+            )
+
+class TestCompanyHeadlinesYahoo:
+    """validate news.company_headlines_yahoo()"""
+    good_ticker = helpers.CONFIG.get('STOCKS', 'good_ticker')
+    expected_cols = [
+        'id', 'link', 'published', 'summary', 'title'
+    ]
+    def test_company_headlines_yahoo_happypath(self):
+        """make sure production endpoint works as expected"""
+        all_news_df = news.company_headlines_yahoo(self.good_ticker)
+
+        assert isinstance(all_news_df, pd.DataFrame)
+
+        unique_values, unique_expected = helpers.find_uniques(
+            list(all_news_df.columns.values),
+            self.expected_cols
+        )
+        assert unique_expected == []
+        if unique_values:
+            pytest.xfail(
+                'Unexpected values from company_headlines_yahoo(): {}'.format(unique_values)
+            )
+
+    @pytest.mark.long
+    def test_vader_application(self):
+        """make sure use-case for news + vader works"""
+        import prosper.datareader.utils as utils
+        all_news_df = news.company_headlines_yahoo(self.good_ticker)
+
+        graded_news = utils.vader_sentiment(all_news_df, 'title')
 
         expected_cols = self.expected_cols
         expected_cols.extend(['neu', 'pos', 'compound', 'neg'])

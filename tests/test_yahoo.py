@@ -15,4 +15,3 @@ def test_fetch_finance_headlines_happypath():
         helpers.validate_schema(article, 'yahoo/yahoo_finance_headline.schema')
         for article in feed
     ]
-    assert False

@@ -3,6 +3,7 @@
 import pandas as pd
 
 import prosper.datareader.robinhood as robinhood  # TODO: simplify import
+import prosper.datareader.yahoo as yahoo
 import prosper.datareader.intrinino as intrinino
 import prosper.datareader.exceptions as exceptions
 import prosper.datareader.config as config
@@ -82,4 +83,31 @@ def company_news_intrinino(
     news_df['publication_date'] = pd.to_datetime(news_df['publication_date'])
 
     logger.debug(news_df)
+    return news_df
+
+def company_headlines_yahoo(
+        ticker,
+        logger=config.LOGGER,
+):
+    """get news items from Yahoo for a given company
+
+    Args:
+        ticker (str): stock ticker for desired company
+        logger (:obj:`logging.logger`, optional): logging handle
+
+    Returns:
+        (:obj:`pandas.DataFrame`): tabularized data for news
+
+    Raises:
+        requests.exceptions: HTTP/connection errors
+
+    """
+    logger.info('Fetching company raw data feed for `%s` -- yahoo', ticker)
+    raw_data = yahoo.news.fetch_finance_headlines_yahoo(ticker)
+
+    logger.info('--pushing data into Pandas')
+
+    news_df = pd.DataFrame(raw_data)
+    news_df['published'] = pd.to_datetime(news_df['published'])
+
     return news_df
