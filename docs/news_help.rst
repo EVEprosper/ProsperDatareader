@@ -15,7 +15,9 @@ company_news_rh()
 
     ``news_dataframe = news.company_news_rh('TICKER')``
 
-Fetches articles from `Robinhood`_ for desired ticker.  NOTE: ``page_limit`` may be needed for popular stocks.
+Fetches articles from `Robinhood`_ for desired ticker.  
+
+**NOTE**: ``page_limit`` may be needed for popular stocks.
 
 company_news_intrinino()
 ------------------------
@@ -27,7 +29,7 @@ Fetches articles for `Intrinino`_ for desired ticker.  This feed is authenticate
 **NOTE**: authentication patterns.  Either/or, not both
 
 - Direct auth: use special account/password combo in account info (not personal login credentials)
-- Public-Key Auth: (**BROKEN**) use public-key api to authenticate
+- Public-Key Auth: (*BROKEN*) use public-key api to authenticate
 
 company_headlines_yahoo()
 -------------------------
