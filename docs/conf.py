@@ -22,6 +22,7 @@
 import os
 import sys
 sys.path.insert(0, os.path.abspath('../prosper/datareader'))
+sys.path.insert(0, os.path.abspath('../prosper'))
 from _version import __version__
 ## ^^ TODO ^^ ##
 import alabaster
@@ -36,7 +37,7 @@ import alabaster
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
-    #'sphinx.ext.autodoc',
+    'sphinx.ext.autodoc',
     #'sphinx.ext.napoleon',
     'sphinx.ext.doctest',
     'sphinx.ext.todo',
@@ -45,7 +46,8 @@ extensions = [
     'sphinx.ext.ifconfig',
     'sphinx.ext.viewcode',
     'sphinx.ext.githubpages',
-    'alabaster'
+    'sphinxcontrib.napoleon',
+    'alabaster',
 ]
 
 # The suffix(es) of source filenames.

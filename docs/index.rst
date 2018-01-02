@@ -30,14 +30,22 @@ Index
 =====
 
 .. toctree::
-   :maxdepth: 2
-   :caption: Contents:
+    :maxdepth: 2
+    :caption: Contents:
 
-   getting_started.rst
-   stocks_help.rst
-   coins_help.rst
-   utils_help.rst
-   
+    getting_started.rst
+    stocks_help.rst
+    coins_help.rst
+    utils_help.rst
+
+API Reference
+=============
+
+.. toctree::
+    :maxdepth: 2
+ 
+    source/datareader.rst
+
 Indices and tables
 ==================
 
