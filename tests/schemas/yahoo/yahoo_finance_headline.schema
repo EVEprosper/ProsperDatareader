@@ -1,0 +1,14 @@
+{
+    "type": "object",
+    "properties": {
+        "id": {"type":"string"},
+        "link": {"type":"string", "format":"uri"},
+        "published": {"type":"string", "format":"date-time"},
+        "summary": {"type":"string"},
+        "title": {"type":"string"}
+    },
+    "required": [
+        "id", "link", "published", "summary", "title"
+    ],
+    "additionalProperties": false
+}
