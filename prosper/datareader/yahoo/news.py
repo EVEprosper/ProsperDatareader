@@ -5,13 +5,15 @@ import feedparser
 import pandas as pd
 
 DROP_COLUMNS = [
-    'guidislink', 'links', 'summary_detail', 'title_detail', 'published_parsed'
+    'guidislink', 'links', 'summary_detail', 'title_detail', 'published_parsed', # Company list
+    'media_credit', 'media_content', 'media_text', 'source',                     # Industry list
 ]
-FINANCE_NEWS_URL = 'http://finance.yahoo.com/rss/headline'
+COMPANY_NEWS_URL = 'http://finance.yahoo.com/rss/headline'
+INDUSTRY_NEWS_URL = 'http://finance.yahoo.com/rss/industry'
 def fetch_finance_headlines_yahoo(
         ticker,
         drop_columns=DROP_COLUMNS,
-        uri=FINANCE_NEWS_URL,
+        uri=COMPANY_NEWS_URL,
 ):
     """fetch & parse RSS feed from yahoo
 

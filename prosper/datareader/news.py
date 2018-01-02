@@ -91,6 +91,9 @@ def company_headlines_yahoo(
 ):
     """get news items from Yahoo for a given company
 
+    Notes:
+        Wraps https://developer.yahoo.com/finance/company.html
+
     Args:
         ticker (str): stock ticker for desired company
         logger (:obj:`logging.logger`, optional): logging handle
@@ -104,6 +107,39 @@ def company_headlines_yahoo(
     """
     logger.info('Fetching company raw data feed for `%s` -- yahoo', ticker)
     raw_data = yahoo.news.fetch_finance_headlines_yahoo(ticker)
+
+    logger.info('--pushing data into Pandas')
+
+    news_df = pd.DataFrame(raw_data)
+    news_df['published'] = pd.to_datetime(news_df['published'])
+
+    return news_df
+
+def industry_headlines_yahoo(
+        ticker,
+        logger=config.LOGGER,
+):
+    """get news items from Yahoo for an industry segment given a ticker
+
+    Notes:
+        Wraps https://developer.yahoo.com/finance/industry.html
+
+    Args:
+        ticker (str): stock ticker for desired company
+        logger (:obj:`logging.logger`, optional): logging handle
+
+    Returns:
+        (:obj:`pandas.DataFrame`): tabularized data for news
+
+    Raises:
+        requests.exceptions: HTTP/connection errors
+
+    """
+    logger.info('Fetching industry raw data feed for `%s` -- yahoo', ticker)
+    raw_data = yahoo.news.fetch_finance_headlines_yahoo(
+        ticker,
+        uri=yahoo.news.INDUSTRY_NEWS_URL,
+    )
 
     logger.info('--pushing data into Pandas')
 
