@@ -11,25 +11,25 @@ import prosper.datareader.intrinio.auth as auth
 import prosper.datareader.exceptions as exceptions
 
 CAN_DIRECT_AUTH = all([
-    helpers.CONFIG.get('INTRINIO', 'username'),
-    helpers.CONFIG.get('INTRINIO', 'password')
+    helpers.CONFIG.get_option('INTRINIO', 'username'),
+    helpers.CONFIG.get_option('INTRINIO', 'password')
 ])
-CAN_PUBLIC_KEY = bool(helpers.CONFIG.get('INTRINIO', 'public_key'))
+CAN_PUBLIC_KEY = bool(helpers.CONFIG.get_option('INTRINIO', 'public_key'))
 
 
 def direct_connection(capsys):
     """generate a direct-auth connector"""
     with capsys.disabled():
         return auth.IntrinioHelper(
-            username=helpers.CONFIG.get('INTRINIO', 'username'),
-            password=helpers.CONFIG.get('INTRINIO', 'password')
+            username=helpers.CONFIG.get_option('INTRINIO', 'username'),
+            password=helpers.CONFIG.get_option('INTRINIO', 'password')
         )
 
 def pubkey_connection(capsys):
     """generate a pub-key connector"""
     with capsys.disabled():
         return auth.IntrinioHelper(
-            public_key=helpers.CONFIG.get('INTRINIO', 'public_key')
+            public_key=helpers.CONFIG.get_option('INTRINIO', 'public_key')
         )
 
 def test_bad_auth():

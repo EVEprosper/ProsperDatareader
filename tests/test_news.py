@@ -9,10 +9,10 @@ import prosper.datareader.news as news
 import prosper.datareader.exceptions as exceptions
 
 CAN_DIRECT_AUTH = all([
-    helpers.CONFIG.get('INTRINIO', 'username'),
-    helpers.CONFIG.get('INTRINIO', 'password')
+    helpers.CONFIG.get_option('INTRINIO', 'username'),
+    helpers.CONFIG.get_option('INTRINIO', 'password')
 ])
-CAN_PUBLIC_KEY = bool(helpers.CONFIG.get('INTRINIO', 'public_key'))
+CAN_PUBLIC_KEY = bool(helpers.CONFIG.get_option('INTRINIO', 'public_key'))
 
 
 class TestCompanyNewsRobinhood:
@@ -75,8 +75,8 @@ class TestCompanyNewsIntrinino:
 
         all_news_df = news.company_news_intrinio(
             self.good_ticker,
-            username=helpers.CONFIG.get('INTRINIO', 'username'),
-            password=helpers.CONFIG.get('INTRINIO', 'password')
+            username=helpers.CONFIG.get_option('INTRINIO', 'username'),
+            password=helpers.CONFIG.get_option('INTRINIO', 'password')
         )
 
         assert isinstance(all_news_df, pd.DataFrame)
@@ -97,7 +97,7 @@ class TestCompanyNewsIntrinino:
 
         all_news_df = news.company_news_intrinio(
             self.good_ticker,
-            public_key=helpers.CONFIG.get('INTRINIO', 'public_key')
+            public_key=helpers.CONFIG.get_option('INTRINIO', 'public_key')
         )
 
         assert isinstance(all_news_df, pd.DataFrame)
@@ -135,8 +135,8 @@ class TestCompanyNewsIntrinino:
 
         all_news_df = news.company_news_intrinio(
             self.good_ticker,
-            username=helpers.CONFIG.get('INTRINIO', 'username'),
-            password=helpers.CONFIG.get('INTRINIO', 'password')
+            username=helpers.CONFIG.get_option('INTRINIO', 'username'),
+            password=helpers.CONFIG.get_option('INTRINIO', 'password')
         )
         graded_news = utils.vader_sentiment(all_news_df, 'summary')
 
