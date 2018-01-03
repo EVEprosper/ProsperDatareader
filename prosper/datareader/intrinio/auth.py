@@ -6,7 +6,7 @@ from .. import exceptions
 from .. import config
 
 BASE_URL = 'https://api.intrinio.com/'
-class IntrininoHelper(object):
+class IntrinioHelper(object):
     """parent class for handling requests to Intrininio
 
     Notes:

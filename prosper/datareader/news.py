@@ -4,7 +4,7 @@ import pandas as pd
 
 import prosper.datareader.robinhood as robinhood  # TODO: simplify import
 import prosper.datareader.yahoo as yahoo
-import prosper.datareader.intrinino as intrinino
+import prosper.datareader.intrinio as intrinio
 import prosper.datareader.exceptions as exceptions
 import prosper.datareader.config as config
 
@@ -38,7 +38,7 @@ def company_news_rh(
     logger.debug(news_df)
     return news_df
 
-def company_news_intrinino(
+def company_news_intrinio(
         ticker,
         username='',
         password='',
@@ -68,7 +68,7 @@ def company_news_intrinino(
 
     """
     logger.info('Fetching company raw data feed for `%s` -- INTRININO', ticker)
-    connection = intrinino.auth.IntrininoHelper(
+    connection = intrinio.auth.IntrinioHelper(
         username=username,
         password=password,
         public_key=public_key,

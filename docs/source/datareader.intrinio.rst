@@ -1,13 +1,13 @@
-datareader\.intrinino package
+datareader\.intrinio package
 =============================
 
 Submodules
 ----------
 
-datareader\.intrinino\.auth module
+datareader\.intrinio\.auth module
 ----------------------------------
 
-.. automodule:: datareader.intrinino.auth
+.. automodule:: datareader.intrinio.auth
     :members:
     :undoc-members:
     :show-inheritance:
@@ -16,7 +16,7 @@ datareader\.intrinino\.auth module
 Module contents
 ---------------
 
-.. automodule:: datareader.intrinino
+.. automodule:: datareader.intrinio
     :members:
     :undoc-members:
     :show-inheritance:

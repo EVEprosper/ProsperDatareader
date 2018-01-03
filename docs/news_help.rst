@@ -19,12 +19,12 @@ Fetches articles from `Robinhood`_ for desired ticker.
 
 **NOTE**: ``page_limit`` may be needed for popular stocks.
 
-company_news_intrinino()
+company_news_intrinio()
 ------------------------
 
     ``news_dataframe = news.company_news_intrinino('ticker', ...)``
 
-Fetches articles for `Intrinino`_ for desired ticker.  This feed is authenticated, and will require credentials from an `Intrinino account`_.
+Fetches articles for `Intrinio`_ for desired ticker.  This feed is authenticated, and will require credentials from an `Intrinio account`_.
 
 **NOTE**: authentication patterns.  Either/or, not both
 
@@ -48,7 +48,7 @@ Process `Yahoo Finance - Industry News`_ feed for a desired ticker.
 **NOTE**: only accepts company tickers, not industry segments.  Yahoo dictates the blend given the tickers, and gives no easy access to reverse engineer who's in what group.
 
 .. _Robinhood: https://www.robinhood.com/
-.. _Intrinino: https://intrinio.com/
-.. _Intrinino account: https://intrinio.com/account
+.. _Intrinio: https://intrinio.com/
+.. _Intrinio account: https://intrinio.com/account
 .. _Yahoo Finance - Company News: https://developer.yahoo.com/finance/company.html
 .. _Yahoo Finance - Industry News: https://developer.yahoo.com/finance/industry.html

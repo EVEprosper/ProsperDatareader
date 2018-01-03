@@ -9,10 +9,10 @@ import prosper.datareader.news as news
 import prosper.datareader.exceptions as exceptions
 
 CAN_DIRECT_AUTH = all([
-    helpers.CONFIG.get('INTRININO', 'username'),
-    helpers.CONFIG.get('INTRININO', 'password')
+    helpers.CONFIG.get('INTRINIO', 'username'),
+    helpers.CONFIG.get('INTRINIO', 'password')
 ])
-CAN_PUBLIC_KEY = bool(helpers.CONFIG.get('INTRININO', 'public_key'))
+CAN_PUBLIC_KEY = bool(helpers.CONFIG.get('INTRINIO', 'public_key'))
 
 
 class TestCompanyNewsRobinhood:
@@ -73,10 +73,10 @@ class TestCompanyNewsIntrinino:
         if not CAN_DIRECT_AUTH:
             pytest.xfail('Lacking creds for Intrinino -- direct auth')
 
-        all_news_df = news.company_news_intrinino(
+        all_news_df = news.company_news_intrinio(
             self.good_ticker,
-            username=helpers.CONFIG.get('INTRININO', 'username'),
-            password=helpers.CONFIG.get('INTRININO', 'password')
+            username=helpers.CONFIG.get('INTRINIO', 'username'),
+            password=helpers.CONFIG.get('INTRINIO', 'password')
         )
 
         assert isinstance(all_news_df, pd.DataFrame)
@@ -95,9 +95,9 @@ class TestCompanyNewsIntrinino:
         if not CAN_PUBLIC_KEY:
             pytest.xfail('Lacking creds for Intrinino -- pubkey auth')
 
-        all_news_df = news.company_news_intrinino(
+        all_news_df = news.company_news_intrinio(
             self.good_ticker,
-            public_key=helpers.CONFIG.get('INTRININO', 'public_key')
+            public_key=helpers.CONFIG.get('INTRINIO', 'public_key')
         )
 
         assert isinstance(all_news_df, pd.DataFrame)
@@ -114,12 +114,12 @@ class TestCompanyNewsIntrinino:
     def test_company_news_intrinino_badauth(self):
         """make sure exceptions raise for bad auth patterns"""
         with pytest.raises(exceptions.InvalidAuth):
-            bad_news_df = news.company_news_intrinino(
+            bad_news_df = news.company_news_intrinio(
                 self.good_ticker
             )
 
         with pytest.raises(exceptions.InvalidAuth):
-            bad_news_df = news.company_news_intrinino(
+            bad_news_df = news.company_news_intrinio(
                 self.good_ticker,
                 username='fake',
                 password='fake',
@@ -133,10 +133,10 @@ class TestCompanyNewsIntrinino:
         if not CAN_DIRECT_AUTH:
             pytest.xfail('Lacking creds for Intrinino -- direct auth')
 
-        all_news_df = news.company_news_intrinino(
+        all_news_df = news.company_news_intrinio(
             self.good_ticker,
-            username=helpers.CONFIG.get('INTRININO', 'username'),
-            password=helpers.CONFIG.get('INTRININO', 'password')
+            username=helpers.CONFIG.get('INTRINIO', 'username'),
+            password=helpers.CONFIG.get('INTRINIO', 'password')
         )
         graded_news = utils.vader_sentiment(all_news_df, 'summary')
 
