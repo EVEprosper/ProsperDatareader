@@ -22,9 +22,9 @@ Supported Feeds
 ===============
 
 * `Utils`_: General utilities for additional insights
-* `Stocks`_: Parse IRL stock quote data
+* `Stocks`_: Parse stock quote data
 * `Coins`_: Data utilities for cryptocoin price quotes
-* `News`_: Fetch relevant news data
+* `News`_: Fetch news data for stocks
 
 Index
 =====
