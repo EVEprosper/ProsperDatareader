@@ -6,11 +6,23 @@ Subpackages
 
 .. toctree::
 
-    datareader.coins
-    datareader.stocks
+    datareader.cryptocompare
+    datareader.hitbtc
+    datareader.iex
+    datareader.intrinino
+    datareader.robinhood
+    datareader.yahoo
 
 Submodules
 ----------
+
+datareader\.coins module
+------------------------
+
+.. automodule:: datareader.coins
+    :members:
+    :undoc-members:
+    :show-inheritance:
 
 datareader\.config module
 -------------------------
@@ -24,6 +36,22 @@ datareader\.exceptions module
 -----------------------------
 
 .. automodule:: datareader.exceptions
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+datareader\.news module
+-----------------------
+
+.. automodule:: datareader.news
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+datareader\.stocks module
+-------------------------
+
+.. automodule:: datareader.stocks
     :members:
     :undoc-members:
     :show-inheritance:

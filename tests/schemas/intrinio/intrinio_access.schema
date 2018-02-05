@@ -1,0 +1,12 @@
+{
+    "type": "array",
+    "items": {
+        "type": "object",
+        "properties": {
+            "access_code": {"type":"string"},
+            "daily_limit": {"type":"integer"}
+        },
+        "required": ["access_code", "daily_limit"],
+        "additionalProperties": false
+    }
+}

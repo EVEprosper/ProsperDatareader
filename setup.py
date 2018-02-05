@@ -133,7 +133,7 @@ setup(
     include_package_data=True,
     package_data={
         '': ['LICENSE', 'README.rst'],
-        'prosper': ['datareader/version.txt']
+        'prosper': ['datareader/version.txt'],
     },
     install_requires=[
         'prospercommon',
@@ -141,7 +141,8 @@ setup(
         'requests',
         'six',
         'semantic-version',
-        'demjson~=2.2.4'
+        'demjson~=2.2.4',
+        'feedparser',
     ],
     tests_require=[
         'jsonschema',
@@ -149,16 +150,16 @@ setup(
         'flaky',
         'testfixtures',
         'pytest_cov',
-        'pytest-xdist'
+        'pytest-xdist',
     ],
     extras_require={
         'dev':[
             'pandas-datareader',
             'sphinx',
             'sphinxcontrib-napoleon',
-            'semantic-version'
+            'semantic-version',
         ],
-        'nltk':['nltk'] # optional function, avoid heavy import unless required
+        'nltk':['nltk'], # optional function, avoid heavy import unless required
     },
     cmdclass={
         'test':PyTest,
