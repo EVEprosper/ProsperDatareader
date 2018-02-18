@@ -5,6 +5,7 @@ import pandas as pd
 import prosper.datareader.robinhood as robinhood  # TODO: simplify import
 import prosper.datareader.yahoo as yahoo
 import prosper.datareader.intrinio as intrinio
+import prosper.datareader.cryptopanic as cryptopanic
 import prosper.datareader.exceptions as exceptions
 import prosper.datareader.config as config
 
@@ -147,3 +148,40 @@ def industry_headlines_yahoo(
     news_df['published'] = pd.to_datetime(news_df['published'])
 
     return news_df
+
+def coin_news_cryptopanic(
+        ticker,
+        auth_token,
+        filters='',
+        public=True,
+        following=False,
+        article_limit=10000,
+        logger=config.LOGGER,
+):
+    """get news items from cryptopanic for a given coin
+
+    Notes:
+        Wraps https://cryptopanic.com/about/api/
+
+    Args:
+        ticker (str): short name of crypto coin
+        auth_token (str): cryptopanic API auth token
+        filters (str): cryptopanic group filter
+        public (bool): public/private post feeds
+        logger (:obj:`logging.logger`): logging handle
+
+    Returns:
+        (:obj:`pandas.DataFrame`): tabularized data for news
+
+    Raises:
+        requests.exceptions: HTTP/connection errors
+
+    """
+    article_list = cryptopanic.quotes.fetch_posts(
+        auth_token,
+        ticker=ticker,
+        filters=filters,
+        public=public,
+        following=following,
+        article_limit=article_limit,
+    )
