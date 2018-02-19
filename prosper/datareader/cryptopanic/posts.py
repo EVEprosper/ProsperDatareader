@@ -1,4 +1,6 @@
 """prosper.datareader.cryptopanic.posts: utilities for fetching cryptocoin news"""
+import warnings
+
 import requests
 
 from .. import exceptions
@@ -7,7 +9,7 @@ CRYPTOPANIC_FILTERS = (
     'trending', 'hot', 'bullish', 'bearish', 'important', 'saved', 'lol',
 )
 
-ROOT_API = 'https://cryptopanic.com/'
+ROOT_API = 'https://cryptopanic.com/api/'
 def fetch_posts(
         auth_token,
         ticker='',
@@ -64,6 +66,11 @@ def fetch_posts(
 
         url = page['next']
 
+        if article_count >= article_limit:
+            warnings.warn(
+                'article limit {} reached'.format(article_limit),
+                exceptions.PaginationWarning
+            )
         if not url or article_count >= article_limit:
             break
 

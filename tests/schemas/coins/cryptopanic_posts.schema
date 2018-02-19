@@ -1,0 +1,60 @@
+{
+    "type": "array",
+    "items": {
+        "type": "object",
+        "properties": {
+            "domain": {"type": "string", "format": "uri"},
+            "votes": {
+                "type": "object",
+                "properties": {
+                    "negative": {"type": "integer"},
+                    "positive": {"type": "integer"},
+                    "important": {"type": "integer"}
+                },
+                "required": [
+                    "negative", "positive", "important"
+                ],
+                "additionalProperties": false
+            },
+            "source": {
+                "type": "object",
+                "properties": {
+                    "domain": {"type": "string", "format": "uri"},
+                    "title": {"type": "string"},
+                    "path": {"type": ["string", "null"], "format": "uri"}
+                },
+                "required": [
+                    "domain", "title", "path"
+                ],
+                "additionalProperties": false
+            },
+            "title": {"type": "string"},
+            "published_at": {"type": "string", "format": "date-time"},
+            "slug": {"type": "string"},
+            "currencies": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "code": {"type": "string"},
+                        "title": {"type": "string"},
+                        "slug": {"type": "string"},
+                        "url": {"type": "string", "format": "uri"}
+                    },
+                    "required": [
+                        "code", "title", "slug", "url"
+                    ],
+                    "additionalProperties": false
+                }
+            },
+            "id": {"type": "integer"},
+            "created_at": {"type": "string", "format": "date-time"},
+            "url": {"type": "string", "format": "uri"}
+        },
+        "required": [
+            "domain", "votes", "source", "title", "published_at", "slug",
+            "currencies", "id", "created_at", "url"
+        ],
+        "additionalProperties": false
+    }
+}
