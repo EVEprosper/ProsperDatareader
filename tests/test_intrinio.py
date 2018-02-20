@@ -47,7 +47,7 @@ def test_bad_auth():
 def test_direct_auth_happypath(capsys):
     """validate direct_auth scheme"""
     if not CAN_DIRECT_AUTH:
-        pytest.xfail('Missing username/password')
+        pytest.xfail('Missing `username`/`password` for intrinio')
 
     direct_auth = direct_connection(capsys)
 
@@ -58,7 +58,7 @@ def test_direct_auth_happypath(capsys):
 def test_pubkey_auth_happypath(capsys):
     """validate direct_auth scheme"""
     if not CAN_PUBLIC_KEY:
-        pytest.xfail('Missing username/password')
+        pytest.xfail('Missing `username`/`password` for intrinio')
 
     pub_auth = pubkey_connection(capsys)
 
@@ -68,7 +68,7 @@ def test_pubkey_auth_happypath(capsys):
 def test_news_endpoint(capsys):
     """validate /news endpoint contents"""
     if not CAN_DIRECT_AUTH:
-        pytest.xfail('Missing username/password')
+        pytest.xfail('Missing `username`/`password` for intrinio')
 
     response = direct_connection(capsys).request(
         'news',
