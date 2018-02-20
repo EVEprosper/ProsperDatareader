@@ -44,7 +44,7 @@ def fetch_posts(
         params['currencies'] = ticker
     if filters:
         assert filters in CRYPTOPANIC_FILTERS
-        params['filter'] = filters
+        params['filter'] = filters.lower()
     if public:
         params['public'] = True
     if not public and following:
