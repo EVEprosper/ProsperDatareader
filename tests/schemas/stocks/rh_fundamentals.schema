@@ -5,22 +5,26 @@
         "high": {"type":"string"},
         "low": {"type":"string"},
         "volume": {"type":"string"},
+        "average_volume_2_weeks": {"type":"string"},
         "average_volume": {"type":"string"},
         "high_52_weeks": {"type":"string"},
         "dividend_yield": {"type":["string", "null"]},
         "low_52_weeks": {"type":"string"},
         "market_cap": {"type":"string"},
         "pe_ratio": {"type":["string", "null"]},
+        "shares_outstanding": {"type": "string"},
         "description": {"type":"string"},
         "instrument": {"type":"string", "format":"uri"},
         "ceo": {"type":"string"},
         "num_employees": {"type":"integer"},
         "year_founded": {"type":"integer"},
         "headquarters_city": {"type":"string"},
-        "headquarters_state": {"type":"string"}
+        "headquarters_state": {"type":"string"},
+        "sector": {"type": "string"}
     },
     "required":[
         "open", "high", "low", "volume", "average_volume", "high_52_weeks", "dividend_yield", 
-        "low_52_weeks", "market_cap", "pe_ratio", "description", "instrument"],
+        "low_52_weeks", "market_cap", "pe_ratio", "description", "instrument"
+    ],
     "additionalProperties": false
 }

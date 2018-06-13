@@ -1,6 +1,7 @@
 {
     "type": "object",
     "properties": {
+        "tradable_chain_id": {"type":"string"},
         "min_tick_size": {"type":"null"},
         "type": {"type":"string", "enum":["stock"]},
         "splits": {"type":"string", "format":"uri"},
