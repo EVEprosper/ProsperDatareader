@@ -10,6 +10,37 @@ import helpers
 import prosper.datareader.robinhood as robinhood
 import prosper.datareader.exceptions as exceptions
 
+@pytest.mark.new
+class TestAuth:
+    can_auth = all([
+        helpers.CONFIG.get_option('ROBINHOOD', 'username'),
+        helpers.CONFIG.get_option('ROBINHOOD', 'password'),
+        helpers.CONFIG.get_option('ROBINHOOD', 'client_id'),
+    ])
+    def test_auth_happypath(self):
+        """validate context manager logs in and logs out user"""
+        if not self.can_auth:
+            pytest.xfail('RobinHood Auth Required')
+        with robinhood.auth.RobinHoodAuth(
+                username=helpers.CONFIG.get_option('ROBINHOOD', 'username'),
+                password=helpers.CONFIG.get_option('ROBINHOOD', 'password'),
+                client_id=helpers.CONFIG.get_option('ROBINHOOD', 'client_id'),
+        ) as auth_token:
+            req = requests.get(
+                'https://api.robinhood.com/user/id/',
+                headers=dict(Authorization=auth_token),
+            )
+            req.raise_for_status()
+            userinfo = req.json()
+            helpers.validate_schema(userinfo, 'stocks/rh_user.schema')
+
+        with pytest.raises(requests.HTTPError):
+            req = requests.get(
+                'https://api.robinhood.com/user/id/',
+                headers=dict(Authorization=auth_token),
+            )
+            req.raise_for_status()
+
 class TestExpectedSchemas:
     good_ticker = helpers.CONFIG.get('STOCKS', 'good_ticker')
     markets_url = helpers.CONFIG.get('STOCKS', 'markets_url')

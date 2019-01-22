@@ -3,8 +3,8 @@ import logging
 
 import requests
 
-RH_LOGIN = ''
-RH_LOGOUT = ''
+RH_LOGIN = 'https://api.robinhood.com/oauth2/token/'
+RH_LOGOUT = 'https://api.robinhood.com/oauth2/revoke_token/'
 class RobinHoodAuth(object):
     """context manager for logging in and out of Robinhood
 
