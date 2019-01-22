@@ -1,0 +1,12 @@
+{
+    "type": "object",
+    "properties": {
+        "url": {"type": "string", "format": "uri"},
+        "username": {"type": "string"},
+        "id": {"type": "string"}
+    },
+    "required": [
+        "url", "username", "id"
+    ],
+    "additionalProperties": false
+}

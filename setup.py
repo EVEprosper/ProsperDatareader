@@ -80,6 +80,7 @@ class PyTest(TestCommand):
         self.pytest_args = [
             'tests',
             '-rx',
+            '-m new',  # !! FIXME: REMOVE ME !!
             '-vv',
             '--cov=prosper/' + __library_name__,
             '--cov-report=term-missing',
@@ -152,6 +153,7 @@ setup(
         'testfixtures',
         'pytest_cov',
         'pytest-xdist',
+        'nltk',
     ],
     extras_require={
         'dev':[
